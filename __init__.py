@@ -46,13 +46,13 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup(hass, config):
     """Set up the OpenTherm Gateway component."""
     conf = config[DOMAIN]
-    hass.data[DATA_HWAM_STOVE] = []
+    hass.data[DATA_HWAM_STOVE] = {}
     for name, cfg in conf.items():
         stove = await StoveDevice.create(hass, name, cfg[CONF_HOST])
-        hass.data[DATA_HWAM_STOVE].append(stove)
+        hass.data[DATA_HWAM_STOVE][name] = stove
+        hass.async_create_task(async_load_platform(
+            hass, 'fan', DOMAIN, stove, config))
 #    hass.async_create_task(register_services(hass, stove))
-#    hass.async_create_task(async_load_platform(
-#        hass, 'fan', DOMAIN, conf.get(CONF_NAME), config))
 #    if monitored_vars:
 #        hass.async_create_task(setup_monitored_vars(
 #            hass, config, monitored_vars))

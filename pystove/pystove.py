@@ -36,6 +36,10 @@ DATA_END_MINUTE = 'end_minute'
 DATA_BURN_LEVEL = 'burn_level'
 DATA_DATE_TIME = 'date_time'
 DATA_FILENAME = 'file_name'
+DATA_FIRMWARE_VERSION = 'firmware_version'
+DATA_FIRMWARE_VERSION_BUILD = 'version_build'
+DATA_FIRMWARE_VERSION_MAJOR = 'version_major'
+DATA_FIRMWARE_VERSION_MINOR = 'version_minor'
 DATA_IP = 'ip'
 DATA_LEVEL = 'level'
 DATA_MAINTENANCE_ALARMS = 'maintenance_alarms'
@@ -74,15 +78,11 @@ DATA_TEST_VALVE1 = 'valve_primary'
 DATA_TEST_VALVE2 = 'valve_secondary'
 DATA_TEST_VALVE3 = 'valve_tertiary'
 DATA_TIME_SINCE_REMOTE_MSG = 'time_since_remote_msg'
-DATA_TIME_TO_NEW_FIRE_WOOD = 'time_to_new_fire_wood'
+DATA_TIME_TO_NEW_FIREWOOD = 'time_to_new_fire_wood'
 DATA_UPDATING = 'updating'
 DATA_VALVE1_POSITION = 'valve1_position'
 DATA_VALVE2_POSITION = 'valve2_position'
 DATA_VALVE3_POSITION = 'valve3_position'
-DATA_VERSION = 'firmware_version'
-DATA_VERSION_BUILD = 'version_build'
-DATA_VERSION_MAJOR = 'version_major'
-DATA_VERSION_MINOR = 'version_minor'
 
 DATA_YEAR = 'year'
 DATA_MONTH = 'month'
@@ -95,21 +95,79 @@ HTTP_HEADERS = {
     "Accept": "application/json"
 }
 
+MAINTENANCE_ALARMS = [
+    'Stove Backup Battery Low',
+    'O2 Sensor Fault',
+    'O2 Sensor Offset',
+    'Stove Temperature Sensor Fault',
+    'Room Temperature Sensor Fault',
+    'Communication Fault',
+    'Room Temperature Sensor Battery Low',
+]
+
+NIGHT_LOWERING_STATES = [
+    'Disabled',
+    'Init',
+    'Day',
+    'Night',
+    'Manual Night',
+]
+
+OPERATION_MODES = [
+    'Init',
+    'Self Test',
+    'Normal',
+    'Temperature Fault',
+    'O2 Fault',
+    'Calibration',
+    'Safety',
+    'Manual',
+    'MotorTest',
+    'Slow Combustion',
+    'Low Voltage',
+]
+
 PHASE = [
     'Ignition',
     'Burn',
     'Burn',
     'Burn',
     'Glow',
-    'Start'
+    'Standby',
 ]
 
 RESPONSE_OK = 'OK'
+
+SAFETY_ALARMS = [
+    'Valve Fault',
+    'Valve Fault',
+    'Valve Fault',
+    'Bad Configuration',
+    'Valve Disconnected',
+    'Valve Disconnected',
+    'Valve Disconnected',
+    'Valve Calibration Error',
+    'Valve Calibration Error',
+    'Valve Calibration Error',
+    'Chimney Overheat',
+    'Door Open Too Long',
+    'Manual Safety Alarm',
+    'Stove Sensor Fault',
+]
+
+SELF_TEST_VALUES = [
+    'Failed',
+    'Passed',
+    'Running',
+    'Not Completed',
+    'Not Started',
+]
 
 STOVE_ACCESSPOINT_URL = '/esp/get_current_accesspoint'
 STOVE_BURN_LEVEL_URL = '/set_burn_level'
 STOVE_DATA_URL = '/get_stove_data'
 STOVE_ID_URL = '/esp/get_identification'
+STOVE_LIVE_DATA_URL = '/get_live_data'
 STOVE_NIGHT_LOWERING_OFF_URL = '/set_night_lowering_off'
 STOVE_NIGHT_LOWERING_ON_URL = '/set_night_lowering_on'
 STOVE_NIGHT_TIME_URL = '/set_night_time'
@@ -157,47 +215,69 @@ class Stove():
         time_to_refuel = timedelta(hours=data[DATA_NEW_FIREWOOD_HOURS],
                                    minutes=data[DATA_NEW_FIREWOOD_MINUTES])
         refuel_estimate = stove_datetime + time_to_refuel
+        maintenance_alarms = self._get_maintenance_alarms_text(
+            data[DATA_MAINTENANCE_ALARMS])
+        safety_alarms = self._get_safety_alarms_text(data[DATA_SAFETY_ALARMS])
+        operation_mode = OPERATION_MODES[data[DATA_OPERATION_MODE]]
+        night_lowering = NIGHT_LOWERING_STATES[data[DATA_NIGHT_LOWERING]]
         nighttime_start = time(hour=data[DATA_NIGHT_BEGIN_HOUR],
                                minute=data[DATA_NIGHT_BEGIN_MINUTE])
         nighttime_end = time(hour=data[DATA_NIGHT_END_HOUR],
                              minute=data[DATA_NIGHT_END_MINUTE])
-        stove_version = "{}.{}.{}".format(data[DATA_VERSION_MAJOR],
-                                          data[DATA_VERSION_MINOR],
-                                          data[DATA_VERSION_BUILD])
+        stove_version = "{}.{}.{}".format(data[DATA_FIRMWARE_VERSION_MAJOR],
+                                          data[DATA_FIRMWARE_VERSION_MINOR],
+                                          data[DATA_FIRMWARE_VERSION_BUILD])
         remote_version = "{}.{}.{}".format(data[DATA_REMOTE_VERSION_MAJOR],
                                            data[DATA_REMOTE_VERSION_MINOR],
                                            data[DATA_REMOTE_VERSION_BUILD])
         for item in (DATA_STOVE_TEMPERATURE, DATA_ROOM_TEMPERATURE,
                      DATA_OXYGEN_LEVEL):
-            data[item] = data[item]/100
+            data[item] = int(data[item]/100)
         processed_data = {
             DATA_ALGORITHM: data[DATA_ALGORITHM],
             DATA_BURN_LEVEL: data[DATA_BURN_LEVEL],
-            DATA_MAINTENANCE_ALARMS: data[DATA_MAINTENANCE_ALARMS],
+            DATA_MAINTENANCE_ALARMS: maintenance_alarms,
             DATA_MESSAGE_ID: data[DATA_MESSAGE_ID],
             DATA_NEW_FIREWOOD_ESTIMATE: refuel_estimate,
             DATA_NIGHT_BEGIN_TIME: nighttime_start,
             DATA_NIGHT_END_TIME: nighttime_end,
-            DATA_NIGHT_LOWERING: data[DATA_NIGHT_LOWERING],
-            DATA_OPERATION_MODE: data[DATA_OPERATION_MODE],
+            DATA_NIGHT_LOWERING: night_lowering,
+            DATA_OPERATION_MODE: operation_mode,
             DATA_OXYGEN_LEVEL: data[DATA_OXYGEN_LEVEL],
             DATA_PHASE: phase,
             DATA_REFILL_ALARM: data[DATA_REFILL_ALARM],
             DATA_REMOTE_REFILL_ALARM: data[DATA_REMOTE_REFILL_ALARM],
             DATA_REMOTE_VERSION: remote_version,
             DATA_ROOM_TEMPERATURE: data[DATA_ROOM_TEMPERATURE],
-            DATA_SAFETY_ALARMS: data[DATA_SAFETY_ALARMS],
+            DATA_SAFETY_ALARMS: safety_alarms,
             DATA_STOVE_TEMPERATURE: data[DATA_STOVE_TEMPERATURE],
             DATA_TIME_SINCE_REMOTE_MSG: data[DATA_TIME_SINCE_REMOTE_MSG],
             DATA_DATE_TIME: stove_datetime,
-            DATA_TIME_TO_NEW_FIRE_WOOD: time_to_refuel,
+            DATA_TIME_TO_NEW_FIREWOOD: time_to_refuel,
             DATA_UPDATING: data[DATA_UPDATING],
             DATA_VALVE1_POSITION: data[DATA_VALVE1_POSITION],
             DATA_VALVE2_POSITION: data[DATA_VALVE2_POSITION],
             DATA_VALVE3_POSITION: data[DATA_VALVE3_POSITION],
-            DATA_VERSION: stove_version,
+            DATA_FIRMWARE_VERSION: stove_version,
         }
         return processed_data
+
+    async def get_live_data(self):
+        """Get 'live' temp and o2 data from the last 2 hours."""
+        bin_arr = bytearray(await self._get('http://' + self.stove_host
+                                            + STOVE_LIVE_DATA_URL), 'utf-8')
+        data_out = {
+            DATA_STOVE_TEMPERATURE: [],
+            DATA_OXYGEN_LEVEL: [],
+        }
+        for i in range(120):
+            data_out[DATA_STOVE_TEMPERATURE].append((
+                bin_arr[i*4] << 4 | bin_arr[i*4+1] << 0 | bin_arr[i*4+2] << 12
+                | bin_arr[i*4+3] << 8) / 100)
+            data_out[DATA_OXYGEN_LEVEL].append((
+                bin_arr[i*4+480] << 4 | bin_arr[i*4+481] << 0
+                | bin_arr[i*4+482] << 12 | bin_arr[i*4+483] << 8) / 100)
+        return data_out
 
     async def get_raw_data(self):
         """Request an update from the stove, return raw result."""
@@ -209,20 +289,13 @@ class Stove():
     async def self_test(self, processed=True):
         """Run self test routine, return result dict."""
         if await self._self_test_start():
-            values = [
-                '',
-                'OK',
-                'Busy',
-                'Skipped',
-                ]
-
             def process_dict(in_dict):
                 """Process dict values."""
                 if not processed:
                     return in_dict
                 out_dict = {}
                 for k, v in in_dict.items():
-                    out_dict[k] = values[v]
+                    out_dict[k] = SELF_TEST_VALUES[v]
                 return out_dict
             while True:
                 intermediate_raw = await self._self_test_result()
@@ -383,6 +456,24 @@ class Stove():
         json_str = await self._get('http://' + self.stove_host
                                    + STOVE_SELFTEST_START_URL)
         return json.loads(json_str).get(DATA_RESPONSE) == RESPONSE_OK
+
+    def _get_maintenance_alarms_text(self, bitmask):
+        """Process maintenance alarms bitmask, return a list of strings."""
+        num_alarms = len(MAINTENANCE_ALARMS)
+        ret = []
+        for i in range(num_alarms):
+            if 1 << i & bitmask:
+                ret.append(MAINTENANCE_ALARMS[i])
+        return ret
+
+    def _get_safety_alarms_text(self, bitmask):
+        """Process safety alarms bitmask, return a list of strings."""
+        num_alarms = len(SAFETY_ALARMS)
+        ret = []
+        for i in range(num_alarms):
+            if 1 << i & bitmask:
+                ret.append(SAFETY_ALARMS[i])
+        return ret
 
     async def _get(self, url):
         """Get data from url, return response."""

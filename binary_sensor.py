@@ -1,126 +1,72 @@
 """
-Support for OpenTherm Gateway binary sensors.
+Support for HWAM Stove binary sensors.
 
 For more details about this platform, please refer to the documentation at
-http://home-assistant.io/components/binary_sensor.opentherm_gw/
+http://home-assistant.io/components/binary_sensor.hwam_stove/
 """
 import logging
 
-from homeassistant.components.binary_sensor import (
-    BinarySensorDevice, ENTITY_ID_FORMAT)
-from homeassistant.components.opentherm_gw import (
-    DATA_GW_VARS, DATA_OPENTHERM_GW, SIGNAL_OPENTHERM_GW_UPDATE)
+from homeassistant.components.binary_sensor import (ENTITY_ID_FORMAT,
+                                                    BinarySensorDevice)
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import async_generate_entity_id
 
-DEVICE_CLASS_COLD = 'cold'
-DEVICE_CLASS_HEAT = 'heat'
-DEVICE_CLASS_PROBLEM = 'problem'
+from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_PYSTOVE
 
-DEPENDENCIES = ['opentherm_gw']
+DEPENDENCIES = ['hwam_stove']
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_platform(hass, config, async_add_entities,
                                discovery_info=None):
-    """Set up the OpenTherm Gateway binary sensors."""
+    """Set up the HWAM Stove sensors."""
     if discovery_info is None:
         return
-    gw_vars = hass.data[DATA_OPENTHERM_GW][DATA_GW_VARS]
+    pystove = hass.data[DATA_HWAM_STOVE][DATA_PYSTOVE]
     sensor_info = {
-        # [device_class, friendly_name]
-        gw_vars.DATA_MASTER_CH_ENABLED: [
-            None, "Thermostat Central Heating Enabled"],
-        gw_vars.DATA_MASTER_DHW_ENABLED: [
-            None, "Thermostat Hot Water Enabled"],
-        gw_vars.DATA_MASTER_COOLING_ENABLED: [
-            None, "Thermostat Cooling Enabled"],
-        gw_vars.DATA_MASTER_OTC_ENABLED: [
-            None, "Thermostat Outside Temperature Correction Enabled"],
-        gw_vars.DATA_MASTER_CH2_ENABLED: [
-            None, "Thermostat Central Heating 2 Enabled"],
-        gw_vars.DATA_SLAVE_FAULT_IND: [
-            DEVICE_CLASS_PROBLEM, "Boiler Fault Indication"],
-        gw_vars.DATA_SLAVE_CH_ACTIVE: [
-            DEVICE_CLASS_HEAT, "Boiler Central Heating Status"],
-        gw_vars.DATA_SLAVE_DHW_ACTIVE: [
-            DEVICE_CLASS_HEAT, "Boiler Hot Water Status"],
-        gw_vars.DATA_SLAVE_FLAME_ON: [
-            DEVICE_CLASS_HEAT, "Boiler Flame Status"],
-        gw_vars.DATA_SLAVE_COOLING_ACTIVE: [
-            DEVICE_CLASS_COLD, "Boiler Cooling Status"],
-        gw_vars.DATA_SLAVE_CH2_ACTIVE: [
-            DEVICE_CLASS_HEAT, "Boiler Central Heating 2 Status"],
-        gw_vars.DATA_SLAVE_DIAG_IND: [
-            DEVICE_CLASS_PROBLEM, "Boiler Diagnostics Indication"],
-        gw_vars.DATA_SLAVE_DHW_PRESENT: [None, "Boiler Hot Water Present"],
-        gw_vars.DATA_SLAVE_CONTROL_TYPE: [None, "Boiler Control Type"],
-        gw_vars.DATA_SLAVE_COOLING_SUPPORTED: [None, "Boiler Cooling Support"],
-        gw_vars.DATA_SLAVE_DHW_CONFIG: [
-            None, "Boiler Hot Water Configuration"],
-        gw_vars.DATA_SLAVE_MASTER_LOW_OFF_PUMP: [
-            None, "Boiler Pump Commands Support"],
-        gw_vars.DATA_SLAVE_CH2_PRESENT: [
-            None, "Boiler Central Heating 2 Present"],
-        gw_vars.DATA_SLAVE_SERVICE_REQ: [
-            DEVICE_CLASS_PROBLEM, "Boiler Service Required"],
-        gw_vars.DATA_SLAVE_REMOTE_RESET: [None, "Boiler Remote Reset Support"],
-        gw_vars.DATA_SLAVE_LOW_WATER_PRESS: [
-            DEVICE_CLASS_PROBLEM, "Boiler Low Water Pressure"],
-        gw_vars.DATA_SLAVE_GAS_FAULT: [
-            DEVICE_CLASS_PROBLEM, "Boiler Gas Fault"],
-        gw_vars.DATA_SLAVE_AIR_PRESS_FAULT: [
-            DEVICE_CLASS_PROBLEM, "Boiler Air Pressure Fault"],
-        gw_vars.DATA_SLAVE_WATER_OVERTEMP: [
-            DEVICE_CLASS_PROBLEM, "Boiler Water Overtemperature"],
-        gw_vars.DATA_REMOTE_TRANSFER_DHW: [
-            None, "Remote Hot Water Setpoint Transfer Support"],
-        gw_vars.DATA_REMOTE_TRANSFER_MAX_CH: [
-            None, "Remote Maximum Central Heating Setpoint Write Support"],
-        gw_vars.DATA_REMOTE_RW_DHW: [
-            None, "Remote Hot Water Setpoint Write Support"],
-        gw_vars.DATA_REMOTE_RW_MAX_CH: [
-            None, "Remote Central Heating Setpoint Write Support"],
-        gw_vars.DATA_ROVRD_MAN_PRIO: [
-            None, "Remote Override Manual Change Priority"],
-        gw_vars.DATA_ROVRD_AUTO_PRIO: [
-            None, "Remote Override Program Change Priority"],
-        gw_vars.OTGW_GPIO_A_STATE: [None, "Gateway GPIO A State"],
-        gw_vars.OTGW_GPIO_B_STATE: [None, "Gateway GPIO B State"],
-        gw_vars.OTGW_IGNORE_TRANSITIONS: [None, "Gateway Ignore Transitions"],
-        gw_vars.OTGW_OVRD_HB: [None, "Gateway Override High Byte"],
+        # {name: [device_class, friendly_name format]}
+        pystove.DATA_REFILL_ALARM: [None, "Refill Alarm {}"],
     }
+    stove_device = discovery_info[0]
+    sensor_list = discovery_info[1]
     sensors = []
-    for var in discovery_info:
+    for var in sensor_list:
         device_class = sensor_info[var][0]
-        friendly_name = sensor_info[var][1]
-        entity_id = async_generate_entity_id(ENTITY_ID_FORMAT, var, hass=hass)
-        sensors.append(OpenThermBinarySensor(entity_id, var, device_class,
-                                             friendly_name))
+        name_format = sensor_info[var][1]
+        entity_id = async_generate_entity_id(
+            ENTITY_ID_FORMAT, name_format.format(stove_device.name),
+            hass=hass)
+        sensors.append(
+            HwamStoveBinarySensor(entity_id, stove_device, var, device_class,
+                                  name_format))
     async_add_entities(sensors)
 
 
-class OpenThermBinarySensor(BinarySensorDevice):
+class HwamStoveBinarySensor(BinarySensorDevice):
     """Represent an OpenTherm Gateway binary sensor."""
 
-    def __init__(self, entity_id, var, device_class, friendly_name):
+    def __init__(self, entity_id, stove_device, var, device_class,
+                 name_format):
         """Initialize the binary sensor."""
+        self._stove_device = stove_device
         self.entity_id = entity_id
         self._var = var
         self._state = None
         self._device_class = device_class
-        self._friendly_name = friendly_name
+        self._name_format = name_format
+        self._friendly_name = name_format.format(stove_device.name)
 
     async def async_added_to_hass(self):
         """Subscribe to updates from the component."""
-        _LOGGER.debug(
-            "Added OpenTherm Gateway binary sensor %s", self._friendly_name)
-        async_dispatcher_connect(self.hass, SIGNAL_OPENTHERM_GW_UPDATE,
+        _LOGGER.debug("Added HWAM Stove binary sensor %s", self.entity_id)
+        async_dispatcher_connect(self.hass, self._stove_device.signal,
                                  self.receive_report)
 
     async def receive_report(self, status):
         """Handle status updates from the component."""
+        self._friendly_name = self._name_format.format(
+            self._stove_device.stove.name)
         self._state = bool(status.get(self._var))
         self.async_schedule_update_ha_state()
 

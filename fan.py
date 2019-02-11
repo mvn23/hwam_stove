@@ -32,7 +32,7 @@ class StoveBurnLevel(FanEntity):
         self._stove_device = stove_device
         self._device_name = slugify('burn_level_{}'.format(stove_device.name))
         self.entity_id = '{}.{}'.format(DOMAIN, self._device_name)
-        self.friendly_name = 'Burn level {}'.format(stove_device.name)
+        self.friendly_name = 'Burn Level {}'.format(stove_device.stove.name)
         self._icon = 'mdi:fire'
 
     async def async_added_to_hass(self):
@@ -44,8 +44,6 @@ class StoveBurnLevel(FanEntity):
         """Receive updates."""
         self._burn_level = data[self._pystove.DATA_BURN_LEVEL]
         self._state = data[self._pystove.DATA_PHASE] != self._pystove.PHASE[5]
-        self.friendly_name = 'Burn level {}'.format(
-            self._stove_device.stove.name)
         self.async_schedule_update_ha_state()
 
     async def async_set_speed(self, speed: str):

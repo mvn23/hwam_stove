@@ -55,7 +55,7 @@ class HwamStoveBinarySensor(BinarySensorDevice):
         self._state = None
         self._device_class = device_class
         self._name_format = name_format
-        self._friendly_name = name_format.format(stove_device.name)
+        self._friendly_name = name_format.format(stove_device.stove.name)
 
     async def async_added_to_hass(self):
         """Subscribe to updates from the component."""
@@ -65,8 +65,6 @@ class HwamStoveBinarySensor(BinarySensorDevice):
 
     async def receive_report(self, status):
         """Handle status updates from the component."""
-        self._friendly_name = self._name_format.format(
-            self._stove_device.stove.name)
         self._state = bool(status.get(self._var))
         self.async_schedule_update_ha_state()
 

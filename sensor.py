@@ -60,7 +60,7 @@ class HwamStoveSensor(Entity):
         self._device_class = device_class
         self._unit = unit
         self._name_format = name_format
-        self._friendly_name = name_format.format(stove_device.name)
+        self._friendly_name = name_format.format(stove_device.stove.name)
 
     async def async_added_to_hass(self):
         """Subscribe to updates from the component."""
@@ -70,8 +70,6 @@ class HwamStoveSensor(Entity):
 
     async def receive_report(self, status):
         """Handle status updates from the component."""
-        self._friendly_name = self._name_format.format(
-            self._stove_device.stove.name)
         value = status.get(self._var)
         if isinstance(value, float):
             value = '{:2.1f}'.format(value)

@@ -92,7 +92,6 @@ class StoveDevice:
 
     async def setup_monitored_vars(self, monitored_vars, hass_config):
         """Add monitored_vars as sensors and binary sensors."""
-        pystove = self.pystove
         sensor_type_map = {
             COMP_BINARY_SENSOR: [
                 pystove.DATA_REFILL_ALARM,
@@ -111,6 +110,7 @@ class StoveDevice:
                 pystove.DATA_OPERATION_MODE,
                 pystove.DATA_OXYGEN_LEVEL,
                 pystove.DATA_PHASE,
+                pystove.DATA_REMOTE_VERSION,
                 pystove.DATA_ROOM_TEMPERATURE,
                 pystove.DATA_SAFETY_ALARMS,
                 pystove.DATA_STOVE_TEMPERATURE,

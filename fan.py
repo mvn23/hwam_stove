@@ -1,0 +1,98 @@
+"""
+Hwam stove fan entity.
+
+For more details about this platform, please refer to the documentation at
+http://home-assistant.io/components/hwam_stove/
+"""
+
+#### Todo variabelen importeren uit pystove ipv strings (let op start/standby)
+
+
+import logging
+
+from homeassistant.helpers.dispatcher import async_dispatcher_connect
+from homeassistant.components.fan import FanEntity, DOMAIN, SUPPORT_SET_SPEED
+from homeassistant.util import slugify
+
+_LOGGER = logging.getLogger(__name__)
+
+async def async_setup_platform(hass, config, async_add_entities,
+                               discovery_info=None):
+    """Set up HWAM stove device."""
+    stove = StoveBurnLevel(hass, discovery_info)
+    async_add_entities([stove])
+
+
+class StoveBurnLevel(FanEntity):
+    """Representation of a fan."""
+
+    def __init__(self, hass, stove_device):
+        self._burn_level = None
+        self._state = False
+        self._stove_device = stove_device
+        self._device_name = slugify('burn_level_{}'.format(stove_device.name))
+        self.entity_id = '{}.{}'.format(DOMAIN, self._device_name)
+        self.friendly_name = 'Burn level {}'.format(stove_device.name)
+        self._icon = 'mdi:fire'
+ 
+    async def async_added_to_hass(self):
+        """Subscribe to updates."""
+        async_dispatcher_connect(self.hass, self._stove_device.signal, 
+                                 self.receive_report)
+
+    async def receive_report(self, data):
+        """Receive updates."""
+        self._burn_level = data['burn_level']
+        self._state = data['phase'] != 'Start'
+        self.friendly_name = 'Burn level {}'.format(self._stove_device.stove.name)
+        self.async_schedule_update_ha_state()
+
+    async def async_set_speed(self, speed: str):
+        """Set the speed of the fan.
+
+        This method must be run in the event loop and returns a coroutine.
+        """
+        await self._stove_device.stove.set_burn_level(int(speed))
+
+    async def async_turn_on(self, speed: str = None, **kwargs):
+        """Turn on the fan.
+
+        This method must be run in the event loop and returns a coroutine.
+        """
+        if not self._state:
+            await self._stove_device.stove.start()
+        await self.async_set_speed(speed)
+
+    async def async_turn_off(self, **kwargs):
+        """Disable turn off."""
+        await self.async_turn_on(self._burn_level)
+        
+    @property
+    def is_on(self):
+        """Return true if the entity is on."""
+        return self._state
+
+    @property
+    def speed(self) -> str:
+        """Return the current speed."""
+        return '{}'.format(self._burn_level)
+
+    @property
+    def speed_list(self) -> list:
+        """Get the list of available speeds."""
+        return ['0', '1', '2', '3', '4', '5']
+
+    @property
+    def supported_features(self) -> int:
+        """Flag supported features."""
+        return SUPPORT_SET_SPEED
+    
+    @property
+    def icon(self) -> str:
+        """Set the icon."""
+        return self._icon
+    
+    @property
+    def name(self) -> str:
+        """Set the friendly name."""
+        return self.friendly_name

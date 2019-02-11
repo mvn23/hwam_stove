@@ -19,8 +19,6 @@ from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_utc_time_change
 
 import homeassistant.helpers.config_validation as cv
-from homeassistant.components.opentherm_gw import DATA_DEVICE
-
 
 DOMAIN = 'hwam_stove'
 
@@ -52,10 +50,6 @@ async def async_setup(hass, config):
         hass.data[DATA_HWAM_STOVE][name] = stove
         hass.async_create_task(async_load_platform(
             hass, 'fan', DOMAIN, stove, config))
-#    hass.async_create_task(register_services(hass, stove))
-#    if monitored_vars:
-#        hass.async_create_task(setup_monitored_vars(
-#            hass, config, monitored_vars))
     return True
 
 
@@ -90,5 +84,4 @@ class StoveDevice:
     async def update(self, *_):
         """Update and dispatch stove info."""
         data = await self.stove.get_data()
-        _LOGGER.debug("Stove {} updated: {}".format(self.name, data))
         async_dispatcher_send(self.hass, self.signal, data)

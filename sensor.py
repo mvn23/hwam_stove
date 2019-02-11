@@ -14,7 +14,7 @@ from homeassistant.helpers.entity import Entity, async_generate_entity_id
 from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_PYSTOVE
 
 DEPENDENCIES = ['hwam_stove']
-
+UNIT_PERCENT = '%'
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -26,10 +26,48 @@ async def async_setup_platform(hass, config, async_add_entities,
     pystove = hass.data[DATA_HWAM_STOVE][DATA_PYSTOVE]
     sensor_info = {
         # {name: [device_class, unit, friendly_name format]}
-        pystove.DATA_STOVE_TEMPERATURE: [
-            DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS, "Stove Temperature {}"],
+        pystove.DATA_ALGORITHM: [
+            None, None, "Algorithm {}"],
+        pystove.DATA_BURN_LEVEL: [
+            None, None, "Burn Level {}"],
+        pystove.DATA_MAINTENANCE_ALARMS: [
+            None, None, "Maintenance Alarms {}"],
+        pystove.DATA_MESSAGE_ID: [
+            None, None, "Message ID {}"],
+        pystove.DATA_NEW_FIREWOOD_ESTIMATE: [
+            None, None, "New Firewood Estimate {}"],
+        pystove.DATA_NIGHT_BEGIN_TIME: [
+            None, None, "Night Begin Time {}"],
+        pystove.DATA_NIGHT_END_TIME: [
+            None, None, "Night End Time {}"],
+        pystove.DATA_NIGHT_LOWERING: [
+            None, None, "Night Lowering {}"],
+        pystove.DATA_OPERATION_MODE: [
+            None, None, "Operation Mode {}"],
+        pystove.DATA_OXYGEN_LEVEL: [
+            None, UNIT_PERCENT, "Oxygen Level {}"],
+        pystove.DATA_PHASE: [
+            None, None, "Phase {}"],
         pystove.DATA_ROOM_TEMPERATURE: [
             DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS, "Room Temperature {}"],
+        pystove.DATA_SAFETY_ALARMS: [
+            None, None, "Safety Alarms {}"],
+        pystove.DATA_STOVE_TEMPERATURE: [
+            DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS, "Stove Temperature {}"],
+        pystove.DATA_TIME_SINCE_REMOTE_MSG: [
+            None, None, "Time Since Remote Message {}"],
+        pystove.DATA_DATE_TIME: [
+            None, None, "Date and time {}"],
+        pystove.DATA_TIME_TO_NEW_FIREWOOD: [
+            None, None, "Time To New Firewood {}"],
+        pystove.DATA_VALVE1_POSITION: [
+            None, None, "Valve 1 Postition {}"],
+        pystove.DATA_VALVE2_POSITION: [
+            None, None, "Valve 2 Postition {}"],
+        pystove.DATA_VALVE3_POSITION: [
+            None, None, "Valve 3 Postition {}"],
+        pystove.DATA_FIRMWARE_VERSION: [
+            None, None, "Firmware Version {}"],
     }
     stove_device = discovery_info[0]
     sensor_list = discovery_info[1]

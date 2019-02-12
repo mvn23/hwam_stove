@@ -92,6 +92,7 @@ class StoveDevice:
 
     async def setup_monitored_vars(self, monitored_vars, hass_config):
         """Add monitored_vars as sensors and binary sensors."""
+        pystove = self.pystove
         sensor_type_map = {
             COMP_BINARY_SENSOR: [
                 pystove.DATA_REFILL_ALARM,

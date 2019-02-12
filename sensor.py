@@ -6,6 +6,8 @@ http://home-assistant.io/components/sensor.hwam_stove/
 """
 import logging
 
+from datetime import datetime, timedelta
+
 from homeassistant.components.sensor import ENTITY_ID_FORMAT
 from homeassistant.const import DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
@@ -48,6 +50,8 @@ async def async_setup_platform(hass, config, async_add_entities,
             None, UNIT_PERCENT, "Oxygen Level {}"],
         pystove.DATA_PHASE: [
             None, None, "Phase {}"],
+        pystove.DATA_REMOTE_VERSION: [
+            None, None, "Remote Version {}"],
         pystove.DATA_ROOM_TEMPERATURE: [
             DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS, "Room Temperature {}"],
         pystove.DATA_SAFETY_ALARMS: [
@@ -109,8 +113,15 @@ class HwamStoveSensor(Entity):
     async def receive_report(self, status):
         """Handle status updates from the component."""
         value = status.get(self._var)
-        if isinstance(value, float):
-            value = '{:2.1f}'.format(value)
+        pystove = self.hass.data[DATA_HWAM_STOVE][DATA_PYSTOVE]
+        if (status.get(pystove.DATA_PHASE) != pystove.PHASE[4]
+                and self._var in [pystove.DATA_NEW_FIREWOOD_ESTIMATE,
+                                  pystove.DATA_TIME_TO_NEW_FIREWOOD]):
+            value = "Wait for Glow phase..."
+        elif isinstance(value, datetime):
+            value = value.strftime('%-d %b, %-H:%M')
+        elif isinstance(value, timedelta):
+            value = '{}'.format(value)
         self._value = value
         self.async_schedule_update_ha_state()
 

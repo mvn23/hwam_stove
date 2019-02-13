@@ -81,7 +81,7 @@ async def async_setup_platform(hass, config, async_add_entities,
         unit = sensor_info[var][1]
         name_format = sensor_info[var][2]
         entity_id = async_generate_entity_id(
-            ENTITY_ID_FORMAT, name_format.format(stove_device.name),
+            ENTITY_ID_FORMAT, "{}_{}".format(var, stove_device.name),
             hass=hass)
         sensors.append(
             HwamStoveSensor(entity_id, stove_device, var, device_class, unit,

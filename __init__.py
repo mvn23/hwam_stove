@@ -157,14 +157,15 @@ class StoveDevice:
         pystove = self.pystove
         sensor_type_map = {
             COMP_BINARY_SENSOR: [
+                pystove.DATA_MAINTENANCE_ALARMS,
                 pystove.DATA_REFILL_ALARM,
                 pystove.DATA_REMOTE_REFILL_ALARM,
+                pystove.DATA_SAFETY_ALARMS,
                 pystove.DATA_UPDATING,
             ],
             COMP_SENSOR: [
                 pystove.DATA_ALGORITHM,
                 pystove.DATA_BURN_LEVEL,
-                pystove.DATA_MAINTENANCE_ALARMS,
                 pystove.DATA_MESSAGE_ID,
                 pystove.DATA_NEW_FIREWOOD_ESTIMATE,
                 pystove.DATA_NIGHT_BEGIN_TIME,
@@ -175,7 +176,6 @@ class StoveDevice:
                 pystove.DATA_PHASE,
                 pystove.DATA_REMOTE_VERSION,
                 pystove.DATA_ROOM_TEMPERATURE,
-                pystove.DATA_SAFETY_ALARMS,
                 pystove.DATA_STOVE_TEMPERATURE,
                 pystove.DATA_TIME_SINCE_REMOTE_MSG,
                 pystove.DATA_DATE_TIME,

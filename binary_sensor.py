@@ -87,8 +87,8 @@ async def async_setup_platform(hass, config, async_add_entities,
                 ENTITY_ID_FORMAT, "{}_{}".format(var, stove_device.name),
                 hass=hass)
             binary_sensors.append(
-                HwamStoveBinarySensor(entity_id, stove_device, var, device_class,
-                                      name_format))
+                HwamStoveBinarySensor(entity_id, stove_device, var,
+                                      device_class, name_format))
         elif var in alarm_sensor_info:
             for data in alarm_sensor_info[var]:
                 device_class = data[0]
@@ -96,7 +96,8 @@ async def async_setup_platform(hass, config, async_add_entities,
                 alarm_name = data[2]
                 entity_id = async_generate_entity_id(
                     ENTITY_ID_FORMAT, "{}_{}_{}".format(var, alarm_name,
-                    stove_device.name), hass=hass)
+                                                        stove_device.name),
+                    hass=hass)
                 binary_sensors.append(
                     HwamStoveAlarmSensor(
                         entity_id, stove_device, var, device_class,

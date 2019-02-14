@@ -129,8 +129,8 @@ class StoveDevice:
         self.name = name
         self.config = stove_config
         self.signal = 'hwam_stove_update_{}'.format(self.config[CONF_HOST])
-        self.stove = await pystove.Stove.create(self.config[CONF_HOST],
-                                                skip_ident=True)
+        self.stove = await self.pystove.Stove.create(self.config[CONF_HOST],
+                                                     skip_ident=True)
 
         async def cleanup(event):
             """Clean up stove object."""

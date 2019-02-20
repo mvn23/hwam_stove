@@ -5,7 +5,7 @@ For more details about this component, please refer to the documentation at
 http://home-assistant.io/components/hwam_stove/
 """
 import logging
-from datetime import timedelta
+from datetime import datetime, date, timedelta
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -13,17 +13,37 @@ import voluptuous as vol
 from homeassistant.components.binary_sensor import DOMAIN as COMP_BINARY_SENSOR
 from homeassistant.components.fan import DOMAIN as COMP_FAN
 from homeassistant.components.sensor import DOMAIN as COMP_SENSOR
-from homeassistant.const import (CONF_HOST, CONF_MONITORED_VARIABLES,
-                                 CONF_NAME, EVENT_HOMEASSISTANT_STOP)
+from homeassistant.const import (ATTR_DATE, ATTR_TIME, CONF_HOST,
+                                 CONF_MONITORED_VARIABLES, CONF_NAME,
+                                 EVENT_HOMEASSISTANT_STOP)
+from homeassistant.helpers.config_validation import slugify
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
 
 DOMAIN = 'hwam_stove'
 
+ATTR_START_TIME = 'start_time'
+ATTR_END_TIME = 'end_time'
+
 DATA_HWAM_STOVE = 'hwam_stove'
 DATA_PYSTOVE = 'pystove'
 DATA_STOVES = 'stoves'
+
+SERVICE_ENABLE_NIGHT_LOWERING = 'enable_night_lowering'
+SERVICE_DISABLE_NIGHT_LOWERING = 'disable_night_lowering'
+
+SERVICE_SET_NIGHT_LOWERING_HOURS = 'set_night_lowering_hours'
+SERVICE_SET_NIGHT_LOWERING_HOURS_SCHEMA = vol.Schema({
+    vol.Optional(ATTR_START_TIME): cv.time,
+    vol.Optional(ATTR_END_TIME): cv.time,
+}, cv.has_at_least_one_key(ATTR_START_TIME, ATTR_END_TIME))
+
+SERVICE_SET_CLOCK = 'set_clock'
+SERVICE_SET_CLOCK_SCHEMA = vol.Schema({
+    vol.Optional(ATTR_DATE, default=date.today()): cv.date,
+    vol.Optional(ATTR_TIME, default=datetime.now().time()): cv.time,
+})
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
@@ -52,7 +72,49 @@ async def async_setup(hass, config):
     for name, cfg in conf.items():
         stove_device = await StoveDevice.create(hass, name, cfg, config)
         hass.data[DATA_HWAM_STOVE][DATA_STOVES][name] = stove_device
+        hass.async_create_task(register_services(hass, stove_device))
     return True
+
+
+async def register_services(hass, stove_device):
+    """Register HWAM Stove services."""
+
+    def format_service(service_name):
+        """Format the service name with the stove_device name."""
+        return slugify("{}_{}".format(service_name, stove_device.name))
+
+    async def set_night_lowering_hours(call):
+        """Set night lowering hours on the stove."""
+        attr_start = call.data.get(ATTR_START_TIME)
+        attr_end = call.data.get(ATTR_END_TIME)
+        await stove_device.stove.set_night_lowering_hours(attr_start, attr_end)
+    hass.services.async_register(
+        DOMAIN, format_service(SERVICE_SET_NIGHT_LOWERING_HOURS),
+        set_night_lowering_hours, SERVICE_SET_NIGHT_LOWERING_HOURS_SCHEMA)
+
+    async def enable_night_lowering(call):
+        """Enable night lowering."""
+        await stove_device.stove.set_night_lowering(True)
+    hass.services.async_register(
+        DOMAIN, format_service(SERVICE_ENABLE_NIGHT_LOWERING),
+        enable_night_lowering, vol.Schema({}))
+
+    async def disable_night_lowering(call):
+        """Disable night lowering."""
+        await stove_device.stove.set_night_lowering(False)
+    hass.services.async_register(
+        DOMAIN, format_service(SERVICE_DISABLE_NIGHT_LOWERING),
+        disable_night_lowering, vol.Schema({}))
+
+    async def set_device_clock(call):
+        """Set the clock on the stove."""
+        attr_date = call.data[ATTR_DATE]
+        attr_time = call.data[ATTR_TIME]
+        await stove_device.stove.set_time(
+            datetime.combine(attr_date, attr_time))
+    hass.services.async_register(
+        DOMAIN, format_service(SERVICE_SET_CLOCK), set_device_clock,
+        SERVICE_SET_CLOCK_SCHEMA)
 
 
 class StoveDevice:
@@ -135,8 +197,8 @@ class StoveDevice:
                 _LOGGER.error("Monitored variable not supported: %s", var)
         if binary_sensors:
             self.hass.async_create_task(async_load_platform(
-                self.hass, COMP_BINARY_SENSOR, DOMAIN, [self, binary_sensors],
-                hass_config))
+                self.hass, COMP_BINARY_SENSOR, DOMAIN,
+                [self, binary_sensors], hass_config))
         if sensors:
             self.hass.async_create_task(async_load_platform(
                 self.hass, COMP_SENSOR, DOMAIN, [self, sensors],

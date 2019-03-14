@@ -41,38 +41,51 @@ async def async_setup_platform(hass, config, async_add_entities,
             # Stove Backup Battery Low
             [DEVICE_CLASS_BATTERY, "Stove Backup Battery Low {}",
              pystove.MAINTENANCE_ALARMS[0]],
-#             # O2 Sensor Fault
-#             [pystove.MAINTENANCE_ALARMS[1]],
-#             # O2 Sensor Offset
-#             [pystove.MAINTENANCE_ALARMS[2]],
-#             # Stove Temperature Sensor Fault
-#             [pystove.MAINTENANCE_ALARMS[3]],
-#             # Room Temperature Sensor Fault
-#             [pystove.MAINTENANCE_ALARMS[4]],
-#             # Communication Fault
-#             [pystove.MAINTENANCE_ALARMS[5]],
-#             # Room Temperature Sensor Battery Low
-#             [pystove.MAINTENANCE_ALARMS[6]],
+            # O2 Sensor Fault
+            [DEVICE_CLASS_PROBLEM, "O2 Sensor Fault {}",
+             pystove.MAINTENANCE_ALARMS[1]],
+            # O2 Sensor Offset
+            [DEVICE_CLASS_PROBLEM, "O2 Sensor Offset {}",
+             pystove.MAINTENANCE_ALARMS[2]],
+            # Stove Temperature Sensor Fault
+            [DEVICE_CLASS_PROBLEM, "Stove Temperature Sensor Fault {}",
+             pystove.MAINTENANCE_ALARMS[3]],
+            # Room Temperature Sensor Fault
+            [DEVICE_CLASS_PROBLEM, "Room Temperature Sensor Fault {}",
+             pystove.MAINTENANCE_ALARMS[4]],
+            # Communication Fault
+            [DEVICE_CLASS_PROBLEM, "Communication Fault {}",
+             pystove.MAINTENANCE_ALARMS[5]],
+            # Room Temperature Sensor Battery Low
+            [DEVICE_CLASS_PROBLEM, "Room Temperature Sensor Battery Low {}",
+             pystove.MAINTENANCE_ALARMS[6]],
         ],
         pystove.DATA_SAFETY_ALARMS: [
             # General (any) safety alarm
             [DEVICE_CLASS_SAFETY, "Safety Alarm {}", None],
-#             # Valve Fault, same as [1] and [2].
-#             [pystove.SAFETY_ALARMS[0], ],
-#             # Bad Configuration
-#             [pystove.SAFETY_ALARMS[3], ],
-#             # Valve Disconnect, same as [5] and [6]
-#             [pystove.SAFETY_ALARMS[4], ],
-#             # Valve Calibration Error, same as [8] and [9]
-#             [pystove.SAFETY_ALARMS[7], ],
-#             # Overheating
-#             [pystove.SAFETY_ALARMS[10], ],
-#             # Door Open Too Long
-#             [pystove.SAFETY_ALARMS[11], ],
-#             # Manual Safety Alarm
-#             [pystove.SAFETY_ALARMS[12], ],
-#             # Stove Sensor Fault
-#             [pystove.SAFETY_ALARMS[13], ],
+            # Valve Fault, same as [1] and [2].
+            [DEVICE_CLASS_SAFETY, "Valve Fault {}", pystove.SAFETY_ALARMS[0]],
+            # Bad Configuration
+            [DEVICE_CLASS_SAFETY, "Bad Configuration {}",
+             pystove.SAFETY_ALARMS[3]],
+            # Valve Disconnect, same as [5] and [6]
+            [DEVICE_CLASS_SAFETY, "Valve Disconnect {}",
+             pystove.SAFETY_ALARMS[4]],
+            # Valve Calibration Error, same as [8] and [9]
+            [DEVICE_CLASS_SAFETY, "Valve Calibration Error {}",
+             pystove.SAFETY_ALARMS[7]],
+            # Overheating
+            [DEVICE_CLASS_SAFETY, "Stove Overheat {}",
+             pystove.SAFETY_ALARMS[10]],
+            # Door Open Too Long
+            [DEVICE_CLASS_SAFETY, "Door Open Too Long {}",
+             pystove.SAFETY_ALARMS[11]],
+            # Manual Safety Alarm
+            [DEVICE_CLASS_SAFETY, "Manual Safety Alarm {}",
+             pystove.SAFETY_ALARMS[12]],
+            # Stove Sensor Fault
+            [DEVICE_CLASS_SAFETY, "Stove Sensor Fault {}",
+             pystove.SAFETY_ALARMS[13]],
         ],
     }
     stove_name = discovery_info['stove_name']
@@ -94,10 +107,16 @@ async def async_setup_platform(hass, config, async_add_entities,
                 device_class = data[0]
                 name_format = data[1]
                 alarm_name = data[2]
-                entity_id = async_generate_entity_id(
-                    ENTITY_ID_FORMAT, "{}_{}_{}".format(var, alarm_name,
-                                                        stove_device.name),
-                    hass=hass)
+                if alarm_name is None:
+                    entity_id = async_generate_entity_id(
+                        ENTITY_ID_FORMAT, "{}_{}".format(
+                            var, stove_device.name),
+                        hass=hass)
+                else:
+                    entity_id = async_generate_entity_id(
+                        ENTITY_ID_FORMAT, "{}_{}_{}".format(var, alarm_name,
+                                                            stove_device.name),
+                        hass=hass)
                 binary_sensors.append(
                     HwamStoveAlarmSensor(
                         entity_id, stove_device, var, device_class,

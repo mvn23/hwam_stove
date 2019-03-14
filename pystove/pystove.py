@@ -24,7 +24,6 @@ from datetime import datetime, time, timedelta
 
 import aiohttp
 
-
 _LOGGER = logging.getLogger(__name__)
 
 DATA_ALGORITHM = 'algorithm'
@@ -301,10 +300,11 @@ class Stove():
                 intermediate_raw = await self._self_test_result()
                 if intermediate_raw is None:
                     yield None
-                intermediate = process_dict(intermediate_raw)
-                yield intermediate
-                if 2 not in intermediate_raw.values():
-                    break
+                else:
+                    intermediate = process_dict(intermediate_raw)
+                    yield intermediate
+                    if 2 not in intermediate_raw.values():
+                        break
                 await asyncio.sleep(3)
         else:
             yield None
@@ -387,10 +387,10 @@ class Stove():
             """Get stove name and IP."""
             json_str = await self._get('http://' + self.stove_host
                                        + STOVE_ID_URL)
-            if json_str is None:
-                _LOGGER.warning("Unable to read stove name and IP.")
-                return
             stove_id = json.loads(json_str)
+            if None in [stove_id.get(DATA_NAME), stove_id.get(DATA_IP)]:
+                _LOGGER.warning("Unable to read stove name and/or IP.")
+                return
             self.name = stove_id[DATA_NAME]
             self.stove_ip = stove_id[DATA_IP]
 
@@ -398,11 +398,11 @@ class Stove():
             """Get stove SSID."""
             json_str = await self._get('http://' + self.stove_host
                                        + STOVE_ACCESSPOINT_URL)
-            if json_str is None:
+            stove_ssid = json.loads(json_str).get(DATA_SSID)
+            if stove_ssid is None:
                 _LOGGER.warning("Unable to read stove SSID.")
                 return
-            stove_ssid = json.loads(json_str)
-            self.stove_ssid = stove_ssid[DATA_SSID]
+            self.stove_ssid = stove_ssid
 
         async def get_version_info():
             """Get stove version info."""
@@ -412,9 +412,6 @@ class Stove():
             }
             json_str = await self._post('http://' + self.stove_host
                                         + STOVE_OPEN_FILE_URL, data)
-            if json_str is None:
-                _LOGGER.warning("Unable to read stove version info.")
-                return
             success = json.loads(json_str)
             if success[DATA_SUCCESS] == 1:
                 xml_str = await self._post('http://' + self.stove_host
@@ -427,6 +424,8 @@ class Stove():
                     _LOGGER.warning("Invalid XML. Could not get version info.")
                 except AttributeError:
                     _LOGGER.warning("Missing key in version info XML.")
+            else:
+                _LOGGER.warning("Unable to open stove version info file.")
 
         await asyncio.gather(*[
             get_name_and_ip(),

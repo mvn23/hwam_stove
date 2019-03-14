@@ -13,7 +13,8 @@ from homeassistant.const import DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import Entity, async_generate_entity_id
 
-from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_PYSTOVE
+from custom_components.hwam_stove import (DATA_HWAM_STOVE, DATA_PYSTOVE,
+                                          DATA_STOVES)
 
 DEPENDENCIES = ['hwam_stove']
 UNIT_PERCENT = '%'
@@ -73,8 +74,9 @@ async def async_setup_platform(hass, config, async_add_entities,
         pystove.DATA_FIRMWARE_VERSION: [
             None, None, "Firmware Version {}"],
     }
-    stove_device = discovery_info[0]
-    sensor_list = discovery_info[1]
+    stove_name = discovery_info['stove_name']
+    stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES][stove_name]
+    sensor_list = discovery_info['sensors']
     sensors = []
     for var in sensor_list:
         device_class = sensor_info[var][0]

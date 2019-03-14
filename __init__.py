@@ -81,7 +81,7 @@ class StoveDevice:
         """Run ident routine and schedule updates."""
         await self.stove._identify()
         self.hass.async_create_task(async_load_platform(
-            self.hass, COMP_FAN, DOMAIN, self, hass_config))
+            self.hass, COMP_FAN, DOMAIN, self.name, hass_config))
         monitored_vars = self.config.get(CONF_MONITORED_VARIABLES)
         if monitored_vars:
             self.hass.async_create_task(
@@ -135,11 +135,13 @@ class StoveDevice:
                 _LOGGER.error("Monitored variable not supported: %s", var)
         if binary_sensors:
             self.hass.async_create_task(async_load_platform(
-                self.hass, COMP_BINARY_SENSOR, DOMAIN, [self, binary_sensors],
+                self.hass, COMP_BINARY_SENSOR, DOMAIN,
+                {'stove_name': self.name, 'sensors': binary_sensors},
                 hass_config))
         if sensors:
             self.hass.async_create_task(async_load_platform(
-                self.hass, COMP_SENSOR, DOMAIN, [self, sensors],
+                self.hass, COMP_SENSOR, DOMAIN,
+                {'stove_name': self.name, 'sensors': sensors},
                 hass_config))
 
     async def update(self, *_):

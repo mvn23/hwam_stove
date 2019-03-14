@@ -16,7 +16,6 @@ from homeassistant.components.sensor import DOMAIN as COMP_SENSOR
 from homeassistant.const import (ATTR_DATE, ATTR_TIME, CONF_HOST,
                                  CONF_MONITORED_VARIABLES, CONF_NAME,
                                  EVENT_HOMEASSISTANT_STOP)
-from homeassistant.helpers.config_validation import slugify
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
@@ -25,25 +24,16 @@ DOMAIN = 'hwam_stove'
 
 ATTR_START_TIME = 'start_time'
 ATTR_END_TIME = 'end_time'
+ATTR_STOVE_NAME = 'stove_name'
 
 DATA_HWAM_STOVE = 'hwam_stove'
 DATA_PYSTOVE = 'pystove'
 DATA_STOVES = 'stoves'
 
-SERVICE_ENABLE_NIGHT_LOWERING = 'enable_night_lowering'
 SERVICE_DISABLE_NIGHT_LOWERING = 'disable_night_lowering'
-
-SERVICE_SET_NIGHT_LOWERING_HOURS = 'set_night_lowering_hours'
-SERVICE_SET_NIGHT_LOWERING_HOURS_SCHEMA = vol.Schema({
-    vol.Optional(ATTR_START_TIME): cv.time,
-    vol.Optional(ATTR_END_TIME): cv.time,
-}, cv.has_at_least_one_key(ATTR_START_TIME, ATTR_END_TIME))
-
+SERVICE_ENABLE_NIGHT_LOWERING = 'enable_night_lowering'
 SERVICE_SET_CLOCK = 'set_clock'
-SERVICE_SET_CLOCK_SCHEMA = vol.Schema({
-    vol.Optional(ATTR_DATE, default=date.today()): cv.date,
-    vol.Optional(ATTR_TIME, default=datetime.now().time()): cv.time,
-})
+SERVICE_SET_NIGHT_LOWERING_HOURS = 'set_night_lowering_hours'
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
@@ -72,49 +62,77 @@ async def async_setup(hass, config):
     for name, cfg in conf.items():
         stove_device = await StoveDevice.create(hass, name, cfg, config)
         hass.data[DATA_HWAM_STOVE][DATA_STOVES][name] = stove_device
-        hass.async_create_task(register_services(hass, stove_device))
+    hass.async_create_task(register_services(hass))
     return True
 
 
-async def register_services(hass, stove_device):
+async def register_services(hass):
     """Register HWAM Stove services."""
 
-    def format_service(service_name):
-        """Format the service name with the stove_device name."""
-        return slugify("{}_{}".format(service_name, stove_device.name))
+    service_set_night_lowering_hours_schema = vol.Schema({
+        vol.Required(ATTR_STOVE_NAME): vol.All(
+            cv.string, vol.In(hass.data[DATA_HWAM_STOVE][DATA_STOVES])),
+        vol.Optional(ATTR_START_TIME): cv.time,
+        vol.Optional(ATTR_END_TIME): cv.time,
+    }, cv.has_at_least_one_key(ATTR_START_TIME, ATTR_END_TIME))
+    service_set_clock_schema = vol.Schema({
+        vol.Required(ATTR_STOVE_NAME): vol.All(
+            cv.string, vol.In(hass.data[DATA_HWAM_STOVE][DATA_STOVES])),
+        vol.Optional(ATTR_DATE, default=date.today()): cv.date,
+        vol.Optional(ATTR_TIME, default=datetime.now().time()): cv.time,
+    })
+    service_set_night_lowering_schema = vol.Schema({
+        vol.Required(ATTR_STOVE_NAME): vol.All(
+            cv.string, vol.In(hass.data[DATA_HWAM_STOVE][DATA_STOVES])),
+    })
 
     async def set_night_lowering_hours(call):
         """Set night lowering hours on the stove."""
+        stove_name = call.data[ATTR_STOVE_NAME]
+        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
+        if stove_device is None:
+            return
         attr_start = call.data.get(ATTR_START_TIME)
         attr_end = call.data.get(ATTR_END_TIME)
         await stove_device.stove.set_night_lowering_hours(attr_start, attr_end)
     hass.services.async_register(
-        DOMAIN, format_service(SERVICE_SET_NIGHT_LOWERING_HOURS),
-        set_night_lowering_hours, SERVICE_SET_NIGHT_LOWERING_HOURS_SCHEMA)
+        DOMAIN, SERVICE_SET_NIGHT_LOWERING_HOURS, set_night_lowering_hours,
+        service_set_night_lowering_hours_schema)
 
     async def enable_night_lowering(call):
         """Enable night lowering."""
+        stove_name = call.data[ATTR_STOVE_NAME]
+        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
+        if stove_device is None:
+            return
         await stove_device.stove.set_night_lowering(True)
     hass.services.async_register(
-        DOMAIN, format_service(SERVICE_ENABLE_NIGHT_LOWERING),
-        enable_night_lowering, vol.Schema({}))
+        DOMAIN, SERVICE_ENABLE_NIGHT_LOWERING, enable_night_lowering,
+        service_set_night_lowering_schema)
 
     async def disable_night_lowering(call):
         """Disable night lowering."""
+        stove_name = call.data[ATTR_STOVE_NAME]
+        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
+        if stove_device is None:
+            return
         await stove_device.stove.set_night_lowering(False)
     hass.services.async_register(
-        DOMAIN, format_service(SERVICE_DISABLE_NIGHT_LOWERING),
-        disable_night_lowering, vol.Schema({}))
+        DOMAIN, SERVICE_DISABLE_NIGHT_LOWERING, disable_night_lowering,
+        service_set_night_lowering_schema)
 
     async def set_device_clock(call):
         """Set the clock on the stove."""
+        stove_name = call.data[ATTR_STOVE_NAME]
+        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
+        if stove_device is None:
+            return
         attr_date = call.data[ATTR_DATE]
         attr_time = call.data[ATTR_TIME]
         await stove_device.stove.set_time(
             datetime.combine(attr_date, attr_time))
     hass.services.async_register(
-        DOMAIN, format_service(SERVICE_SET_CLOCK), set_device_clock,
-        SERVICE_SET_CLOCK_SCHEMA)
+        DOMAIN, SERVICE_SET_CLOCK, set_device_clock, service_set_clock_schema)
 
 
 class StoveDevice:

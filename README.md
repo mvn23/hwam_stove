@@ -98,6 +98,18 @@ Disable the night lowering feature on the Hwam Stove.
 This service takes the following parameter:
 - __stove_name__ _(Required)_ The name of the stove as specified in configuration.yaml. Example: `living_room`.
 
+** Service 'hwam_stove.enable_remote_refill_alarm' **
+
+Enable the remote refill alarm option on the Hwam Stove.
+This service takes the following parameter:
+- __stove_name__ _(Required)_ The name of the stove as specified in configuration.yaml. Example: `living_room`.
+
+** Service 'hwam_stove.disable_remote_refill_alarm' **
+
+Disable the remote refill alarm option on the Hwam Stove.
+This service takes the following parameter:
+- __stove_name__ _(Required)_ The name of the stove as specified in configuration.yaml. Example: `living_room`.
+
 ** Service 'hwam_stove.set_night_lowering_hours' **
 
 Set the night lowering hours. At least one of `start_time` or `end_time` must be provided.

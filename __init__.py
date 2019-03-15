@@ -32,6 +32,8 @@ DATA_STOVES = 'stoves'
 
 SERVICE_DISABLE_NIGHT_LOWERING = 'disable_night_lowering'
 SERVICE_ENABLE_NIGHT_LOWERING = 'enable_night_lowering'
+SERVICE_DISABLE_REMOTE_REFILL_ALARM = 'disable_remote_refill_alarm'
+SERVICE_ENABLE_REMOTE_REFILL_ALARM = 'enable_remote_refill_alarm'
 SERVICE_SET_CLOCK = 'set_clock'
 SERVICE_SET_NIGHT_LOWERING_HOURS = 'set_night_lowering_hours'
 
@@ -81,7 +83,7 @@ async def register_services(hass):
         vol.Optional(ATTR_DATE, default=date.today()): cv.date,
         vol.Optional(ATTR_TIME, default=datetime.now().time()): cv.time,
     })
-    service_set_night_lowering_schema = vol.Schema({
+    service_basic_schema = vol.Schema({
         vol.Required(ATTR_STOVE_NAME): vol.All(
             cv.string, vol.In(hass.data[DATA_HWAM_STOVE][DATA_STOVES])),
     })
@@ -108,7 +110,7 @@ async def register_services(hass):
         await stove_device.stove.set_night_lowering(True)
     hass.services.async_register(
         DOMAIN, SERVICE_ENABLE_NIGHT_LOWERING, enable_night_lowering,
-        service_set_night_lowering_schema)
+        service_basic_schema)
 
     async def disable_night_lowering(call):
         """Disable night lowering."""
@@ -119,7 +121,29 @@ async def register_services(hass):
         await stove_device.stove.set_night_lowering(False)
     hass.services.async_register(
         DOMAIN, SERVICE_DISABLE_NIGHT_LOWERING, disable_night_lowering,
-        service_set_night_lowering_schema)
+        service_basic_schema)
+
+    async def enable_remote_refill_alarm(call):
+        """Enable remote refill alarm."""
+        stove_name = call.data[ATTR_STOVE_NAME]
+        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
+        if stove_device is None:
+            return
+        await stove_device.stove.set_remote_refill_alarm(True)
+    hass.services.async_register(
+        DOMAIN, SERVICE_ENABLE_REMOTE_REFILL_ALARM, enable_remote_refill_alarm,
+        service_basic_schema)
+
+    async def disable_remote_refill_alarm(call):
+        """Disable remote refill alarm."""
+        stove_name = call.data[ATTR_STOVE_NAME]
+        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
+        if stove_device is None:
+            return
+        await stove_device.stove.set_remote_refill_alarm(False)
+    hass.services.async_register(
+        DOMAIN, SERVICE_DISABLE_REMOTE_REFILL_ALARM,
+        disable_remote_refill_alarm, service_basic_schema)
 
     async def set_device_clock(call):
         """Set the clock on the stove."""

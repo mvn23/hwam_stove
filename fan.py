@@ -34,7 +34,6 @@ class StoveBurnLevel(FanEntity):
         self._stove_device = stove_device
         self._device_name = slugify('burn_level_{}'.format(stove_device.name))
         self.entity_id = '{}.{}'.format(DOMAIN, self._device_name)
-        self.friendly_name = 'Burn Level {}'.format(stove_device.stove.name)
         self._icon = 'mdi:fire'
 
     async def async_added_to_hass(self):
@@ -95,7 +94,7 @@ class StoveBurnLevel(FanEntity):
     @property
     def name(self) -> str:
         """Set the friendly name."""
-        return self.friendly_name
+        return 'Burn Level {}'.format(self._stove_device.stove.name)
 
     @property
     def should_poll(self) -> str:

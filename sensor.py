@@ -104,7 +104,6 @@ class HwamStoveSensor(Entity):
         self._device_class = device_class
         self._unit = unit
         self._name_format = name_format
-        self._friendly_name = name_format.format(stove_device.stove.name)
 
     async def async_added_to_hass(self):
         """Subscribe to updates from the component."""
@@ -130,7 +129,7 @@ class HwamStoveSensor(Entity):
     @property
     def name(self):
         """Return the friendly name of the sensor."""
-        return self._friendly_name
+        return self._name_format.format(stove_device.stove.name)
 
     @property
     def device_class(self):

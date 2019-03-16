@@ -183,14 +183,14 @@ class StoveDevice:
 
     async def init_stove(self, hass_config):
         """Run ident routine and schedule updates."""
-        await self.stove._identify()
+        self.hass.loop.create_task(self.stove._identify())
         self.hass.async_create_task(async_load_platform(
             self.hass, COMP_FAN, DOMAIN, self.name, hass_config))
         monitored_vars = self.config.get(CONF_MONITORED_VARIABLES)
         if monitored_vars:
             self.hass.async_create_task(
                 self.setup_monitored_vars(monitored_vars, hass_config))
-        self.hass.async_create_task(self.update())
+        self.hass.loop.create_task(self.update())
         async_track_time_interval(self.hass, self.update,
                                   timedelta(seconds=10))
 
@@ -251,4 +251,7 @@ class StoveDevice:
     async def update(self, *_):
         """Update and dispatch stove info."""
         data = await self.stove.get_data()
+        if data is None:
+            _LOGGER.error("Got empty response, skipping dispatch.")
+            return
         async_dispatcher_send(self.hass, self.signal, data)

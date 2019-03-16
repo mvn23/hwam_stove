@@ -136,7 +136,6 @@ class HwamStoveBinarySensor(BinarySensorDevice):
         self._state = None
         self._device_class = device_class
         self._name_format = name_format
-        self._friendly_name = name_format.format(stove_device.stove.name)
 
     async def async_added_to_hass(self):
         """Subscribe to updates from the component."""
@@ -152,7 +151,7 @@ class HwamStoveBinarySensor(BinarySensorDevice):
     @property
     def name(self):
         """Return the friendly name."""
-        return self._friendly_name
+        return self._name_format.format(stove_device.stove.name)
 
     @property
     def is_on(self):

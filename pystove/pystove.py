@@ -207,6 +207,8 @@ class Stove():
     async def get_data(self):
         """Call get_raw_data, process result before returning."""
         data = await self.get_raw_data()
+        if data is None:
+            return
         phase = PHASE[data[DATA_PHASE]]
         stove_datetime = datetime(data[DATA_YEAR], data[DATA_MONTH],
                                   data[DATA_DAY], data[DATA_HOURS],
@@ -265,6 +267,9 @@ class Stove():
         """Get 'live' temp and o2 data from the last 2 hours."""
         bin_arr = bytearray(await self._get('http://' + self.stove_host
                                             + STOVE_LIVE_DATA_URL), 'utf-8')
+        if len(bin_arr) != 120:
+            _LOGGER.error("Got unexpected response from stove.")
+            return
         data_out = {
             DATA_STOVE_TEMPERATURE: [],
             DATA_OXYGEN_LEVEL: [],
@@ -282,6 +287,9 @@ class Stove():
         """Request an update from the stove, return raw result."""
         json_str = await self._get('http://' + self.stove_host
                                    + STOVE_DATA_URL)
+        if json_str is None:
+            _LOGGER.error("Got empty or no response from stove.")
+            return
         data = json.loads(json_str)
         return data
 
@@ -314,6 +322,9 @@ class Stove():
         data = {DATA_LEVEL: burn_level}
         json_str = await self._post('http://' + self.stove_host
                                     + STOVE_BURN_LEVEL_URL, data)
+        if json_str is None:
+            _LOGGER.error("Got empty or no response from stove.")
+            return False
         return json.loads(json_str).get(DATA_RESPONSE) == RESPONSE_OK
 
     async def set_night_lowering(self, state=None):
@@ -330,6 +341,9 @@ class Stove():
         url = (STOVE_NIGHT_LOWERING_OFF_URL if cur_state
                else STOVE_NIGHT_LOWERING_ON_URL)
         json_str = await self._get('http://' + self.stove_host + url)
+        if json_str is None:
+            _LOGGER.error("Got empty or no response from stove.")
+            return False
         return json.loads(json_str).get(DATA_RESPONSE) == RESPONSE_OK
 
     async def set_night_lowering_hours(self, start=None, end=None):
@@ -346,6 +360,9 @@ class Stove():
         }
         json_str = await self._post('http://' + self.stove_host
                                     + STOVE_NIGHT_TIME_URL, data)
+        if json_str is None:
+            _LOGGER.error("Got empty or no response from stove.")
+            return False
         return json.loads(json_str).get(DATA_RESPONSE) == RESPONSE_OK
 
     async def set_remote_refill_alarm(self, state=None):
@@ -358,6 +375,9 @@ class Stove():
         data = {DATA_ENABLE: 0 if cur_state else 1}
         json_str = await self._post('http://' + self.stove_host
                                     + STOVE_REMOTE_REFILL_ALARM_URL, data)
+        if json_str is None:
+            _LOGGER.error("Got empty or no response from stove.")
+            return False
         return json.loads(json_str).get(DATA_RESPONSE) == RESPONSE_OK
 
     async def set_time(self, new_time=datetime.now()):
@@ -372,12 +392,18 @@ class Stove():
         }
         json_str = await self._post('http://' + self.stove_host
                                     + STOVE_SET_TIME_URL, data)
+        if json_str is None:
+            _LOGGER.error("Got empty or no response from stove.")
+            return False
         return json.loads(json_str).get(DATA_RESPONSE) == RESPONSE_OK
 
     async def start(self):
         """Start the ignition phase."""
         json_str = await self._get('http://' + self.stove_host
                                    + STOVE_START_URL)
+        if json_str is None:
+            _LOGGER.error("Got empty or no response from stove.")
+            return False
         return json.loads(json_str).get(DATA_RESPONSE) == RESPONSE_OK
 
     async def _identify(self):
@@ -387,6 +413,9 @@ class Stove():
             """Get stove name and IP."""
             json_str = await self._get('http://' + self.stove_host
                                        + STOVE_ID_URL)
+            if json_str is None:
+                _LOGGER.error("Got empty or no response from stove.")
+                return
             stove_id = json.loads(json_str)
             if None in [stove_id.get(DATA_NAME), stove_id.get(DATA_IP)]:
                 _LOGGER.warning("Unable to read stove name and/or IP.")
@@ -398,6 +427,9 @@ class Stove():
             """Get stove SSID."""
             json_str = await self._get('http://' + self.stove_host
                                        + STOVE_ACCESSPOINT_URL)
+            if json_str is None:
+                _LOGGER.error("Got empty or no response from stove.")
+                return
             stove_ssid = json.loads(json_str).get(DATA_SSID)
             if stove_ssid is None:
                 _LOGGER.warning("Unable to read stove SSID.")
@@ -412,6 +444,9 @@ class Stove():
             }
             json_str = await self._post('http://' + self.stove_host
                                         + STOVE_OPEN_FILE_URL, data)
+            if json_str is None:
+                _LOGGER.error("Got empty or no response from stove.")
+                return
             success = json.loads(json_str)
             if success[DATA_SUCCESS] == 1:
                 xml_str = await self._post('http://' + self.stove_host
@@ -441,6 +476,9 @@ class Stove():
             # Error prone, retry up to 3 times
             json_str = await self._get('http://' + self.stove_host
                                        + STOVE_SELFTEST_RESULT_URL)
+            if json_str is None:
+                _LOGGER.error("Got empty or no response from stove.")
+                continue
             result = json.loads(json_str)
             if not result.get('reponse'):  # NOT A TYPO!!!
                 break
@@ -454,6 +492,9 @@ class Stove():
         """Request self test start."""
         json_str = await self._get('http://' + self.stove_host
                                    + STOVE_SELFTEST_START_URL)
+        if json_str is None:
+            _LOGGER.error("Got empty or no response from stove.")
+            return False
         return json.loads(json_str).get(DATA_RESPONSE) == RESPONSE_OK
 
     def _get_maintenance_alarms_text(self, bitmask):

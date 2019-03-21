@@ -129,7 +129,7 @@ class HwamStoveSensor(Entity):
     @property
     def name(self):
         """Return the friendly name of the sensor."""
-        return self._name_format.format(stove_device.stove.name)
+        return self._name_format.format(self._stove_device.stove.name)
 
     @property
     def device_class(self):

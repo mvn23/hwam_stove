@@ -151,7 +151,7 @@ class HwamStoveBinarySensor(BinarySensorDevice):
     @property
     def name(self):
         """Return the friendly name."""
-        return self._name_format.format(stove_device.stove.name)
+        return self._name_format.format(self._stove_device.stove.name)
 
     @property
     def is_on(self):

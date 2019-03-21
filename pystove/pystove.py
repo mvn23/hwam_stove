@@ -293,29 +293,9 @@ class Stove():
         data = json.loads(json_str)
         return data
 
-    async def self_test(self, processed=True):
-        """Run self test routine, return result dict."""
-        if await self._self_test_start():
-            def process_dict(in_dict):
-                """Process dict values."""
-                if not processed:
-                    return in_dict
-                out_dict = {}
-                for k, v in in_dict.items():
-                    out_dict[k] = SELF_TEST_VALUES[v]
-                return out_dict
-            while True:
-                intermediate_raw = await self._self_test_result()
-                if intermediate_raw is None:
-                    yield None
-                else:
-                    intermediate = process_dict(intermediate_raw)
-                    yield intermediate
-                    if 2 not in intermediate_raw.values():
-                        break
-                await asyncio.sleep(3)
-        else:
-            yield None
+    def self_test(self, delay=3, processed=True):
+        """Return self test async generator."""
+        return _SelfTest(self, delay, processed)
 
     async def set_burn_level(self, burn_level):
         """Set the desired burnlevel."""
@@ -531,3 +511,52 @@ class Stove():
                 return await response.text()
         except aiohttp.client_exceptions.ClientConnectorError:
             _LOGGER.error("Could not connect to stove.")
+
+
+class _SelfTest:
+    """Self test async generator."""
+
+    def __init__(self, stove, delay, processed=True):
+        self.stove = stove
+        self.delay = delay
+        self.processed = processed
+        self.test_started = False
+        self.test_finished = False
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+
+        async def get_result():
+            """Get intermediate test results."""
+
+            def process_dict(in_dict):
+                """Process dict values."""
+                if not self.processed:
+                    return in_dict
+                out_dict = {}
+                for k, v in in_dict.items():
+                    out_dict[k] = SELF_TEST_VALUES[v]
+                return out_dict
+
+            intermediate_raw = await self.stove._self_test_result()
+            if intermediate_raw is None:
+                return None
+            else:
+                intermediate = process_dict(intermediate_raw)
+                if 2 not in intermediate_raw.values():
+                    self.test_finished = True
+                return intermediate
+
+        if not self.test_started:
+            if await self.stove._self_test_start():
+                self.test_started = True
+                return await get_result()
+            else:
+                raise StopAsyncIteration
+        if self.test_finished:
+            raise StopAsyncIteration
+
+        await asyncio.sleep(self.delay)
+        return await get_result()

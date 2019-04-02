@@ -64,7 +64,7 @@ __monitored_variables:__
 
 ### Maintenance Alarms
 
-When the `maintenance_alarms` option is added to the list of `monitored_variables`, the following binary sensors will be added to Home Assistant. In each entity id, <name> will be replaced by the name of the stove as specified in configuration.yaml.
+When the `maintenance_alarms` option is added to the list of `monitored_variables`, the following binary sensors will be added to Home Assistant. In each entity id, `<name>` will be replaced by the name of the stove as specified in configuration.yaml.
 - __`binary_sensor.maintenance_alarms_<name>`__ This is a catch-all sensor which will be `on` when any other maintenance alarm is active.
 - __`binary_sensor.maintenance_alarms_stove_backup_battery_low_<name>`__ Indicates that the backup battery in the stove is low. Charge or replace the battery.
 - __`binary_sensor.maintenance_alarms_o2_sensor_fault_<name>`__ Indicates a fault in the oxygen sensor. Run a self test on the stove. The stove may be used with this error, but the door should be kept open when refilling until permanent flames are seen. Service is recommended as soon as possible.
@@ -77,7 +77,7 @@ When the `maintenance_alarms` option is added to the list of `monitored_variable
 
 ### Safety Alarms
 
-When the `safety_alarms` option is added to the list of `monitored_variables`, the following binary sensors will be added to Home Assistant. In each entity id, <name> will be replaced by the name of the stove as specified in configuration.yaml.
+When the `safety_alarms` option is added to the list of `monitored_variables`, the following binary sensors will be added to Home Assistant. In each entity id, `<name>` will be replaced by the name of the stove as specified in configuration.yaml.
 - __`binary_sensor.safety_alarms_<name>`__ This is a catch-all sensor which will be `on` when any other safety alarm is active.
 - __`binary_sensor.safety_alarms_valve_fault_<name>`__ Indicates a fault with one or more valves. Restart the stove and run a self test. Do not use the stove until the problem is fixed.
 - __`binary_sensor.safety_alarms_bad_configuration_<name>`__ Indicates a fault in the airbox configuration. Update the airbox software with the `format` option enabled. Do not use the stove until the problem is fixed.

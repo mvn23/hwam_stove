@@ -7,7 +7,7 @@ http://home-assistant.io/components/binary_sensor.hwam_stove/
 import logging
 
 from homeassistant.components.binary_sensor import (ENTITY_ID_FORMAT,
-                                                    BinarySensorDevice)
+                                                    BinarySensorEntity)
 from homeassistant.const import DEVICE_CLASS_BATTERY
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import async_generate_entity_id
@@ -124,7 +124,7 @@ async def async_setup_platform(hass, config, async_add_entities,
     async_add_entities(binary_sensors)
 
 
-class HwamStoveBinarySensor(BinarySensorDevice):
+class HwamStoveBinarySensor(BinarySensorEntity):
     """Representation of a HWAM Stove binary sensor."""
 
     def __init__(self, entity_id, stove_device, var, device_class,

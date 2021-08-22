@@ -29,7 +29,7 @@ class StoveBurnLevel(FanEntity):
 
     def __init__(self, hass, stove_device):
         self._pystove = hass.data[DATA_HWAM_STOVE][DATA_PYSTOVE]
-        self._burn_level = None
+        self._burn_level = 0
         self._state = False
         self._stove_device = stove_device
         self._device_name = slugify('burn_level_{}'.format(stove_device.name))
@@ -47,12 +47,12 @@ class StoveBurnLevel(FanEntity):
         self._state = data[self._pystove.DATA_PHASE] != self._pystove.PHASE[5]
         self.async_schedule_update_ha_state()
 
-    async def async_set_speed(self, speed: str):
+    async def async_set_percentage(self, percentage: int) -> None:
         """Set the speed of the fan.
 
         This method must be run in the event loop and returns a coroutine.
         """
-        await self._stove_device.stove.set_burn_level(int(speed))
+        await self._stove_device.stove.set_burn_level(int(percentage/20))
 
     async def async_turn_on(self, speed: str = None, **kwargs):
         """Turn on the fan.
@@ -72,14 +72,14 @@ class StoveBurnLevel(FanEntity):
         return self._state
 
     @property
-    def speed(self) -> str:
+    def percentage(self) -> int:
         """Return the current speed."""
-        return '{}'.format(self._burn_level)
+        return self._burn_level * 20;
 
     @property
-    def speed_list(self) -> list:
+    def speed_count(self) -> int:
         """Get the list of available speeds."""
-        return ['0', '1', '2', '3', '4', '5']
+        return 5
 
     @property
     def supported_features(self) -> int:

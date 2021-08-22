@@ -2,7 +2,7 @@
 Support for HWAM Stove sensors.
 
 For more details about this platform, please refer to the documentation at
-http://home-assistant.io/components/sensor.hwam_stove/
+https://github.com/mvn23/hwam_stove
 """
 import logging
 

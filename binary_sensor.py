@@ -2,7 +2,7 @@
 Support for HWAM Stove binary sensors.
 
 For more details about this platform, please refer to the documentation at
-http://home-assistant.io/components/binary_sensor.hwam_stove/
+https://github.com/mvn23/hwam_stove
 """
 import logging
 

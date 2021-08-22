@@ -2,7 +2,7 @@
 Hwam stove fan entity.
 
 For more details about this platform, please refer to the documentation at
-http://home-assistant.io/components/hwam_stove/
+https://github.com/mvn23/hwam_stove
 """
 import logging
 

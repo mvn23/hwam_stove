@@ -2,7 +2,7 @@
 Support for Hwam SmartControl stoves.
 
 For more details about this component, please refer to the documentation at
-http://home-assistant.io/components/hwam_stove/
+https://github.com/mvn23/hwam_stove
 """
 import logging
 from datetime import datetime, date, timedelta

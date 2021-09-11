@@ -8,10 +8,10 @@ import logging
 
 from datetime import datetime, timedelta
 
-from homeassistant.components.sensor import ENTITY_ID_FORMAT
+from homeassistant.components.sensor import ENTITY_ID_FORMAT, SensorEntity
 from homeassistant.const import DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
-from homeassistant.helpers.entity import Entity, async_generate_entity_id
+from homeassistant.helpers.entity import async_generate_entity_id
 
 from custom_components.hwam_stove import (DATA_HWAM_STOVE, DATA_PYSTOVE,
                                           DATA_STOVES)
@@ -91,7 +91,7 @@ async def async_setup_platform(hass, config, async_add_entities,
     async_add_entities(sensors)
 
 
-class HwamStoveSensor(Entity):
+class HwamStoveSensor(SensorEntity):
     """Representation of a HWAM Stove sensor."""
 
     def __init__(self, entity_id, stove_device, var, device_class, unit,
@@ -137,12 +137,12 @@ class HwamStoveSensor(Entity):
         return self._device_class
 
     @property
-    def state(self):
+    def native_value(self):
         """Return the state of the device."""
         return self._value
 
     @property
-    def unit_of_measurement(self):
+    def native_unit_of_measurement(self):
         """Return the unit of measurement."""
         return self._unit
 

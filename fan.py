@@ -4,20 +4,19 @@ Hwam stove fan entity.
 For more details about this platform, please refer to the documentation at
 https://github.com/mvn23/hwam_stove
 """
+
 import logging
 
-from homeassistant.components.fan import DOMAIN, SUPPORT_SET_SPEED, FanEntity
+from homeassistant.components.fan import DOMAIN, FanEntityFeature, FanEntity
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.util import slugify
 
-from custom_components.hwam_stove import (DATA_HWAM_STOVE, DATA_PYSTOVE,
-                                          DATA_STOVES)
+from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_PYSTOVE, DATA_STOVES
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_platform(hass, config, async_add_entities,
-                               discovery_info=None):
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up HWAM stove device."""
     stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES][discovery_info]
     stove = StoveBurnLevel(hass, stove_device)
@@ -32,14 +31,15 @@ class StoveBurnLevel(FanEntity):
         self._burn_level = 0
         self._state = False
         self._stove_device = stove_device
-        self._device_name = slugify('burn_level_{}'.format(stove_device.name))
-        self.entity_id = '{}.{}'.format(DOMAIN, self._device_name)
-        self._icon = 'mdi:fire'
+        self._device_name = slugify("burn_level_{}".format(stove_device.name))
+        self.entity_id = "{}.{}".format(DOMAIN, self._device_name)
+        self._icon = "mdi:fire"
 
     async def async_added_to_hass(self):
         """Subscribe to updates."""
-        async_dispatcher_connect(self.hass, self._stove_device.signal,
-                                 self.receive_report)
+        async_dispatcher_connect(
+            self.hass, self._stove_device.signal, self.receive_report
+        )
 
     async def receive_report(self, data):
         """Receive updates."""
@@ -52,7 +52,7 @@ class StoveBurnLevel(FanEntity):
 
         This method must be run in the event loop and returns a coroutine.
         """
-        await self._stove_device.stove.set_burn_level(int(percentage/20))
+        await self._stove_device.stove.set_burn_level(int(percentage / 20))
 
     async def async_turn_on(self, speed: str = None, **kwargs):
         """Turn on the fan.
@@ -74,7 +74,7 @@ class StoveBurnLevel(FanEntity):
     @property
     def percentage(self) -> int:
         """Return the current speed."""
-        return self._burn_level * 20;
+        return self._burn_level * 20
 
     @property
     def speed_count(self) -> int:
@@ -84,7 +84,7 @@ class StoveBurnLevel(FanEntity):
     @property
     def supported_features(self) -> int:
         """Flag supported features."""
-        return SUPPORT_SET_SPEED
+        return FanEntityFeature.SET_SPEED
 
     @property
     def icon(self) -> str:
@@ -94,7 +94,7 @@ class StoveBurnLevel(FanEntity):
     @property
     def name(self) -> str:
         """Set the friendly name."""
-        return 'Burn Level {}'.format(self._stove_device.stove.name)
+        return "Burn Level {}".format(self._stove_device.stove.name)
 
     @property
     def should_poll(self) -> str:

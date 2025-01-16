@@ -20,6 +20,9 @@ from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
 
+from pystove import pystove
+
+
 DOMAIN = 'hwam_stove'
 
 ATTR_START_TIME = 'start_time'
@@ -27,7 +30,6 @@ ATTR_END_TIME = 'end_time'
 ATTR_STOVE_NAME = 'stove_name'
 
 DATA_HWAM_STOVE = 'hwam_stove'
-DATA_PYSTOVE = 'pystove'
 DATA_STOVES = 'stoves'
 
 SERVICE_DISABLE_NIGHT_LOWERING = 'disable_night_lowering'
@@ -48,17 +50,13 @@ CONFIG_SCHEMA = vol.Schema({
     }, cv.ensure_list),
 }, extra=vol.ALLOW_EXTRA)
 
-# REQUIREMENTS = ['pystove']
-
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup(hass, config):
     """Set up the HWAM Stove component."""
-    from .pystove import pystove
     hass.data[DATA_HWAM_STOVE] = {
         DATA_STOVES: {},
-        DATA_PYSTOVE: pystove,
     }
     conf = config[DOMAIN]
     for name, cfg in conf.items():
@@ -166,12 +164,11 @@ class StoveDevice:
     async def create(cls, hass, name, stove_config, hass_config):
         """Create a stove component."""
         self = cls()
-        self.pystove = hass.data[DATA_HWAM_STOVE][DATA_PYSTOVE]
         self.hass = hass
         self.name = name
         self.config = stove_config
         self.signal = 'hwam_stove_update_{}'.format(self.config[CONF_HOST])
-        self.stove = await self.pystove.Stove.create(self.config[CONF_HOST],
+        self.stove = await pystove.Stove.create(self.config[CONF_HOST],
                                                      skip_ident=True)
 
         async def cleanup(event):
@@ -196,7 +193,6 @@ class StoveDevice:
 
     async def setup_monitored_vars(self, monitored_vars, hass_config):
         """Add monitored_vars as sensors and binary sensors."""
-        pystove = self.pystove
         sensor_type_map = {
             COMP_BINARY_SENSOR: [
                 pystove.DATA_MAINTENANCE_ALARMS,

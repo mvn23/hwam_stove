@@ -7,11 +7,13 @@ https://github.com/mvn23/hwam_stove
 
 import logging
 
+import pystove
+
 from homeassistant.components.fan import DOMAIN, FanEntityFeature, FanEntity
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.util import slugify
 
-from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_PYSTOVE, DATA_STOVES
+from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_STOVES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,7 +29,6 @@ class StoveBurnLevel(FanEntity):
     """Representation of a fan."""
 
     def __init__(self, hass, stove_device):
-        self._pystove = hass.data[DATA_HWAM_STOVE][DATA_PYSTOVE]
         self._burn_level = 0
         self._state = False
         self._stove_device = stove_device
@@ -43,8 +44,8 @@ class StoveBurnLevel(FanEntity):
 
     async def receive_report(self, data):
         """Receive updates."""
-        self._burn_level = data[self._pystove.DATA_BURN_LEVEL]
-        self._state = data[self._pystove.DATA_PHASE] != self._pystove.PHASE[5]
+        self._burn_level = data[pystove.DATA_BURN_LEVEL]
+        self._state = data[pystove.DATA_PHASE] != pystove.PHASE[5]
         self.async_schedule_update_ha_state()
 
     async def async_set_percentage(self, percentage: int) -> None:

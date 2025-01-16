@@ -7,6 +7,8 @@ https://github.com/mvn23/hwam_stove
 
 import logging
 
+import pystove
+
 from datetime import datetime, timedelta
 
 from homeassistant.components.sensor import (
@@ -18,7 +20,7 @@ from homeassistant.const import PERCENTAGE, UnitOfTemperature
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import async_generate_entity_id
 
-from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_PYSTOVE, DATA_STOVES
+from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_STOVES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,7 +29,6 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     """Set up the HWAM Stove sensors."""
     if discovery_info is None:
         return
-    pystove = hass.data[DATA_HWAM_STOVE][DATA_PYSTOVE]
     sensor_info = {
         # {name: [device_class, unit, friendly_name format]}
         pystove.DATA_ALGORITHM: [None, None, "Algorithm {}"],
@@ -107,7 +108,6 @@ class HwamStoveSensor(SensorEntity):
     async def receive_report(self, status):
         """Handle status updates from the component."""
         value = status.get(self._var)
-        pystove = self.hass.data[DATA_HWAM_STOVE][DATA_PYSTOVE]
         if status.get(pystove.DATA_PHASE) != pystove.PHASE[4] and self._var in [
             pystove.DATA_NEW_FIREWOOD_ESTIMATE,
             pystove.DATA_TIME_TO_NEW_FIREWOOD,

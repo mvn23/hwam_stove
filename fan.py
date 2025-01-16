@@ -7,20 +7,29 @@ https://github.com/mvn23/hwam_stove
 
 import logging
 
-from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_STOVES
 from homeassistant.components.fan import DOMAIN, FanEntity, FanEntityFeature
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import slugify
 
 import pystove
 
+from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES
+
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up HWAM stove device."""
-    stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES][discovery_info]
-    stove = StoveBurnLevel(hass, stove_device)
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config_entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Set up the HWAM Stove fan."""
+    stove_name = config_entry.data[CONF_NAME]
+    stove_hub = hass.data[DATA_HWAM_STOVE][DATA_STOVES][stove_name]
+    stove = StoveBurnLevel(hass, stove_hub)
     async_add_entities([stove])
 
 

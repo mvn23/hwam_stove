@@ -1,6 +1,7 @@
 {
   "domain": "hwam_stove",
   "name": "HWAM Smart Stove",
+  "config_flow": true,
   "documentation": "https://github.com/mvn23/hwam_stove",
   "dependencies": [],
   "codeowners": [],

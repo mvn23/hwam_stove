@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "init": {
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "id": "ID"
+        }
+      }
+    },
+    "error": {
+      "already_configured": "Host already configured",
+      "id_exists": "ID already exists",
+      "cannot_connect": "Can not connect to host"
+    }
+  },
+  "issues": {
+    "deprecated_import_from_configuration_yaml": {
+      "title": "Deprecated configuration",
+      "description": "Configuration of the HWAM Smart Stove integration through configuration.yaml is deprecated. Your configuration has been migrated to config entries. Please remove any HWAM Smart Stove configuration from your configuration.yaml."
+    }
+  }
+}  

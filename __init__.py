@@ -8,9 +8,7 @@ https://github.com/mvn23/hwam_stove
 from datetime import date, datetime, timedelta
 import logging
 
-from homeassistant.components.binary_sensor import DOMAIN as COMP_BINARY_SENSOR
-from homeassistant.components.fan import DOMAIN as COMP_FAN
-from homeassistant.components.sensor import DOMAIN as COMP_SENSOR
+from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.const import (
     ATTR_DATE,
     ATTR_TIME,
@@ -19,10 +17,12 @@ from homeassistant.const import (
     CONF_NAME,
     EVENT_HOMEASSISTANT_STOP,
 )
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers import issue_registry as ir
 import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
+from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
 
 from pystove import pystove
@@ -63,23 +63,55 @@ CONFIG_SCHEMA = vol.Schema(
     extra=vol.ALLOW_EXTRA,
 )
 
+PLATFORMS = [
+    "binary_sensor",
+    "fan",
+    "sensor",
+]
+
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup(hass, config):
-    """Set up the HWAM Stove component."""
-    hass.data[DATA_HWAM_STOVE] = {
-        DATA_STOVES: {},
-    }
-    conf = config[DOMAIN]
-    for name, cfg in conf.items():
-        stove_device = await StoveDevice.create(hass, name, cfg, config)
-        hass.data[DATA_HWAM_STOVE][DATA_STOVES][name] = stove_device
-    hass.async_create_task(register_services(hass))
+async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+    """Set up the HWAM Stove component from a config entry."""
+    if DATA_HWAM_STOVE not in hass.data:
+        hass.data[DATA_HWAM_STOVE] = {DATA_STOVES: {}}
+
+    stove_hub = await StoveDevice.create(hass, config_entry)
+    hass.data[DATA_HWAM_STOVE][DATA_STOVES][config_entry.data[CONF_NAME]] = stove_hub
+
+    await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
+
+    register_services(hass)
     return True
 
 
-async def register_services(hass):
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Set up the HWAM Stove component."""
+    if DOMAIN in config:
+        ir.async_create_issue(
+            hass,
+            DOMAIN,
+            "deprecated_import_from_configuration_yaml",
+            is_fixable=False,
+            is_persistent=False,
+            severity=ir.IssueSeverity.WARNING,
+            translation_key="deprecated_import_from_configuration_yaml",
+        )
+    if not hass.config_entries.async_entries(DOMAIN) and DOMAIN in config:
+        conf = config[DOMAIN]
+        for device_id, device_config in conf.items():
+            device_config[CONF_NAME] = device_id
+
+            hass.async_create_task(
+                hass.config_entries.flow.async_init(
+                    DOMAIN, context={"source": SOURCE_IMPORT}, data=device_config
+                )
+            )
+    return True
+
+
+def register_services(hass):
     """Register HWAM Stove services."""
 
     service_set_night_lowering_hours_schema = vol.Schema(
@@ -205,99 +237,29 @@ class StoveDevice:
     """Abstract description of a stove component."""
 
     @classmethod
-    async def create(cls, hass, name, stove_config, hass_config):
+    async def create(cls, hass, config_entry):
         """Create a stove component."""
         self = cls()
         self.hass = hass
-        self.name = name
-        self.config = stove_config
-        self.signal = f"hwam_stove_update_{self.config[CONF_HOST]}"
-        self.stove = await pystove.Stove.create(self.config[CONF_HOST], skip_ident=True)
+        self.name = config_entry.data[CONF_NAME]
+        self.signal = f"hwam_stove_update_{config_entry.data[CONF_HOST]}"
+        self.stove = await pystove.Stove.create(
+            config_entry.data[CONF_HOST], skip_ident=True
+        )
 
         async def cleanup(event):
             """Clean up stove object."""
             await self.stove.destroy()
 
         hass.bus.async_listen(EVENT_HOMEASSISTANT_STOP, cleanup)
-        hass.async_create_task(self.init_stove(hass_config))
+        hass.async_create_task(self.init_stove())
         return self
 
-    async def init_stove(self, hass_config):
+    async def init_stove(self):
         """Run ident routine and schedule updates."""
         self.hass.loop.create_task(self.stove._identify())
-        self.hass.async_create_task(
-            async_load_platform(self.hass, COMP_FAN, DOMAIN, self.name, hass_config)
-        )
-        monitored_vars = self.config.get(CONF_MONITORED_VARIABLES)
-        if monitored_vars:
-            self.hass.async_create_task(
-                self.setup_monitored_vars(monitored_vars, hass_config)
-            )
         self.hass.loop.create_task(self.update())
         async_track_time_interval(self.hass, self.update, timedelta(seconds=10))
-
-    async def setup_monitored_vars(self, monitored_vars, hass_config):
-        """Add monitored_vars as sensors and binary sensors."""
-        sensor_type_map = {
-            COMP_BINARY_SENSOR: [
-                pystove.DATA_MAINTENANCE_ALARMS,
-                pystove.DATA_REFILL_ALARM,
-                pystove.DATA_REMOTE_REFILL_ALARM,
-                pystove.DATA_SAFETY_ALARMS,
-                pystove.DATA_UPDATING,
-            ],
-            COMP_SENSOR: [
-                pystove.DATA_ALGORITHM,
-                pystove.DATA_BURN_LEVEL,
-                pystove.DATA_MESSAGE_ID,
-                pystove.DATA_NEW_FIREWOOD_ESTIMATE,
-                pystove.DATA_NIGHT_BEGIN_TIME,
-                pystove.DATA_NIGHT_END_TIME,
-                pystove.DATA_NIGHT_LOWERING,
-                pystove.DATA_OPERATION_MODE,
-                pystove.DATA_OXYGEN_LEVEL,
-                pystove.DATA_PHASE,
-                pystove.DATA_REMOTE_VERSION,
-                pystove.DATA_ROOM_TEMPERATURE,
-                pystove.DATA_STOVE_TEMPERATURE,
-                pystove.DATA_TIME_SINCE_REMOTE_MSG,
-                pystove.DATA_DATE_TIME,
-                pystove.DATA_TIME_TO_NEW_FIREWOOD,
-                pystove.DATA_VALVE1_POSITION,
-                pystove.DATA_VALVE2_POSITION,
-                pystove.DATA_VALVE3_POSITION,
-                pystove.DATA_FIRMWARE_VERSION,
-            ],
-        }
-        binary_sensors = []
-        sensors = []
-        for var in monitored_vars:
-            if var in sensor_type_map[COMP_SENSOR]:
-                sensors.append(var)
-            elif var in sensor_type_map[COMP_BINARY_SENSOR]:
-                binary_sensors.append(var)
-            else:
-                _LOGGER.error("Monitored variable not supported: %s", var)
-        if binary_sensors:
-            self.hass.async_create_task(
-                async_load_platform(
-                    self.hass,
-                    COMP_BINARY_SENSOR,
-                    DOMAIN,
-                    {"stove_name": self.name, "sensors": binary_sensors},
-                    hass_config,
-                )
-            )
-        if sensors:
-            self.hass.async_create_task(
-                async_load_platform(
-                    self.hass,
-                    COMP_SENSOR,
-                    DOMAIN,
-                    {"stove_name": self.name, "sensors": sensors},
-                    hass_config,
-                )
-            )
 
     async def update(self, *_):
         """Update and dispatch stove info."""

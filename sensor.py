@@ -5,12 +5,10 @@ For more details about this platform, please refer to the documentation at
 https://github.com/mvn23/hwam_stove
 """
 
+from datetime import datetime, timedelta
 import logging
 
-import pystove
-
-from datetime import datetime, timedelta
-
+from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_STOVES
 from homeassistant.components.sensor import (
     ENTITY_ID_FORMAT,
     SensorDeviceClass,
@@ -20,7 +18,7 @@ from homeassistant.const import PERCENTAGE, UnitOfTemperature
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import async_generate_entity_id
 
-from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_STOVES
+import pystove
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -75,7 +73,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         unit = sensor_info[var][1]
         name_format = sensor_info[var][2]
         entity_id = async_generate_entity_id(
-            ENTITY_ID_FORMAT, "{}_{}".format(var, stove_device.name), hass=hass
+            ENTITY_ID_FORMAT, f"{var}_{stove_device.name}", hass=hass
         )
         sensors.append(
             HwamStoveSensor(
@@ -116,7 +114,7 @@ class HwamStoveSensor(SensorEntity):
         elif isinstance(value, datetime):
             value = value.strftime("%-d %b, %-H:%M")
         elif isinstance(value, timedelta):
-            value = "{}".format(value)
+            value = f"{value}"
         self._value = value
         self.async_schedule_update_ha_state()
 

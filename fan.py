@@ -7,13 +7,12 @@ https://github.com/mvn23/hwam_stove
 
 import logging
 
-import pystove
-
-from homeassistant.components.fan import DOMAIN, FanEntityFeature, FanEntity
+from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_STOVES
+from homeassistant.components.fan import DOMAIN, FanEntity, FanEntityFeature
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.util import slugify
 
-from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_STOVES
+import pystove
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -32,8 +31,8 @@ class StoveBurnLevel(FanEntity):
         self._burn_level = 0
         self._state = False
         self._stove_device = stove_device
-        self._device_name = slugify("burn_level_{}".format(stove_device.name))
-        self.entity_id = "{}.{}".format(DOMAIN, self._device_name)
+        self._device_name = slugify(f"burn_level_{stove_device.name}")
+        self.entity_id = f"{DOMAIN}.{self._device_name}"
         self._icon = "mdi:fire"
 
     async def async_added_to_hass(self):
@@ -95,7 +94,7 @@ class StoveBurnLevel(FanEntity):
     @property
     def name(self) -> str:
         """Set the friendly name."""
-        return "Burn Level {}".format(self._stove_device.stove.name)
+        return f"Burn Level {self._stove_device.stove.name}"
 
     @property
     def should_poll(self) -> str:

@@ -7,8 +7,7 @@ https://github.com/mvn23/hwam_stove
 
 import logging
 
-import pystove
-
+from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_STOVES
 from homeassistant.components.binary_sensor import (
     ENTITY_ID_FORMAT,
     BinarySensorDeviceClass,
@@ -17,8 +16,7 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import async_generate_entity_id
 
-from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_STOVES
-
+import pystove
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -141,7 +139,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             device_class = binary_sensor_info[var][0]
             name_format = binary_sensor_info[var][1]
             entity_id = async_generate_entity_id(
-                ENTITY_ID_FORMAT, "{}_{}".format(var, stove_device.name), hass=hass
+                ENTITY_ID_FORMAT, f"{var}_{stove_device.name}", hass=hass
             )
             binary_sensors.append(
                 HwamStoveBinarySensor(
@@ -156,13 +154,13 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
                 if alarm_name is None:
                     entity_id = async_generate_entity_id(
                         ENTITY_ID_FORMAT,
-                        "{}_{}".format(var, stove_device.name),
+                        f"{var}_{stove_device.name}",
                         hass=hass,
                     )
                 else:
                     entity_id = async_generate_entity_id(
                         ENTITY_ID_FORMAT,
-                        "{}_{}_{}".format(var, alarm_name, stove_device.name),
+                        f"{var}_{alarm_name}_{stove_device.name}",
                         hass=hass,
                     )
                 binary_sensors.append(

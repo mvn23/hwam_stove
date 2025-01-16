@@ -17,7 +17,6 @@ from homeassistant.helpers.entity import async_generate_entity_id
 
 from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_PYSTOVE, DATA_STOVES
 
-DEPENDENCIES = ["hwam_stove"]
 
 _LOGGER = logging.getLogger(__name__)
 

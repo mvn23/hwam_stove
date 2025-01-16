@@ -14,14 +14,12 @@ from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
 )
-from homeassistant.const import UnitOfTemperature
+from homeassistant.const import PERCENTAGE, UnitOfTemperature
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import async_generate_entity_id
 
 from custom_components.hwam_stove import DATA_HWAM_STOVE, DATA_PYSTOVE, DATA_STOVES
 
-DEPENDENCIES = ["hwam_stove"]
-UNIT_PERCENT = "%"
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -41,7 +39,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         pystove.DATA_NIGHT_END_TIME: [None, None, "Night End Time {}"],
         pystove.DATA_NIGHT_LOWERING: [None, None, "Night Lowering {}"],
         pystove.DATA_OPERATION_MODE: [None, None, "Operation Mode {}"],
-        pystove.DATA_OXYGEN_LEVEL: [None, UNIT_PERCENT, "Oxygen Level {}"],
+        pystove.DATA_OXYGEN_LEVEL: [None, PERCENTAGE, "Oxygen Level {}"],
         pystove.DATA_PHASE: [None, None, "Phase {}"],
         pystove.DATA_REMOTE_VERSION: [None, None, "Remote Version {}"],
         pystove.DATA_ROOM_TEMPERATURE: [
@@ -62,9 +60,9 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         ],
         pystove.DATA_DATE_TIME: [None, None, "Date and time {}"],
         pystove.DATA_TIME_TO_NEW_FIREWOOD: [None, None, "Time To New Firewood {}"],
-        pystove.DATA_VALVE1_POSITION: [None, None, "Valve 1 Postition {}"],
-        pystove.DATA_VALVE2_POSITION: [None, None, "Valve 2 Postition {}"],
-        pystove.DATA_VALVE3_POSITION: [None, None, "Valve 3 Postition {}"],
+        pystove.DATA_VALVE1_POSITION: [None, None, "Valve 1 Position {}"],
+        pystove.DATA_VALVE2_POSITION: [None, None, "Valve 2 Position {}"],
+        pystove.DATA_VALVE3_POSITION: [None, None, "Valve 3 Position {}"],
         pystove.DATA_FIRMWARE_VERSION: [None, None, "Firmware Version {}"],
     }
     stove_name = discovery_info["stove_name"]

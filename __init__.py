@@ -13,13 +13,17 @@ from homeassistant.const import (
     ATTR_DATE,
     ATTR_TIME,
     CONF_HOST,
+    CONF_ID,
     CONF_MONITORED_VARIABLES,
     CONF_NAME,
     EVENT_HOMEASSISTANT_STOP,
 )
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import issue_registry as ir
-import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers import (
+    config_validation as cv,
+    device_registry as dr,
+    issue_registry as ir,
+)
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.typing import ConfigType
@@ -240,9 +244,12 @@ class StoveDevice:
     async def create(cls, hass, config_entry):
         """Create a stove component."""
         self = cls()
+        self.config_entry_id = config_entry.entry_id
+        self.device_entry = None
         self.hass = hass
         self.name = config_entry.data[CONF_NAME]
         self.signal = f"hwam_stove_update_{config_entry.data[CONF_HOST]}"
+        self.hub_id = config_entry.data[CONF_ID]
         self.stove = await pystove.Stove.create(
             config_entry.data[CONF_HOST], skip_ident=True
         )
@@ -257,7 +264,17 @@ class StoveDevice:
 
     async def init_stove(self):
         """Run ident routine and schedule updates."""
-        self.hass.loop.create_task(self.stove._identify())
+        await self.stove._identify()
+
+        dev_reg = dr.async_get(self.hass)
+        self.device_entry = dev_reg.async_get_or_create(
+            config_entry_id=self.config_entry_id,
+            identifiers={(DOMAIN, self.hub_id)},
+            manufacturer="HWAM",
+            model=self.stove.series,
+            translation_key="hwam_stove_device",
+        )
+
         self.hass.loop.create_task(self.update())
         async_track_time_interval(self.hass, self.update, timedelta(seconds=10))
 
@@ -268,3 +285,9 @@ class StoveDevice:
             _LOGGER.error("Got empty response, skipping dispatch.")
             return
         async_dispatcher_send(self.hass, self.signal, data)
+
+        dev_reg = dr.async_get(self.hass)
+        dev_reg.async_update_device(
+            self.device_entry.id,
+            sw_version=data.get(pystove.DATA_FIRMWARE_VERSION),
+        )

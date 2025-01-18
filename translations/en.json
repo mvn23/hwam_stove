@@ -15,6 +15,14 @@
       "cannot_connect": "Can not connect to host"
     }
   },
+  "device": {
+    "hwam_remote_device": {
+      "name": "HWAM Room Temperature Sensor"
+    },
+    "hwam_stove_device": {
+      "name": "HWAM Smart Stove"
+    }
+  },
   "issues": {
     "deprecated_import_from_configuration_yaml": {
       "title": "Deprecated configuration",

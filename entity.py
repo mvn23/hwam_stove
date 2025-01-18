@@ -1,15 +1,17 @@
 """Common HWAM Stove entity properties."""
 
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import Entity, EntityDescription
 
-from . import StoveDevice
+from . import DOMAIN, StoveDevice, StoveDeviceIdentifier
 
 
 class HWAMStoveEntityDescription(EntityDescription):
     """Describe common hwam_stove entity properties."""
 
     name_format: str
+    device_identifier: StoveDeviceIdentifier
 
 
 class HWAMStoveEntity(Entity):
@@ -23,6 +25,15 @@ class HWAMStoveEntity(Entity):
         stove_device: StoveDevice,
         entity_description: HWAMStoveEntityDescription,
     ) -> None:
+        self._attr_unique_id = f"{stove_device.hub_id}-{entity_description.key}"
+        self._attr_device_info = DeviceInfo(
+            identifiers={
+                (
+                    DOMAIN,
+                    f"{stove_device.hub_id}-{entity_description.device_identifier}",
+                )
+            }
+        )
         self._stove_device = stove_device
         self.entity_description = entity_description
 

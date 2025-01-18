@@ -21,7 +21,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 import pystove
 
-from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES
+from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES, StoveDeviceIdentifier
 from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
 
 
@@ -43,9 +43,11 @@ class HWAMStoveBinarySensorListEntityDescription(
     value_source_key: str
     alarm_str: str | None
 
+
 BINARY_SENSOR_DESCRIPTIONS = [
     HWAMStoveBinarySensorEntityDescription(
         key=pystove.DATA_REFILL_ALARM,
+        device_identifier=StoveDeviceIdentifier.STOVE,
         name_format="Refill Alarm {}",
     ),
 ]
@@ -54,14 +56,16 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # General (any) maintenance alarm
     HWAMStoveBinarySensorListEntityDescription(
         key=pystove.DATA_MAINTENANCE_ALARMS,
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         name_format="Maintenance Alarm {}",
-        alarm_str=None
+        alarm_str=None,
     ),
     # Stove Backup Battery Low
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_backup_battery_low",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.BATTERY,
         name_format="Stove Backup Battery Low {}",
@@ -70,6 +74,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # O2 Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_o2_sensor_fault",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         name_format="O2 Sensor Fault {}",
@@ -78,6 +83,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # O2 Sensor Offset
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_o2_sensor_offset",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         name_format="O2 Sensor Offset {}",
@@ -86,6 +92,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Stove Temperature Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_stove_temp_sensor_fault",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         name_format="Stove Temperature Sensor Fault {}",
@@ -94,6 +101,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Room Temperature Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_room_temp_sensor_fault",
+        device_identifier=StoveDeviceIdentifier.REMOTE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         name_format="Room Temperature Sensor Fault {}",
@@ -102,6 +110,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Communication Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_communication_fault",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         name_format="Communication Fault {}",
@@ -110,6 +119,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Room Temperature Sensor Battery Low
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_room_temp_sensor_battery_low",
+        device_identifier=StoveDeviceIdentifier.REMOTE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         name_format="Room Temperature Sensor Battery Low {}",
@@ -118,6 +128,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # General (any) safety alarm
     HWAMStoveBinarySensorListEntityDescription(
         key=pystove.DATA_SAFETY_ALARMS,
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
         name_format="Safety Alarm {}",
@@ -126,6 +137,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Valve Fault, same as [1] and [2].
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_valve_fault",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
         name_format="Valve Fault {}",
@@ -134,6 +146,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Bad Configuration
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_bad_configuration",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
         name_format="Bad Configuration {}",
@@ -142,6 +155,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Valve Disconnect, same as [5] and [6]
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_valve_disconnect",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
         name_format="Valve Disconnect {}",
@@ -150,6 +164,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Valve Calibration Error, same as [8] and [9]
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_valve_calibration_error",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
         name_format="Valve Calibration Error {}",
@@ -158,6 +173,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Overheating
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_stove_overheat",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
         name_format="Stove Overheat {}",
@@ -166,6 +182,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Door Open Too Long
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_door_open_too_long",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
         name_format="Door Open Too Long {}",
@@ -174,6 +191,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Manual Safety Alarm
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_manual_safety_alarm",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
         name_format="Manual Safety Alarm {}",
@@ -182,6 +200,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # Stove Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_stove_sensor_fault",
+        device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
         name_format="Stove Sensor Fault {}",
@@ -210,7 +229,7 @@ async def async_setup_entry(
                     ENTITY_ID_FORMAT,
                     f"{entity_description.key}_{stove_hub.name}",
                     hass=hass,
-                )
+                ),
             )
         )
     for description in BINARY_SENSOR_LIST_DESCRIPTIONS:
@@ -226,9 +245,7 @@ async def async_setup_entry(
                 f"{description.key}_{description.alarm_str}_{stove_hub.name}",
                 hass=hass,
             )
-        binary_sensors.append(
-            HwamStoveAlarmSensor(stove_hub, description, entity_id)
-        )
+        binary_sensors.append(HwamStoveAlarmSensor(stove_hub, description, entity_id))
     async_add_entities(binary_sensors)
 
 

@@ -47,8 +47,8 @@ async def async_setup_entry(
         stove_hub,
         HWAMStoveFanEntityDescription(
             key="fan_entity",
+            translation_key="fan_entity",
             device_identifier=StoveDeviceIdentifier.STOVE,
-            name_format="Burn Level {}",
         ),
     )
     async_add_entities([stove])
@@ -56,6 +56,8 @@ async def async_setup_entry(
 
 class StoveBurnLevel(HWAMStoveEntity, FanEntity):
     """Representation of a fan."""
+
+    _attr_has_entity_name = True
 
     def __init__(self, stove_device, entity_description):
         super().__init__(stove_device, entity_description)

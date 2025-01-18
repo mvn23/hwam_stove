@@ -79,7 +79,12 @@
       "safety_alarms_stove_sensor_fault": {
         "name": "Sensor Fault"
       }
-    }  
+    },
+    "fan": {
+      "fan_entity": {
+        "name": "Burn Level"
+      }
+    }
   },
   "issues": {
     "deprecated_import_from_configuration_yaml": {

@@ -93,11 +93,6 @@ SENSOR_DESCRIPTIONS = [
         name_format="Phase {}",
     ),
     HWAMStoveSensorEntityDescription(
-        key=pystove.DATA_REMOTE_VERSION,
-        device_identifier=StoveDeviceIdentifier.REMOTE,
-        name_format="Remote Version {}",
-    ),
-    HWAMStoveSensorEntityDescription(
         key=pystove.DATA_ROOM_TEMPERATURE,
         device_identifier=StoveDeviceIdentifier.REMOTE,
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -145,11 +140,6 @@ SENSOR_DESCRIPTIONS = [
         key=pystove.DATA_VALVE3_POSITION,
         device_identifier=StoveDeviceIdentifier.STOVE,
         name_format="Valve 3 Position {}",
-    ),
-    HWAMStoveSensorEntityDescription(
-        key=pystove.DATA_FIRMWARE_VERSION,
-        device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Firmware Version {}",
     ),
 ]
 

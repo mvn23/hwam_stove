@@ -16,6 +16,9 @@
     }
   },
   "device": {
+    "hwam_remote_device": {
+      "name": "HWAM Room Temperature Sensor"
+    },
     "hwam_stove_device": {
       "name": "HWAM Smart Stove"
     }

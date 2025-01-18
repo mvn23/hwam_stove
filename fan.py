@@ -22,7 +22,7 @@ from homeassistant.util import slugify
 import pystove
 
 from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES
-from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
+from .entity import HWAMStoveEntity, HWAMStoveEntityDescription, StoveDeviceIdentifier
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -33,12 +33,6 @@ class HWAMStoveFanEntityDescription(
 ):
     """Describes a hwam_stove fan entity."""
 
-FAN_DESCRIPTIONS = [
-    HWAMStoveFanEntityDescription(
-        key="fan_entity",
-        name_format="Burn Level {}",
-    )
-]
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -52,6 +46,7 @@ async def async_setup_entry(
         stove_hub,
         HWAMStoveFanEntityDescription(
             key="fan_entity",
+            device_identifier=StoveDeviceIdentifier.STOVE,
             name_format="Burn Level {}",
         )
     )

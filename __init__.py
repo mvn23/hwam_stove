@@ -6,6 +6,7 @@ https://github.com/mvn23/hwam_stove
 """
 
 from datetime import date, datetime, timedelta
+from enum import StrEnum
 import logging
 
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
@@ -74,6 +75,13 @@ PLATFORMS = [
 ]
 
 _LOGGER = logging.getLogger(__name__)
+
+
+class StoveDeviceIdentifier(StrEnum):
+    """Device identification strings."""
+
+    REMOTE = "remote"
+    STOVE = "stove"
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
@@ -267,12 +275,18 @@ class StoveDevice:
         await self.stove._identify()
 
         dev_reg = dr.async_get(self.hass)
-        self.device_entry = dev_reg.async_get_or_create(
+        self.stove_device_entry = dev_reg.async_get_or_create(
             config_entry_id=self.config_entry_id,
-            identifiers={(DOMAIN, self.hub_id)},
+            identifiers={(DOMAIN, f"{self.hub_id}-{StoveDeviceIdentifier.STOVE}")},
             manufacturer="HWAM",
-            model=self.stove.series,
+            model=f"{self.stove.series}",
             translation_key="hwam_stove_device",
+        )
+        self.remote_device_entry = dev_reg.async_get_or_create(
+            config_entry_id=self.config_entry_id,
+            identifiers={(DOMAIN, f"{self.hub_id}-{StoveDeviceIdentifier.REMOTE}")},
+            manufacturer="HWAM",
+            translation_key="hwam_remote_device",
         )
 
         self.hass.loop.create_task(self.update())
@@ -288,6 +302,10 @@ class StoveDevice:
 
         dev_reg = dr.async_get(self.hass)
         dev_reg.async_update_device(
-            self.device_entry.id,
+            self.stove_device_entry.id,
             sw_version=data.get(pystove.DATA_FIRMWARE_VERSION),
+        )
+        dev_reg.async_update_device(
+            self.remote_device_entry.id,
+            sw_version=data.get(pystove.DATA_REMOTE_VERSION),
         )

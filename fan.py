@@ -23,7 +23,7 @@ from homeassistant.util import slugify
 import pystove
 
 from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES
-from .entity import HWAMStoveEntityDescription
+from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,23 +59,16 @@ async def async_setup_entry(
     async_add_entities([stove])
 
 
-class StoveBurnLevel(FanEntity):
+class StoveBurnLevel(HWAMStoveEntity, FanEntity):
     """Representation of a fan."""
 
     def __init__(self, stove_device, entity_description):
+        super().__init__(stove_device, entity_description)
         self._burn_level = 0
         self._state = False
-        self._stove_device = stove_device
-        self._device_name = slugify(f"burn_level_{stove_device.name}")
-        self.entity_id = f"{DOMAIN}.{self._device_name}"
-        self.entity_description = entity_description
+        device_name = slugify(f"burn_level_{stove_device.name}")
+        self.entity_id = f"{DOMAIN}.{device_name}"
         self._icon = "mdi:fire"
-
-    async def async_added_to_hass(self):
-        """Subscribe to updates."""
-        async_dispatcher_connect(
-            self.hass, self._stove_device.signal, self.receive_report
-        )
 
     async def receive_report(self, data):
         """Receive updates."""
@@ -126,13 +119,3 @@ class StoveBurnLevel(FanEntity):
     def icon(self) -> str:
         """Set the icon."""
         return self._icon
-
-    @property
-    def name(self) -> str:
-        """Set the friendly name."""
-        return self.entity_description.name_format.format(self._stove_device.stove.name)
-
-    @property
-    def should_poll(self) -> str:
-        """Return False because entity pushes its state."""
-        return False

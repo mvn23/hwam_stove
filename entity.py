@@ -30,7 +30,7 @@ class HWAMStoveEntity(Entity):
             identifiers={
                 (
                     DOMAIN,
-                    f"{stove_device.hub_id}-{entity_description.device_identifier}"
+                    f"{stove_device.hub_id}-{entity_description.device_identifier}",
                 )
             }
         )

@@ -26,6 +26,7 @@ from .entity import HWAMStoveEntity, HWAMStoveEntityDescription, StoveDeviceIden
 
 _LOGGER = logging.getLogger(__name__)
 
+
 @dataclass(frozen=True, kw_only=True)
 class HWAMStoveFanEntityDescription(
     FanEntityDescription,
@@ -48,7 +49,7 @@ async def async_setup_entry(
             key="fan_entity",
             device_identifier=StoveDeviceIdentifier.STOVE,
             name_format="Burn Level {}",
-        )
+        ),
     )
     async_add_entities([stove])
 

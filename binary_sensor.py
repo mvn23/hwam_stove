@@ -43,6 +43,7 @@ class HWAMStoveBinarySensorListEntityDescription(
     value_source_key: str
     alarm_str: str | None
 
+
 BINARY_SENSOR_DESCRIPTIONS = [
     HWAMStoveBinarySensorEntityDescription(
         key=pystove.DATA_REFILL_ALARM,
@@ -59,7 +60,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         name_format="Maintenance Alarm {}",
-        alarm_str=None
+        alarm_str=None,
     ),
     # Stove Backup Battery Low
     HWAMStoveBinarySensorListEntityDescription(
@@ -228,7 +229,7 @@ async def async_setup_entry(
                     ENTITY_ID_FORMAT,
                     f"{entity_description.key}_{stove_hub.name}",
                     hass=hass,
-                )
+                ),
             )
         )
     for description in BINARY_SENSOR_LIST_DESCRIPTIONS:
@@ -244,9 +245,7 @@ async def async_setup_entry(
                 f"{description.key}_{description.alarm_str}_{stove_hub.name}",
                 hass=hass,
             )
-        binary_sensors.append(
-            HwamStoveAlarmSensor(stove_hub, description, entity_id)
-        )
+        binary_sensors.append(HwamStoveAlarmSensor(stove_hub, description, entity_id))
     async_add_entities(binary_sensors)
 
 

@@ -84,6 +84,68 @@
       "fan_entity": {
         "name": "Burn Level"
       }
+    },
+    "sensor": {
+      "algorithm": {
+        "name": "Algorithm"
+      },
+      "burn_level": {
+        "name": "Burn Level"
+      },
+      "maintenance_alarms": {
+        "name": "Maintenance Alarms"
+      },
+      "message_id": {
+        "name": "Message ID"
+      },
+      "new_firewood_estimate": {
+        "name": "New Firewood Estimate"
+      },
+      "night_begin_time": {
+        "name": "Night Begin Time"
+      },
+      "night_end_time": {
+        "name": "Night End Time"
+      },
+      "night_lowering": {
+        "name": "Night Lowering"
+      },
+      "operation_mode": {
+        "name": "Operation Mode"
+      },
+      "oxygen_level": {
+        "name": "Oxygen Level"
+      },
+      "phase": {
+        "name": "Phase"
+      },
+      "room_temperature": {
+        "name": "Temperature"
+      },
+      "safety_alarms": {
+        "name": "Safety Alarms"
+      },
+      "stove_temperature": {
+        "name": "Temperature"
+      },
+      "time_since_remote_message": {
+        "name": "Time Since Remote Message"
+      },
+      "date_and_time": {
+        "name": "Date and time"
+      },
+      "time_to_new_firewood": {
+        "name": "Time To New Firewood"
+      },
+      "valve_1_position": {
+        "name": "Valve 1 Position"
+      },
+      "valve_2_position": {
+        "name": "Valve 2 Position"
+      },
+      "valve_3_position": {
+        "name": "Valve 3 Position"
+      }
     }
   },
   "issues": {

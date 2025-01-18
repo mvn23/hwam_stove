@@ -38,108 +38,108 @@ class HWAMStoveSensorEntityDescription(
 SENSOR_DESCRIPTIONS = [
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_ALGORITHM,
+        translation_key="algorithm",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Algorithm {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_BURN_LEVEL,
+        translation_key="burn_level",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Burn Level {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_MAINTENANCE_ALARMS,
+        translation_key="maintenance_alarms",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Maintenance Alarms {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_MESSAGE_ID,
+        translation_key="message_id",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Message ID {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NEW_FIREWOOD_ESTIMATE,
+        translation_key="new_firewood_estimate",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="New Firewood Estimate {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NIGHT_BEGIN_TIME,
+        translation_key="night_begin_time",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Night Begin Time {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NIGHT_END_TIME,
+        translation_key="night_end_time",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Night End Time {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NIGHT_LOWERING,
+        translation_key="night_lowering",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Night Lowering {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_OPERATION_MODE,
+        translation_key="operation_mode",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Operation Mode {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_OXYGEN_LEVEL,
+        translation_key="oxygen_level",
         device_identifier=StoveDeviceIdentifier.STOVE,
         native_unit_of_measurement=PERCENTAGE,
-        name_format="Oxygen Level {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_PHASE,
+        translation_key="phase",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Phase {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_ROOM_TEMPERATURE,
+        translation_key="room_temperature",
         device_identifier=StoveDeviceIdentifier.REMOTE,
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        name_format="Room Temperature {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_SAFETY_ALARMS,
+        translation_key="safety_alarms",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Safety Alarms {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_STOVE_TEMPERATURE,
+        translation_key="stove_temperature",
         device_identifier=StoveDeviceIdentifier.STOVE,
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        name_format="Stove Temperature {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_TIME_SINCE_REMOTE_MSG,
+        translation_key="time_since_remote_message",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Time Since Remote Message {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_DATE_TIME,
+        translation_key="date_and_time",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Date and time {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_TIME_TO_NEW_FIREWOOD,
+        translation_key="time_to_new_firewood",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Time To New Firewood {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_VALVE1_POSITION,
+        translation_key="valve_1_position",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Valve 1 Position {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_VALVE2_POSITION,
+        translation_key="valve_2_position",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Valve 2 Position {}",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_VALVE3_POSITION,
+        translation_key="valve_3_position",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Valve 3 Position {}",
     ),
 ]
 
@@ -169,6 +169,8 @@ async def async_setup_entry(
 
 class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
     """Representation of a HWAM Stove sensor."""
+
+    _attr_has_entity_name = True
 
     def __init__(self, stove_device, entity_description, entity_id):
         """Initialize the sensor."""

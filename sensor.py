@@ -25,7 +25,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 import pystove
 
 from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES
-from .entity import HWAMStoveEntityDescription
+from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -156,25 +156,18 @@ async def async_setup_entry(
     )
 
 
-class HwamStoveSensor(SensorEntity):
+class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
     """Representation of a HWAM Stove sensor."""
 
     def __init__(self, stove_device, entity_description, entity_id):
         """Initialize the sensor."""
-        self._stove_device = stove_device
+        super().__init__(stove_device, entity_description)
         self.entity_id = entity_id
         self._var = entity_description.key
         self._value = None
         self._device_class = entity_description.device_class
         self._unit = entity_description.native_unit_of_measurement
         self._name_format = entity_description.name_format
-
-    async def async_added_to_hass(self):
-        """Subscribe to updates from the component."""
-        _LOGGER.debug("Added HWAM Stove sensor %s", self.entity_id)
-        async_dispatcher_connect(
-            self.hass, self._stove_device.signal, self.receive_report
-        )
 
     async def receive_report(self, status):
         """Handle status updates from the component."""
@@ -192,11 +185,6 @@ class HwamStoveSensor(SensorEntity):
         self.async_schedule_update_ha_state()
 
     @property
-    def name(self):
-        """Return the friendly name of the sensor."""
-        return self._name_format.format(self._stove_device.stove.name)
-
-    @property
     def device_class(self):
         """Return the device class."""
         return self._device_class
@@ -210,8 +198,3 @@ class HwamStoveSensor(SensorEntity):
     def native_unit_of_measurement(self):
         """Return the unit of measurement."""
         return self._unit
-
-    @property
-    def should_poll(self):
-        """Return False because entity pushes its state."""
-        return False

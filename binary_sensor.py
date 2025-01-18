@@ -23,7 +23,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 import pystove
 
 from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES
-from .entity import HWAMStoveEntityDescription
+from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -233,34 +233,21 @@ async def async_setup_entry(
     async_add_entities(binary_sensors)
 
 
-class HwamStoveBinarySensor(BinarySensorEntity):
+class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):
     """Representation of a HWAM Stove binary sensor."""
 
     def __init__(self, stove_device, entity_description, entity_id):
         """Initialize the binary sensor."""
-        self._stove_device = stove_device
+        super().__init__(stove_device, entity_description)
         self.entity_id = entity_id
         self._var = entity_description.key
         self._state = None
         self._device_class = entity_description.device_class
-        self._name_format = entity_description.name_format
-
-    async def async_added_to_hass(self):
-        """Subscribe to updates from the component."""
-        _LOGGER.debug("Added HWAM Stove binary sensor %s", self.entity_id)
-        async_dispatcher_connect(
-            self.hass, self._stove_device.signal, self.receive_report
-        )
 
     async def receive_report(self, status):
         """Handle status updates from the component."""
         self._state = bool(status.get(self._var))
         self.async_schedule_update_ha_state()
-
-    @property
-    def name(self):
-        """Return the friendly name."""
-        return self._name_format.format(self._stove_device.stove.name)
 
     @property
     def is_on(self):
@@ -271,11 +258,6 @@ class HwamStoveBinarySensor(BinarySensorEntity):
     def device_class(self):
         """Return the class of this device."""
         return self._device_class
-
-    @property
-    def should_poll(self):
-        """Return False because entity pushes its state."""
-        return False
 
 
 class HwamStoveAlarmSensor(HwamStoveBinarySensor):

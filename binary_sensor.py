@@ -235,47 +235,29 @@ async def async_setup_entry(
 class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):
     """Representation of a HWAM Stove binary sensor."""
 
-    def __init__(self, stove_coordinator, entity_description):
-        """Initialize the binary sensor."""
-        super().__init__(stove_coordinator, entity_description)
-        self._var = entity_description.key
-        self._state = None
-        self._device_class = entity_description.device_class
+    entity_description: HWAMStoveBinarySensorEntityDescription
 
     @callback
     def _handle_coordinator_update(self):
         """Handle status updates from the coordinator."""
-        self._state = bool(self.coordinator.data[self._var])
+        self._attr_is_on = bool(self.coordinator.data[self.entity_description.key])
         self.async_write_ha_state()
 
-    @property
-    def is_on(self):
-        """Return true if the binary sensor is on."""
-        return self._state
 
-    @property
-    def device_class(self):
-        """Return the class of this device."""
-        return self._device_class
-
-
-class HwamStoveAlarmSensor(HwamStoveBinarySensor):
+class HwamStoveAlarmSensor(HWAMStoveEntity, BinarySensorEntity):
     """Representation of a HWAM Stove Alarm binary sensor."""
 
-    def __init__(self, stove_device, entity_description):
-        super().__init__(stove_device, entity_description)
-        self._alarm_str = entity_description.alarm_str
+    entity_description: HWAMStoveBinarySensorListEntityDescription
 
     @callback
     def _handle_coordinator_update(self):
         """Handle status updates from the component."""
-        if self._alarm_str:
-            self._state = (
-                self._alarm_str
+        self._attr_is_on = (
+            (
+                self.entity_description.alarm_str
                 in self.coordinator.data[self.entity_description.value_source_key]
             )
-        else:
-            self._state = (
-                self.coordinator.data[self.entity_description.value_source_key] != []
-            )
+            if self.entity_description.alarm_str is not None
+            else (self.coordinator.data[self.entity_description.value_source_key] != [])
+        )
         self.async_write_ha_state()

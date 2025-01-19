@@ -166,43 +166,23 @@ async def async_setup_entry(
 class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
     """Representation of a HWAM Stove sensor."""
 
-    def __init__(self, stove_device, entity_description):
-        """Initialize the sensor."""
-        super().__init__(stove_device, entity_description)
-        self._var = entity_description.key
-        self._value = None
-        self._device_class = entity_description.device_class
-        self._unit = entity_description.native_unit_of_measurement
+    entity_description: HWAMStoveSensorEntityDescription
 
     @callback
     def _handle_coordinator_update(self):
         """Handle status updates from the component."""
-        value = self.coordinator.data.get(self._var)
-        if self.coordinator.data.get(pystove.DATA_PHASE) != pystove.PHASE[
-            4
-        ] and self._var in [
+        value = self.coordinator.data[self.entity_description.key]
+        if self.entity_description.key in [
             pystove.DATA_NEW_FIREWOOD_ESTIMATE,
             pystove.DATA_TIME_TO_NEW_FIREWOOD,
+        ]  and self.coordinator.data[pystove.DATA_PHASE] != pystove.PHASE[
+            4
         ]:
-            value = "Wait for Glow phase..."
+            self._attr_native_value = "Wait for Glow phase..."
         elif isinstance(value, datetime):
-            value = value.strftime("%-d %b, %-H:%M")
+            self._attr_native_value = value.strftime("%-d %b, %-H:%M")
         elif isinstance(value, timedelta):
-            value = f"{value}"
-        self._value = value
+            self._attr_native_value = f"{value}"
+        else:
+            self._attr_native_value = value
         self.async_write_ha_state()
-
-    @property
-    def device_class(self):
-        """Return the device class."""
-        return self._device_class
-
-    @property
-    def native_value(self):
-        """Return the state of the device."""
-        return self._value
-
-    @property
-    def native_unit_of_measurement(self):
-        """Return the unit of measurement."""
-        return self._unit

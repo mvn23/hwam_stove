@@ -7,6 +7,7 @@ https://github.com/mvn23/hwam_stove
 
 from dataclasses import dataclass
 import logging
+from typing import Any, Optional
 
 from homeassistant.components.fan import (
     FanEntity,
@@ -60,7 +61,7 @@ class StoveBurnLevel(HWAMStoveEntity, FanEntity):
 
     entity_description: HWAMStoveFanEntityDescription
     _attr_speed_count = 5
-    _attr_supported_features = FanEntityFeature.SET_SPEED
+    _attr_supported_features = FanEntityFeature.TURN_ON |FanEntityFeature.SET_SPEED
 
     @callback
     def _handle_coordinator_update(self):
@@ -77,17 +78,19 @@ class StoveBurnLevel(HWAMStoveEntity, FanEntity):
         self._attr_percentage = int(percentage / 20)
         await self.coordinator.stove.set_burn_level(self._attr_percentage)
 
-    async def async_turn_on(self, speed: str = None, **kwargs):
+
+    async def async_turn_on(
+        self,
+        percentage: Optional[int] = None,
+        preset_mode: Optional[str] = None,
+        **kwargs: Any,
+    ) -> None:
         """Turn on the fan.
 
         This method must be run in the event loop and returns a coroutine.
         """
-        if not self._state:
+        if not self._attr_is_on:
             await self.coordinator.stove.start()
-
-    async def async_turn_off(self, **kwargs):
-        """Disable turn off."""
-        pass    
 
     @property
     def is_on(self):

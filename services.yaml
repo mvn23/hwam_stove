@@ -12,30 +12,6 @@ set_clock:
       description: Optional time in 24h format to set on the stove. Defaults to the current time.
       example: '19:34'
 
-enable_remote_refill_alarm:
-  description: Enable the remote refill alarm option on the HWAM stove.
-  fields:
-    stove_name:
-      description: The stove name as specified in configuration.yaml.
-
-disable_remote_refill_alarm:
-  description: Disable the remote refill alarm option on the HWAM stove.
-  fields:
-    stove_name:
-      description: The stove name as specified in configuration.yaml.
-
-enable_night_lowering:
-  description: Enable the night lowering function on the HWAM stove.
-  fields:
-    stove_name:
-      description: The stove name as specified in configuration.yaml.
-
-disable_night_lowering:
-  description: Disable the night lowering function on the HWAM stove.
-  fields:
-    stove_name:
-      description: The stove name as specified in configuration.yaml.
-
 set_night_lowering_hours:
   description: Set the night lowering hours on the HWAM stove. At least one of 'start_time' or 'end_time' must be provided.
   fields:

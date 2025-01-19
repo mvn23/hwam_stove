@@ -15,6 +15,7 @@ from homeassistant.const import (
     CONF_HOST,
     CONF_MONITORED_VARIABLES,
     CONF_NAME,
+    Platform,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv, issue_registry as ir
@@ -59,9 +60,10 @@ CONFIG_SCHEMA = vol.Schema(
 )
 
 PLATFORMS = [
-    "binary_sensor",
-    "fan",
-    "sensor",
+    Platform.BINARY_SENSOR,
+    Platform.FAN,
+    Platform.SENSOR,
+    Platform.SWITCH,
 ]
 
 _LOGGER = logging.getLogger(__name__)

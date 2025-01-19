@@ -11,7 +11,7 @@ import voluptuous as vol
 
 import pystove
 
-from . import DOMAIN
+from .const import DOMAIN
 
 
 class HWAMStoveConfigFlow(ConfigFlow, domain=DOMAIN):

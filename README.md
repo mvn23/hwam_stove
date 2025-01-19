@@ -1,9 +1,5 @@
 # Hwam_stove component for Home Assistant
 
-
-**This project should be considered abandoned. I do not have access to a HWAM stove anymore. Feel free to fork and update as you see fit.**
-
-
 The `hwam_stove` component is used to control a [Hwam Stove with Smartcontrol](http://www.hwam.com/) from Home Assistant.
 
 There is currently support for the following device types within Home Assistant:

@@ -19,7 +19,7 @@ from homeassistant.const import CONF_NAME, PERCENTAGE, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-import pystove
+from pystove import pystove
 
 from . import DATA_HWAM_STOVE, DATA_STOVES
 from .const import StoveDeviceIdentifier

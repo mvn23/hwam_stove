@@ -68,7 +68,8 @@ async def async_setup_entry(
         HwamStoveBinarySensor(
             stove_hub,
             entity_description,
-        ) for entity_description in SWITCH_DESCRIPTIONS
+        )
+        for entity_description in SWITCH_DESCRIPTIONS
     )
 
 
@@ -92,7 +93,6 @@ class HwamStoveBinarySensor(HWAMStoveEntity, SwitchEntity):
             self._attr_is_on = False
             self.async_schedule_update_ha_state()
 
-    
     async def async_turn_on(self, **kwargs):
         """Turn on the switch."""
         success = await self.entity_description.turn_on_func(self.coordinator)

@@ -5,8 +5,7 @@ For more details about this component, please refer to the documentation at
 https://github.com/mvn23/hwam_stove
 """
 
-from datetime import date, datetime, timedelta
-from enum import StrEnum
+from datetime import date, datetime
 import logging
 
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
@@ -14,25 +13,16 @@ from homeassistant.const import (
     ATTR_DATE,
     ATTR_TIME,
     CONF_HOST,
-    CONF_ID,
     CONF_MONITORED_VARIABLES,
     CONF_NAME,
-    EVENT_HOMEASSISTANT_STOP,
 )
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import (
-    config_validation as cv,
-    device_registry as dr,
-    issue_registry as ir,
-)
-from homeassistant.helpers.dispatcher import async_dispatcher_send
-from homeassistant.helpers.event import async_track_time_interval
+from homeassistant.helpers import config_validation as cv, issue_registry as ir
 from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
 
-from pystove import pystove
-
-DOMAIN = "hwam_stove"
+from .const import DOMAIN
+from .coordinator import StoveCoordinator
 
 ATTR_START_TIME = "start_time"
 ATTR_END_TIME = "end_time"
@@ -77,20 +67,15 @@ PLATFORMS = [
 _LOGGER = logging.getLogger(__name__)
 
 
-class StoveDeviceIdentifier(StrEnum):
-    """Device identification strings."""
-
-    REMOTE = "remote"
-    STOVE = "stove"
-
-
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up the HWAM Stove component from a config entry."""
     if DATA_HWAM_STOVE not in hass.data:
         hass.data[DATA_HWAM_STOVE] = {DATA_STOVES: {}}
 
-    stove_hub = await StoveDevice.create(hass, config_entry)
+    stove_hub = StoveCoordinator(hass, config_entry)
     hass.data[DATA_HWAM_STOVE][DATA_STOVES][config_entry.data[CONF_NAME]] = stove_hub
+
+    await stove_hub.async_config_entry_first_refresh()
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
 
@@ -243,69 +228,3 @@ def register_services(hass):
     hass.services.async_register(
         DOMAIN, SERVICE_SET_CLOCK, set_device_clock, service_set_clock_schema
     )
-
-
-class StoveDevice:
-    """Abstract description of a stove component."""
-
-    @classmethod
-    async def create(cls, hass, config_entry):
-        """Create a stove component."""
-        self = cls()
-        self.config_entry_id = config_entry.entry_id
-        self.device_entry = None
-        self.hass = hass
-        self.name = config_entry.data[CONF_NAME]
-        self.signal = f"hwam_stove_update_{config_entry.data[CONF_HOST]}"
-        self.hub_id = config_entry.data[CONF_ID]
-        self.stove = await pystove.Stove.create(
-            config_entry.data[CONF_HOST], skip_ident=True
-        )
-
-        async def cleanup(event):
-            """Clean up stove object."""
-            await self.stove.destroy()
-
-        hass.bus.async_listen(EVENT_HOMEASSISTANT_STOP, cleanup)
-        hass.async_create_task(self.init_stove())
-        return self
-
-    async def init_stove(self):
-        """Run ident routine and schedule updates."""
-        await self.stove._identify()
-
-        dev_reg = dr.async_get(self.hass)
-        self.stove_device_entry = dev_reg.async_get_or_create(
-            config_entry_id=self.config_entry_id,
-            identifiers={(DOMAIN, f"{self.hub_id}-{StoveDeviceIdentifier.STOVE}")},
-            manufacturer="HWAM",
-            model=f"{self.stove.series}",
-            translation_key="hwam_stove_device",
-        )
-        self.remote_device_entry = dev_reg.async_get_or_create(
-            config_entry_id=self.config_entry_id,
-            identifiers={(DOMAIN, f"{self.hub_id}-{StoveDeviceIdentifier.REMOTE}")},
-            manufacturer="HWAM",
-            translation_key="hwam_remote_device",
-        )
-
-        self.hass.loop.create_task(self.update())
-        async_track_time_interval(self.hass, self.update, timedelta(seconds=10))
-
-    async def update(self, *_):
-        """Update and dispatch stove info."""
-        data = await self.stove.get_data()
-        if data is None:
-            _LOGGER.error("Got empty response, skipping dispatch.")
-            return
-        async_dispatcher_send(self.hass, self.signal, data)
-
-        dev_reg = dr.async_get(self.hass)
-        dev_reg.async_update_device(
-            self.stove_device_entry.id,
-            sw_version=data.get(pystove.DATA_FIRMWARE_VERSION),
-        )
-        dev_reg.async_update_device(
-            self.remote_device_entry.id,
-            sw_version=data.get(pystove.DATA_REMOTE_VERSION),
-        )

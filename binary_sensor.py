@@ -15,13 +15,15 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.const import CONF_NAME
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import async_generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 import pystove
 
-from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES, StoveDeviceIdentifier
+from . import DATA_HWAM_STOVE, DATA_STOVES
+from .const import StoveDeviceIdentifier
 from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
 
 
@@ -252,18 +254,19 @@ async def async_setup_entry(
 class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):
     """Representation of a HWAM Stove binary sensor."""
 
-    def __init__(self, stove_device, entity_description, entity_id):
+    def __init__(self, stove_coordinator, entity_description, entity_id):
         """Initialize the binary sensor."""
-        super().__init__(stove_device, entity_description)
+        super().__init__(stove_coordinator, entity_description)
         self.entity_id = entity_id
         self._var = entity_description.key
         self._state = None
         self._device_class = entity_description.device_class
 
-    async def receive_report(self, status):
-        """Handle status updates from the component."""
-        self._state = bool(status.get(self._var))
-        self.async_schedule_update_ha_state()
+    @callback
+    def _handle_coordinator_update(self):
+        """Handle status updates from the coordinator."""
+        self._state = bool(self.coordinator.data[self._var])
+        self.async_write_ha_state()
 
     @property
     def is_on(self):
@@ -283,10 +286,16 @@ class HwamStoveAlarmSensor(HwamStoveBinarySensor):
         super().__init__(stove_device, entity_description, entity_id)
         self._alarm_str = entity_description.alarm_str
 
-    async def receive_report(self, status):
+    @callback
+    def _handle_coordinator_update(self):
         """Handle status updates from the component."""
         if self._alarm_str:
-            self._state = self._alarm_str in status.get(self._var, [])
+            self._state = (
+                self._alarm_str
+                in self.coordinator.data[self.entity_description.value_source_key]
+            )
         else:
-            self._state = status.get(self._var, []) != []
-        self.async_schedule_update_ha_state()
+            self._state = (
+                self.coordinator.data[self.entity_description.value_source_key] != []
+            )
+        self.async_write_ha_state()

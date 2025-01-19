@@ -15,14 +15,16 @@ from homeassistant.components.fan import (
     FanEntityFeature,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.const import CONF_NAME
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import slugify
 
 import pystove
 
-from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES
-from .entity import HWAMStoveEntity, HWAMStoveEntityDescription, StoveDeviceIdentifier
+from . import DATA_HWAM_STOVE, DATA_STOVES
+from .const import StoveDeviceIdentifier
+from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -57,26 +59,27 @@ async def async_setup_entry(
 class StoveBurnLevel(HWAMStoveEntity, FanEntity):
     """Representation of a fan."""
 
-    def __init__(self, stove_device, entity_description):
-        super().__init__(stove_device, entity_description)
+    def __init__(self, stove_coordinator, entity_description):
+        super().__init__(stove_coordinator, entity_description)
         self._burn_level = 0
         self._state = False
-        device_name = slugify(f"burn_level_{stove_device.name}")
+        device_name = slugify(f"burn_level_{stove_coordinator.name}")
         self.entity_id = f"{DOMAIN}.{device_name}"
         self._icon = "mdi:fire"
 
-    async def receive_report(self, data):
+    @callback
+    def _handle_coordinator_update(self):
         """Receive updates."""
-        self._burn_level = data[pystove.DATA_BURN_LEVEL]
-        self._state = data[pystove.DATA_PHASE] != pystove.PHASE[5]
-        self.async_schedule_update_ha_state()
+        self._burn_level = self.coordinator.data[pystove.DATA_BURN_LEVEL]
+        self._state = self.coordinator.data[pystove.DATA_PHASE] != pystove.PHASE[5]
+        self.async_write_ha_state()
 
     async def async_set_percentage(self, percentage: int) -> None:
         """Set the speed of the fan.
 
         This method must be run in the event loop and returns a coroutine.
         """
-        await self._stove_device.stove.set_burn_level(int(percentage / 20))
+        await self.coordinator.stove.set_burn_level(int(percentage / 20))
 
     async def async_turn_on(self, speed: str = None, **kwargs):
         """Turn on the fan.
@@ -84,7 +87,7 @@ class StoveBurnLevel(HWAMStoveEntity, FanEntity):
         This method must be run in the event loop and returns a coroutine.
         """
         if not self._state:
-            await self._stove_device.stove.start()
+            await self.coordinator.stove.start()
 
     async def async_turn_off(self, **kwargs):
         """Disable turn off."""

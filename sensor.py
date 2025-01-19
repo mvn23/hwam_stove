@@ -16,15 +16,16 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import PERCENTAGE, UnitOfTemperature
-from homeassistant.core import HomeAssistant
+from homeassistant.const import CONF_NAME, PERCENTAGE, UnitOfTemperature
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import async_generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 import pystove
 
-from . import CONF_NAME, DATA_HWAM_STOVE, DATA_STOVES
-from .entity import HWAMStoveEntity, HWAMStoveEntityDescription, StoveDeviceIdentifier
+from . import DATA_HWAM_STOVE, DATA_STOVES
+from .const import StoveDeviceIdentifier
+from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -179,10 +180,13 @@ class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
         self._device_class = entity_description.device_class
         self._unit = entity_description.native_unit_of_measurement
 
-    async def receive_report(self, status):
+    @callback
+    def _handle_coordinator_update(self):
         """Handle status updates from the component."""
-        value = status.get(self._var)
-        if status.get(pystove.DATA_PHASE) != pystove.PHASE[4] and self._var in [
+        value = self.coordinator.data.get(self._var)
+        if self.coordinator.data.get(pystove.DATA_PHASE) != pystove.PHASE[
+            4
+        ] and self._var in [
             pystove.DATA_NEW_FIREWOOD_ESTIMATE,
             pystove.DATA_TIME_TO_NEW_FIREWOOD,
         ]:
@@ -192,7 +196,7 @@ class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
         elif isinstance(value, timedelta):
             value = f"{value}"
         self._value = value
-        self.async_schedule_update_ha_state()
+        self.async_write_ha_state()
 
     @property
     def device_class(self):

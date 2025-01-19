@@ -9,12 +9,12 @@ from homeassistant.const import CONF_HOST, CONF_ID, CONF_NAME
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 
-import pystove
+from pystove import pystove
 
 from .const import DOMAIN
 
 
-class HWAMStoveConfigFlow(ConfigFlow, domain=DOMAIN):
+class HWAMStoveConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
     """HWAM Stove Config Flow."""
 
     VERSION = 1
@@ -36,17 +36,15 @@ class HWAMStoveConfigFlow(ConfigFlow, domain=DOMAIN):
             if host in [e[CONF_HOST] for e in entries]:
                 return self._show_form({"base": "already_configured"})
 
-            async def test_connection():
+            async def test_connection() -> None:
                 """Try to connect to the OpenTherm Gateway."""
                 stove = await pystove.Stove.create(host)
                 status = (
-                    stove.name != pystove.pystove.UNKNOWN
-                    and stove.stove_ip != pystove.pystove.UNKNOWN
+                    stove.name != pystove.UNKNOWN and stove.stove_ip != pystove.UNKNOWN  # type: ignore[attr-defined]
                 )
                 await stove.destroy()
                 if not status:
                     raise ConnectionError
-                return status
 
             try:
                 await test_connection()
@@ -88,7 +86,7 @@ class HWAMStoveConfigFlow(ConfigFlow, domain=DOMAIN):
             errors=errors or {},
         )
 
-    def _create_entry(self, stove_id, name, host):
+    def _create_entry(self, stove_id: str, name: str, host: str) -> ConfigFlowResult:
         """Create entry for the HWAM Stove."""
         return self.async_create_entry(
             title=name, data={CONF_ID: stove_id, CONF_HOST: host, CONF_NAME: name}

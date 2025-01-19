@@ -19,7 +19,7 @@ from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-import pystove
+from pystove import pystove
 
 from . import DATA_HWAM_STOVE, DATA_STOVES
 from .const import StoveDeviceIdentifier
@@ -64,7 +64,7 @@ class StoveBurnLevel(HWAMStoveEntity, FanEntity):
     _attr_supported_features = FanEntityFeature.TURN_ON | FanEntityFeature.SET_SPEED
 
     @callback
-    def _handle_coordinator_update(self):
+    def _handle_coordinator_update(self) -> None:
         """Receive updates."""
         self._attr_percentage = self.coordinator.data[pystove.DATA_BURN_LEVEL] * 20
         self._attr_is_on = self.coordinator.data[pystove.DATA_PHASE] != pystove.PHASE[5]
@@ -92,6 +92,6 @@ class StoveBurnLevel(HWAMStoveEntity, FanEntity):
             await self.coordinator.stove.start()
 
     @property
-    def is_on(self):
+    def is_on(self) -> bool | None:
         """Return true if the entity is on."""
         return self._attr_is_on

@@ -5,9 +5,10 @@ For more details about this platform, please refer to the documentation at
 https://github.com/mvn23/hwam_stove
 """
 
+from collections.abc import Awaitable
 from dataclasses import dataclass
 import logging
-from typing import Any, Awaitable, Callable
+from typing import Any, Callable
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
@@ -79,21 +80,21 @@ class HwamStoveBinarySensor(HWAMStoveEntity, SwitchEntity):
     entity_description: HWAMStoveSwitchEntityDescription
 
     @callback
-    def _handle_coordinator_update(self):
+    def _handle_coordinator_update(self) -> None:
         """Handle status updates from the component."""
         self._attr_is_on = self.entity_description.state_func(
             self.coordinator.data[self.entity_description.key]
         )
         self.async_write_ha_state()
 
-    async def async_turn_off(self, **kwargs):
+    async def async_turn_off(self, **kwargs) -> None:
         """Turn off the switch."""
         success = await self.entity_description.turn_off_func(self.coordinator)
         if success:
             self._attr_is_on = False
             self.async_schedule_update_ha_state()
 
-    async def async_turn_on(self, **kwargs):
+    async def async_turn_on(self, **kwargs) -> None:
         """Turn on the switch."""
         success = await self.entity_description.turn_on_func(self.coordinator)
         if success:

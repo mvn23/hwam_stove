@@ -238,7 +238,7 @@ class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):
     entity_description: HWAMStoveBinarySensorEntityDescription
 
     @callback
-    def _handle_coordinator_update(self):
+    def _handle_coordinator_update(self) -> None:
         """Handle status updates from the coordinator."""
         self._attr_is_on = bool(self.coordinator.data[self.entity_description.key])
         self.async_write_ha_state()
@@ -250,7 +250,7 @@ class HwamStoveAlarmSensor(HWAMStoveEntity, BinarySensorEntity):
     entity_description: HWAMStoveBinarySensorListEntityDescription
 
     @callback
-    def _handle_coordinator_update(self):
+    def _handle_coordinator_update(self) -> None:
         """Handle status updates from the component."""
         self._attr_is_on = (
             (

@@ -17,7 +17,7 @@ from homeassistant.const import (
     CONF_NAME,
     Platform,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers import config_validation as cv, issue_registry as ir
 from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
@@ -109,17 +109,19 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
 
 
-def register_services(hass):
+def register_services(hass: HomeAssistant) -> None:
     """Register HWAM Stove services."""
 
-    service_set_night_lowering_hours_schema = vol.Schema(
-        {
-            vol.Required(ATTR_STOVE_NAME): vol.All(
-                cv.string, vol.In(hass.data[DATA_HWAM_STOVE][DATA_STOVES])
-            ),
-            vol.Optional(ATTR_START_TIME): cv.time,
-            vol.Optional(ATTR_END_TIME): cv.time,
-        },
+    service_set_night_lowering_hours_schema = vol.All(
+        vol.Schema(
+            {
+                vol.Required(ATTR_STOVE_NAME): vol.All(
+                    cv.string, vol.In(hass.data[DATA_HWAM_STOVE][DATA_STOVES])
+                ),
+                vol.Optional(ATTR_START_TIME): cv.time,
+                vol.Optional(ATTR_END_TIME): cv.time,
+            },
+        ),
         cv.has_at_least_one_key(ATTR_START_TIME, ATTR_END_TIME),
     )
     service_set_clock_schema = vol.Schema(
@@ -132,7 +134,7 @@ def register_services(hass):
         }
     )
 
-    async def set_night_lowering_hours(call):
+    async def set_night_lowering_hours(call: ServiceCall) -> None:
         """Set night lowering hours on the stove."""
         stove_name = call.data[ATTR_STOVE_NAME]
         stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
@@ -149,7 +151,7 @@ def register_services(hass):
         service_set_night_lowering_hours_schema,
     )
 
-    async def set_device_clock(call):
+    async def set_device_clock(call: ServiceCall) -> None:
         """Set the clock on the stove."""
         stove_name = call.data[ATTR_STOVE_NAME]
         stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)

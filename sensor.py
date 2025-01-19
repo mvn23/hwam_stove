@@ -169,7 +169,7 @@ class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
     entity_description: HWAMStoveSensorEntityDescription
 
     @callback
-    def _handle_coordinator_update(self):
+    def _handle_coordinator_update(self) -> None:
         """Handle status updates from the component."""
         value = self.coordinator.data[self.entity_description.key]
         if (

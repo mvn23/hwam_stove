@@ -53,7 +53,6 @@ CONFIG_SCHEMA = vol.Schema(
                     }
                 ),
             },
-            cv.ensure_list,
         ),
     },
     extra=vol.ALLOW_EXTRA,

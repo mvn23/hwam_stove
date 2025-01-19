@@ -18,7 +18,7 @@ from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-import pystove
+from pystove import pystove
 
 from . import DATA_HWAM_STOVE, DATA_STOVES
 from .const import StoveDeviceIdentifier
@@ -219,17 +219,17 @@ async def async_setup_entry(
     """Set up the HWAM Stove binary sensors."""
     stove_name = config_entry.data[CONF_NAME]
     stove_hub = hass.data[DATA_HWAM_STOVE][DATA_STOVES][stove_name]
-    binary_sensors = []
-    for entity_description in BINARY_SENSOR_DESCRIPTIONS:
-        binary_sensors.append(
-            HwamStoveBinarySensor(
-                stove_hub,
-                entity_description,
-            )
+    async_add_entities(
+        HwamStoveBinarySensor(
+            stove_hub,
+            entity_description,
         )
-    for entity_description in BINARY_SENSOR_LIST_DESCRIPTIONS:
-        binary_sensors.append(HwamStoveAlarmSensor(stove_hub, entity_description))
-    async_add_entities(binary_sensors)
+        for entity_description in BINARY_SENSOR_DESCRIPTIONS
+    )
+    async_add_entities(
+        HwamStoveAlarmSensor(stove_hub, entity_description)
+        for entity_description in BINARY_SENSOR_LIST_DESCRIPTIONS
+    )
 
 
 class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):

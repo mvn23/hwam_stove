@@ -61,7 +61,7 @@ class StoveBurnLevel(HWAMStoveEntity, FanEntity):
 
     entity_description: HWAMStoveFanEntityDescription
     _attr_speed_count = 5
-    _attr_supported_features = FanEntityFeature.TURN_ON |FanEntityFeature.SET_SPEED
+    _attr_supported_features = FanEntityFeature.TURN_ON | FanEntityFeature.SET_SPEED
 
     @callback
     def _handle_coordinator_update(self):
@@ -77,7 +77,6 @@ class StoveBurnLevel(HWAMStoveEntity, FanEntity):
         """
         self._attr_percentage = int(percentage / 20)
         await self.coordinator.stove.set_burn_level(self._attr_percentage)
-
 
     async def async_turn_on(
         self,

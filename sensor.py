@@ -172,12 +172,14 @@ class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
     def _handle_coordinator_update(self):
         """Handle status updates from the component."""
         value = self.coordinator.data[self.entity_description.key]
-        if self.entity_description.key in [
-            pystove.DATA_NEW_FIREWOOD_ESTIMATE,
-            pystove.DATA_TIME_TO_NEW_FIREWOOD,
-        ]  and self.coordinator.data[pystove.DATA_PHASE] != pystove.PHASE[
-            4
-        ]:
+        if (
+            self.entity_description.key
+            in [
+                pystove.DATA_NEW_FIREWOOD_ESTIMATE,
+                pystove.DATA_TIME_TO_NEW_FIREWOOD,
+            ]
+            and self.coordinator.data[pystove.DATA_PHASE] != pystove.PHASE[4]
+        ):
             self._attr_native_value = "Wait for Glow phase..."
         elif isinstance(value, datetime):
             self._attr_native_value = value.strftime("%-d %b, %-H:%M")

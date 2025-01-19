@@ -15,6 +15,7 @@ from homeassistant.const import (
     CONF_HOST,
     CONF_MONITORED_VARIABLES,
     CONF_NAME,
+    Platform,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv, issue_registry as ir
@@ -59,9 +60,10 @@ CONFIG_SCHEMA = vol.Schema(
 )
 
 PLATFORMS = [
-    "binary_sensor",
-    "fan",
-    "sensor",
+    Platform.BINARY_SENSOR,
+    Platform.FAN,
+    Platform.SENSOR,
+    Platform.SWITCH,
 ]
 
 _LOGGER = logging.getLogger(__name__)
@@ -130,13 +132,6 @@ def register_services(hass):
             vol.Optional(ATTR_TIME, default=datetime.now().time()): cv.time,
         }
     )
-    service_basic_schema = vol.Schema(
-        {
-            vol.Required(ATTR_STOVE_NAME): vol.All(
-                cv.string, vol.In(hass.data[DATA_HWAM_STOVE][DATA_STOVES])
-            ),
-        }
-    )
 
     async def set_night_lowering_hours(call):
         """Set night lowering hours on the stove."""
@@ -153,66 +148,6 @@ def register_services(hass):
         SERVICE_SET_NIGHT_LOWERING_HOURS,
         set_night_lowering_hours,
         service_set_night_lowering_hours_schema,
-    )
-
-    async def enable_night_lowering(call):
-        """Enable night lowering."""
-        stove_name = call.data[ATTR_STOVE_NAME]
-        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
-        if stove_device is None:
-            return
-        await stove_device.stove.set_night_lowering(True)
-
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_ENABLE_NIGHT_LOWERING,
-        enable_night_lowering,
-        service_basic_schema,
-    )
-
-    async def disable_night_lowering(call):
-        """Disable night lowering."""
-        stove_name = call.data[ATTR_STOVE_NAME]
-        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
-        if stove_device is None:
-            return
-        await stove_device.stove.set_night_lowering(False)
-
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_DISABLE_NIGHT_LOWERING,
-        disable_night_lowering,
-        service_basic_schema,
-    )
-
-    async def enable_remote_refill_alarm(call):
-        """Enable remote refill alarm."""
-        stove_name = call.data[ATTR_STOVE_NAME]
-        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
-        if stove_device is None:
-            return
-        await stove_device.stove.set_remote_refill_alarm(True)
-
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_ENABLE_REMOTE_REFILL_ALARM,
-        enable_remote_refill_alarm,
-        service_basic_schema,
-    )
-
-    async def disable_remote_refill_alarm(call):
-        """Disable remote refill alarm."""
-        stove_name = call.data[ATTR_STOVE_NAME]
-        stove_device = hass.data[DATA_HWAM_STOVE][DATA_STOVES].get(stove_name)
-        if stove_device is None:
-            return
-        await stove_device.stove.set_remote_refill_alarm(False)
-
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_DISABLE_REMOTE_REFILL_ALARM,
-        disable_remote_refill_alarm,
-        service_basic_schema,
     )
 
     async def set_device_clock(call):

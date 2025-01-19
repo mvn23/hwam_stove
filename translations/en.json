@@ -146,6 +146,14 @@
       "valve_3_position": {
         "name": "Valve 3 Position"
       }
+    },
+    "switch": {
+      "night_lowering": {
+        "name": "Night Lowering"
+      },
+      "remote_refill_alarm": {
+        "name": "Refill Alarm"
+      }
     }
   },
   "issues": {

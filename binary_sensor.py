@@ -252,8 +252,6 @@ async def async_setup_entry(
 class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):
     """Representation of a HWAM Stove binary sensor."""
 
-    _attr_has_entity_name = True
-
     def __init__(self, stove_device, entity_description, entity_id):
         """Initialize the binary sensor."""
         super().__init__(stove_device, entity_description)

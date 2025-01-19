@@ -170,8 +170,6 @@ async def async_setup_entry(
 class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
     """Representation of a HWAM Stove sensor."""
 
-    _attr_has_entity_name = True
-
     def __init__(self, stove_device, entity_description, entity_id):
         """Initialize the sensor."""
         super().__init__(stove_device, entity_description)
@@ -180,7 +178,6 @@ class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
         self._value = None
         self._device_class = entity_description.device_class
         self._unit = entity_description.native_unit_of_measurement
-        self._name_format = entity_description.name_format
 
     async def receive_report(self, status):
         """Handle status updates from the component."""

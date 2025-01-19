@@ -10,13 +10,13 @@ from . import DOMAIN, StoveDevice, StoveDeviceIdentifier
 class HWAMStoveEntityDescription(EntityDescription):
     """Describe common hwam_stove entity properties."""
 
-    name_format: str | None = None
     device_identifier: StoveDeviceIdentifier
 
 
 class HWAMStoveEntity(Entity):
     """Represent a hwam_stove entity."""
 
+    _attr_has_entity_name = True
     _attr_should_poll = False
     entity_description: HWAMStoveEntityDescription
 
@@ -36,10 +36,6 @@ class HWAMStoveEntity(Entity):
         )
         self._stove_device = stove_device
         self.entity_description = entity_description
-        if self.entity_description.name_format is not None:
-            self._attr_name = self.entity_description.name_format.format(
-                stove_device.stove.name
-            )
 
     async def async_added_to_hass(self):
         """Subscribe to updates."""

@@ -9,7 +9,6 @@ from dataclasses import dataclass
 import logging
 
 from homeassistant.components.binary_sensor import (
-    ENTITY_ID_FORMAT,
     BinarySensorDeviceClass,
     BinarySensorEntity,
     BinarySensorEntityDescription,
@@ -17,7 +16,6 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import async_generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 import pystove
@@ -227,37 +225,19 @@ async def async_setup_entry(
             HwamStoveBinarySensor(
                 stove_hub,
                 entity_description,
-                async_generate_entity_id(
-                    ENTITY_ID_FORMAT,
-                    f"{entity_description.key}_{stove_hub.name}",
-                    hass=hass,
-                ),
             )
         )
-    for description in BINARY_SENSOR_LIST_DESCRIPTIONS:
-        if description.alarm_str is None:
-            entity_id = async_generate_entity_id(
-                ENTITY_ID_FORMAT,
-                f"{description.key}_{stove_hub.name}",
-                hass=hass,
-            )
-        else:
-            entity_id = async_generate_entity_id(
-                ENTITY_ID_FORMAT,
-                f"{description.key}_{description.alarm_str}_{stove_hub.name}",
-                hass=hass,
-            )
-        binary_sensors.append(HwamStoveAlarmSensor(stove_hub, description, entity_id))
+    for entity_description in BINARY_SENSOR_LIST_DESCRIPTIONS:
+        binary_sensors.append(HwamStoveAlarmSensor(stove_hub, entity_description))
     async_add_entities(binary_sensors)
 
 
 class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):
     """Representation of a HWAM Stove binary sensor."""
 
-    def __init__(self, stove_coordinator, entity_description, entity_id):
+    def __init__(self, stove_coordinator, entity_description):
         """Initialize the binary sensor."""
         super().__init__(stove_coordinator, entity_description)
-        self.entity_id = entity_id
         self._var = entity_description.key
         self._state = None
         self._device_class = entity_description.device_class
@@ -282,8 +262,8 @@ class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):
 class HwamStoveAlarmSensor(HwamStoveBinarySensor):
     """Representation of a HWAM Stove Alarm binary sensor."""
 
-    def __init__(self, stove_device, entity_description, entity_id):
-        super().__init__(stove_device, entity_description, entity_id)
+    def __init__(self, stove_device, entity_description):
+        super().__init__(stove_device, entity_description)
         self._alarm_str = entity_description.alarm_str
 
     @callback

@@ -9,7 +9,6 @@ from dataclasses import dataclass
 import logging
 
 from homeassistant.components.fan import (
-    DOMAIN,
     FanEntity,
     FanEntityDescription,
     FanEntityFeature,
@@ -18,7 +17,6 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.util import slugify
 
 import pystove
 
@@ -63,8 +61,6 @@ class StoveBurnLevel(HWAMStoveEntity, FanEntity):
         super().__init__(stove_coordinator, entity_description)
         self._burn_level = 0
         self._state = False
-        device_name = slugify(f"burn_level_{stove_coordinator.name}")
-        self.entity_id = f"{DOMAIN}.{device_name}"
         self._icon = "mdi:fire"
 
     @callback

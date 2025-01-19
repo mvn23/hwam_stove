@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 import logging
 
 from homeassistant.components.sensor import (
-    ENTITY_ID_FORMAT,
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
@@ -18,7 +17,6 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME, PERCENTAGE, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import async_generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 import pystove
@@ -160,9 +158,6 @@ async def async_setup_entry(
         HwamStoveSensor(
             stove_device,
             description,
-            async_generate_entity_id(
-                ENTITY_ID_FORMAT, f"{description.key}_{stove_device.name}", hass=hass
-            ),
         )
         for description in SENSOR_DESCRIPTIONS
     )
@@ -171,10 +166,9 @@ async def async_setup_entry(
 class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
     """Representation of a HWAM Stove sensor."""
 
-    def __init__(self, stove_device, entity_description, entity_id):
+    def __init__(self, stove_device, entity_description):
         """Initialize the sensor."""
         super().__init__(stove_device, entity_description)
-        self.entity_id = entity_id
         self._var = entity_description.key
         self._value = None
         self._device_class = entity_description.device_class

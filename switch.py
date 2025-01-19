@@ -83,12 +83,19 @@ class HwamStoveBinarySensor(HWAMStoveEntity, SwitchEntity):
         self._attr_is_on = self.entity_description.state_func(
             self.coordinator.data[self.entity_description.key]
         )
-        self.async_schedule_update_ha_state()
+        self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs):
         """Turn off the switch."""
-        await self.entity_description.turn_off_func(self.coordinator)
+        success = await self.entity_description.turn_off_func(self.coordinator)
+        if success:
+            self._attr_is_on = False
+            self.async_schedule_update_ha_state()
+
     
     async def async_turn_on(self, **kwargs):
         """Turn on the switch."""
-        await self.entity_description.turn_on_func(self.coordinator)
+        success = await self.entity_description.turn_on_func(self.coordinator)
+        if success:
+            self._attr_is_on = True
+            self.async_schedule_update_ha_state()

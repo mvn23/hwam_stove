@@ -47,8 +47,8 @@ class HWAMStoveBinarySensorListEntityDescription(
 BINARY_SENSOR_DESCRIPTIONS = [
     HWAMStoveBinarySensorEntityDescription(
         key=pystove.DATA_REFILL_ALARM,
+        translation_key="refill_alarm",
         device_identifier=StoveDeviceIdentifier.STOVE,
-        name_format="Refill Alarm {}",
     ),
 ]
 
@@ -56,154 +56,154 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
     # General (any) maintenance alarm
     HWAMStoveBinarySensorListEntityDescription(
         key=pystove.DATA_MAINTENANCE_ALARMS,
+        translation_key="maintenance_alarms",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
-        name_format="Maintenance Alarm {}",
         alarm_str=None,
     ),
     # Stove Backup Battery Low
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_backup_battery_low",
+        translation_key="maintenance_alarms_backup_battery_low",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.BATTERY,
-        name_format="Stove Backup Battery Low {}",
         alarm_str=pystove.MAINTENANCE_ALARMS[0],
     ),
     # O2 Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_o2_sensor_fault",
+        translation_key="maintenance_alarms_o2_sensor_fault",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
-        name_format="O2 Sensor Fault {}",
         alarm_str=pystove.MAINTENANCE_ALARMS[1],
     ),
     # O2 Sensor Offset
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_o2_sensor_offset",
+        translation_key="maintenance_alarms_o2_sensor_offset",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
-        name_format="O2 Sensor Offset {}",
         alarm_str=pystove.MAINTENANCE_ALARMS[2],
     ),
     # Stove Temperature Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_stove_temp_sensor_fault",
+        translation_key="maintenance_alarms_stove_temp_sensor_fault",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
-        name_format="Stove Temperature Sensor Fault {}",
         alarm_str=pystove.MAINTENANCE_ALARMS[3],
     ),
     # Room Temperature Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_room_temp_sensor_fault",
+        translation_key="maintenance_alarms_room_temp_sensor_fault",
         device_identifier=StoveDeviceIdentifier.REMOTE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
-        name_format="Room Temperature Sensor Fault {}",
         alarm_str=pystove.MAINTENANCE_ALARMS[4],
     ),
     # Communication Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_communication_fault",
+        translation_key="maintenance_alarms_communication_fault",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
-        name_format="Communication Fault {}",
         alarm_str=pystove.MAINTENANCE_ALARMS[5],
     ),
     # Room Temperature Sensor Battery Low
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_MAINTENANCE_ALARMS}_room_temp_sensor_battery_low",
+        translation_key="maintenance_alarms_room_temp_sensor_battery_low",
         device_identifier=StoveDeviceIdentifier.REMOTE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
-        name_format="Room Temperature Sensor Battery Low {}",
         alarm_str=pystove.MAINTENANCE_ALARMS[6],
     ),
     # General (any) safety alarm
     HWAMStoveBinarySensorListEntityDescription(
         key=pystove.DATA_SAFETY_ALARMS,
+        translation_key="safety_alarms",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
-        name_format="Safety Alarm {}",
         alarm_str=None,
     ),
     # Valve Fault, same as [1] and [2].
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_valve_fault",
+        translation_key="safety_alarms_valve_fault",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
-        name_format="Valve Fault {}",
         alarm_str=pystove.SAFETY_ALARMS[0],
     ),
     # Bad Configuration
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_bad_configuration",
+        translation_key="safety_alarms_bad_configuration",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
-        name_format="Bad Configuration {}",
         alarm_str=pystove.SAFETY_ALARMS[3],
     ),
     # Valve Disconnect, same as [5] and [6]
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_valve_disconnect",
+        translation_key="safety_alarms_valve_disconnect",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
-        name_format="Valve Disconnect {}",
         alarm_str=pystove.SAFETY_ALARMS[4],
     ),
     # Valve Calibration Error, same as [8] and [9]
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_valve_calibration_error",
+        translation_key="safety_alarms_valve_calibration_error",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
-        name_format="Valve Calibration Error {}",
         alarm_str=pystove.SAFETY_ALARMS[7],
     ),
     # Overheating
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_stove_overheat",
+        translation_key="safety_alarms_stove_overheat",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
-        name_format="Stove Overheat {}",
         alarm_str=pystove.SAFETY_ALARMS[10],
     ),
     # Door Open Too Long
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_door_open_too_long",
+        translation_key="safety_alarms_door_open_too_long",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
-        name_format="Door Open Too Long {}",
         alarm_str=pystove.SAFETY_ALARMS[11],
     ),
     # Manual Safety Alarm
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_manual_safety_alarm",
+        translation_key="safety_alarms_manual_safety_alarm",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
-        name_format="Manual Safety Alarm {}",
         alarm_str=pystove.SAFETY_ALARMS[12],
     ),
     # Stove Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
         key=f"{pystove.DATA_SAFETY_ALARMS}_stove_sensor_fault",
+        translation_key="safety_alarms_stove_sensor_fault",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.SAFETY,
-        name_format="Stove Sensor Fault {}",
         alarm_str=pystove.SAFETY_ALARMS[13],
     ),
 ]

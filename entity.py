@@ -10,13 +10,13 @@ from . import DOMAIN, StoveDevice, StoveDeviceIdentifier
 class HWAMStoveEntityDescription(EntityDescription):
     """Describe common hwam_stove entity properties."""
 
-    name_format: str
     device_identifier: StoveDeviceIdentifier
 
 
 class HWAMStoveEntity(Entity):
     """Represent a hwam_stove entity."""
 
+    _attr_has_entity_name = True
     _attr_should_poll = False
     entity_description: HWAMStoveEntityDescription
 
@@ -49,8 +49,3 @@ class HWAMStoveEntity(Entity):
         """Receive updates from the component."""
         # Must be implemented at the platform level.
         raise NotImplementedError
-
-    @property
-    def name(self) -> str:
-        """Set the friendly name."""
-        return self.entity_description.name_format.format(self._stove_device.stove.name)

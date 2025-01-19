@@ -47,8 +47,8 @@ async def async_setup_entry(
         stove_hub,
         HWAMStoveFanEntityDescription(
             key="fan_entity",
+            translation_key="fan_entity",
             device_identifier=StoveDeviceIdentifier.STOVE,
-            name_format="Burn Level {}",
         ),
     )
     async_add_entities([stove])

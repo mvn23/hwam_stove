@@ -23,6 +23,131 @@
       "name": "HWAM Smart Stove"
     }
   },
+  "entity": {
+    "binary_sensor": {
+      "refill_alarm": {
+        "name": "Refill Alarm"
+      },
+      "maintenance_alarms": {
+        "name": "Maintenance Alarm"
+      },
+      "maintenance_alarms_backup_battery_low": {
+        "name": "Backup Battery Low"
+      },
+      "maintenance_alarms_o2_sensor_fault": {
+        "name": "O2 Sensor Fault"
+      },
+      "maintenance_alarms_o2_sensor_offset": {
+        "name": "O2 Sensor Offset"
+      },
+      "maintenance_alarms_stove_temp_sensor_fault": {
+        "name": "Temperature Sensor Fault"
+      },
+      "maintenance_alarms_room_temp_sensor_fault": {
+        "name": "Temperature Sensor Fault"
+      },
+      "maintenance_alarms_communication_fault": {
+        "name": "Communication Fault"
+      },
+      "maintenance_alarms_room_temp_sensor_battery_low": {
+        "name": "Battery Low"
+      },
+      "safety_alarms": {
+        "name": "Safety Alarm"
+      },
+      "safety_alarms_valve_fault": {
+        "name": "Valve Fault"
+      },
+      "safety_alarms_bad_configuration": {
+        "name": "Bad Configuration"
+      },
+      "safety_alarms_valve_disconnect": {
+        "name": "Valve Disconnect"
+      },
+      "safety_alarms_valve_calibration_error": {
+        "name": "Valve Calibration Error"
+      },
+      "safety_alarms_stove_overheat": {
+        "name": "Overheat Alarm"
+      },
+      "safety_alarms_door_open_too_long": {
+        "name": "Door Open Too Long"
+      },
+      "safety_alarms_manual_safety_alarm": {
+        "name": "Manual Safety Alarm"
+      },
+      "safety_alarms_stove_sensor_fault": {
+        "name": "Sensor Fault"
+      }
+    },
+    "fan": {
+      "fan_entity": {
+        "name": "Burn Level"
+      }
+    },
+    "sensor": {
+      "algorithm": {
+        "name": "Algorithm"
+      },
+      "burn_level": {
+        "name": "Burn Level"
+      },
+      "maintenance_alarms": {
+        "name": "Maintenance Alarms"
+      },
+      "message_id": {
+        "name": "Message ID"
+      },
+      "new_firewood_estimate": {
+        "name": "New Firewood Estimate"
+      },
+      "night_begin_time": {
+        "name": "Night Begin Time"
+      },
+      "night_end_time": {
+        "name": "Night End Time"
+      },
+      "night_lowering": {
+        "name": "Night Lowering"
+      },
+      "operation_mode": {
+        "name": "Operation Mode"
+      },
+      "oxygen_level": {
+        "name": "Oxygen Level"
+      },
+      "phase": {
+        "name": "Phase"
+      },
+      "room_temperature": {
+        "name": "Temperature"
+      },
+      "safety_alarms": {
+        "name": "Safety Alarms"
+      },
+      "stove_temperature": {
+        "name": "Temperature"
+      },
+      "time_since_remote_message": {
+        "name": "Time Since Remote Message"
+      },
+      "date_and_time": {
+        "name": "Date and time"
+      },
+      "time_to_new_firewood": {
+        "name": "Time To New Firewood"
+      },
+      "valve_1_position": {
+        "name": "Valve 1 Position"
+      },
+      "valve_2_position": {
+        "name": "Valve 2 Position"
+      },
+      "valve_3_position": {
+        "name": "Valve 3 Position"
+      }
+    }
+  },
   "issues": {
     "deprecated_import_from_configuration_yaml": {
       "title": "Deprecated configuration",

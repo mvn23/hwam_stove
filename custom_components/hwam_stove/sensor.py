@@ -60,16 +60,6 @@ SENSOR_DESCRIPTIONS = [
         device_identifier=StoveDeviceIdentifier.STOVE,
     ),
     HWAMStoveSensorEntityDescription(
-        key=pystove.DATA_NIGHT_BEGIN_TIME,
-        translation_key="night_begin_time",
-        device_identifier=StoveDeviceIdentifier.STOVE,
-    ),
-    HWAMStoveSensorEntityDescription(
-        key=pystove.DATA_NIGHT_END_TIME,
-        translation_key="night_end_time",
-        device_identifier=StoveDeviceIdentifier.STOVE,
-    ),
-    HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NIGHT_LOWERING,
         translation_key="night_lowering",
         device_identifier=StoveDeviceIdentifier.STOVE,

@@ -101,12 +101,6 @@
       "new_firewood_estimate": {
         "name": "New Firewood Estimate"
       },
-      "night_begin_time": {
-        "name": "Night Begin Time"
-      },
-      "night_end_time": {
-        "name": "Night End Time"
-      },
       "night_lowering": {
         "name": "Night Lowering"
       },

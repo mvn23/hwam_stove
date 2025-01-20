@@ -98,6 +98,11 @@
         "name": "Burn Level"
       }
     },
+    "number": {
+      "burn_level": {
+        "name": "Burn level"
+      }
+    },
     "sensor": {
       "algorithm": {
         "name": "Algorithm"

@@ -93,17 +93,14 @@
         "name": "Date and time"
       }
     },
-    "fan": {
-      "fan_entity": {
-        "name": "Burn Level"
+    "number": {
+      "burn_level": {
+        "name": "Burn level"
       }
     },
     "sensor": {
       "algorithm": {
         "name": "Algorithm"
-      },
-      "burn_level": {
-        "name": "Burn Level"
       },
       "maintenance_alarms": {
         "name": "Maintenance Alarms"

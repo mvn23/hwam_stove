@@ -80,6 +80,11 @@
         "name": "Sensor Fault"
       }
     },
+    "datetime": {
+      "date_and_time": {
+        "name": "Date and time"
+      }
+    },
     "fan": {
       "fan_entity": {
         "name": "Burn Level"

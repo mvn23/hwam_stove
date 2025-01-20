@@ -53,7 +53,6 @@ PLATFORMS = [
     Platform.BINARY_SENSOR,
     Platform.BUTTON,
     Platform.DATETIME,
-    Platform.FAN,
     Platform.NUMBER,
     Platform.SENSOR,
     Platform.SWITCH,

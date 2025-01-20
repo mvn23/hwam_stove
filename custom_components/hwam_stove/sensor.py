@@ -40,11 +40,6 @@ SENSOR_DESCRIPTIONS = [
         device_identifier=StoveDeviceIdentifier.STOVE,
     ),
     HWAMStoveSensorEntityDescription(
-        key=pystove.DATA_BURN_LEVEL,
-        translation_key="burn_level",
-        device_identifier=StoveDeviceIdentifier.STOVE,
-    ),
-    HWAMStoveSensorEntityDescription(
         key=pystove.DATA_MAINTENANCE_ALARMS,
         translation_key="maintenance_alarms",
         device_identifier=StoveDeviceIdentifier.STOVE,

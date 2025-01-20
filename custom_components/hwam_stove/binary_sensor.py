@@ -48,6 +48,7 @@ BINARY_SENSOR_DESCRIPTIONS = [
         key=pystove.DATA_REFILL_ALARM,
         translation_key="refill_alarm",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        icon="mdi:bell-ring",
     ),
 ]
 
@@ -121,7 +122,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="maintenance_alarms_room_temp_sensor_battery_low",
         device_identifier=StoveDeviceIdentifier.REMOTE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
-        device_class=BinarySensorDeviceClass.PROBLEM,
+        device_class=BinarySensorDeviceClass.BATTERY,
         alarm_str=pystove.MAINTENANCE_ALARMS[6],
     ),
     # General (any) safety alarm

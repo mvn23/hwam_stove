@@ -38,6 +38,7 @@ BUTTON_DESCRIPTIONS = [
         translation_key="start",
         device_identifier=StoveDeviceIdentifier.STOVE,
         press_func=lambda stove: stove.start(),
+        icon="mdi:fire-alert",
     ),
     HWAMStoveButtonEntityDescription(
         key="sync_clock",
@@ -45,6 +46,7 @@ BUTTON_DESCRIPTIONS = [
         device_identifier=StoveDeviceIdentifier.STOVE,
         entity_category=EntityCategory.CONFIG,
         press_func=lambda stove: stove.set_time(),
+        icon="mdi:clock-check",
     ),
 ]
 

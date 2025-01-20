@@ -15,7 +15,7 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID, PERCENTAGE, UnitOfTemperature
+from homeassistant.const import CONF_ID, PERCENTAGE, EntityCategory, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -38,42 +38,50 @@ SENSOR_DESCRIPTIONS = [
         key=pystove.DATA_ALGORITHM,
         translation_key="algorithm",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_MAINTENANCE_ALARMS,
         translation_key="maintenance_alarms",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_MESSAGE_ID,
         translation_key="message_id",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NEW_FIREWOOD_ESTIMATE,
         translation_key="new_firewood_estimate",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NIGHT_LOWERING,
         translation_key="night_lowering",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_OPERATION_MODE,
         translation_key="operation_mode",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_OXYGEN_LEVEL,
         translation_key="oxygen_level",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
         native_unit_of_measurement=PERCENTAGE,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_PHASE,
         translation_key="phase",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_ROOM_TEMPERATURE,
@@ -86,11 +94,13 @@ SENSOR_DESCRIPTIONS = [
         key=pystove.DATA_SAFETY_ALARMS,
         translation_key="safety_alarms",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_STOVE_TEMPERATURE,
         translation_key="stove_temperature",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
     ),
@@ -98,26 +108,31 @@ SENSOR_DESCRIPTIONS = [
         key=pystove.DATA_TIME_SINCE_REMOTE_MSG,
         translation_key="time_since_remote_message",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_TIME_TO_NEW_FIREWOOD,
         translation_key="time_to_new_firewood",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_VALVE1_POSITION,
         translation_key="valve_1_position",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_VALVE2_POSITION,
         translation_key="valve_2_position",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_VALVE3_POSITION,
         translation_key="valve_3_position",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
 ]
 

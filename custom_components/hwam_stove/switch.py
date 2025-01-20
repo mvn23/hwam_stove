@@ -12,7 +12,7 @@ from typing import Any, Callable
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID
+from homeassistant.const import CONF_ID, EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -75,6 +75,7 @@ async def async_setup_entry(
 class HwamStoveBinarySensor(HWAMStoveCoordinatorEntity, SwitchEntity):
     """Representation of a HWAM Stove switch."""
 
+    entity_category = EntityCategory.CONFIG
     entity_description: HWAMStoveSwitchEntityDescription
 
     @callback

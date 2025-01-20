@@ -39,6 +39,7 @@ NUMBER_DESCRIPTIONS = [
         translation_key="burn_level",
         device_identifier=StoveDeviceIdentifier.STOVE,
         set_func=lambda stove, value: stove.set_burn_level(int(value)),
+        state_func=lambda value: max(0, min(value, 5)),
         native_max_value=5,
         native_min_value=0,
         native_step=1,

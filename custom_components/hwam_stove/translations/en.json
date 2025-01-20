@@ -154,6 +154,14 @@
       "remote_refill_alarm": {
         "name": "Refill Alarm"
       }
+    },
+    "time": {
+      "night_begin_time": {
+        "name": "Night Begin Time"
+      },
+      "night_end_time": {
+        "name": "Night End Time"
+      }
     }
   },
   "issues": {

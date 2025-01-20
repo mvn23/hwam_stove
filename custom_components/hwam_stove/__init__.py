@@ -61,6 +61,7 @@ PLATFORMS = [
     Platform.FAN,
     Platform.SENSOR,
     Platform.SWITCH,
+    Platform.TIME,
 ]
 
 _LOGGER = logging.getLogger(__name__)

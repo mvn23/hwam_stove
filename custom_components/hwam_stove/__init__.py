@@ -22,14 +22,12 @@ from homeassistant.helpers import config_validation as cv, issue_registry as ir
 from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
 
-from .const import DOMAIN
+from .const import DATA_STOVES, DOMAIN
 from .coordinator import StoveCoordinator
 
 ATTR_START_TIME = "start_time"
 ATTR_END_TIME = "end_time"
 ATTR_STOVE_NAME = "stove_name"
-
-DATA_STOVES = "stoves"
 
 SERVICE_DISABLE_NIGHT_LOWERING = "disable_night_lowering"
 SERVICE_ENABLE_NIGHT_LOWERING = "enable_night_lowering"

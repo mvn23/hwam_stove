@@ -20,8 +20,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from pystove import pystove
 
-from . import DATA_STOVES
-from .const import DOMAIN, StoveDeviceIdentifier
+from .const import DATA_STOVES, DOMAIN, StoveDeviceIdentifier
 from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
 
 

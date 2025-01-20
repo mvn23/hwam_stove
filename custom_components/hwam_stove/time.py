@@ -13,7 +13,7 @@ from typing import Any, Callable
 
 from homeassistant.components.time import TimeEntity, TimeEntityDescription
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID
+from homeassistant.const import CONF_ID, EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -77,6 +77,7 @@ async def async_setup_entry(
 class HwamStoveTime(HWAMStoveCoordinatorEntity, TimeEntity):
     """Representation of a HWAM Stove time entity."""
 
+    entity_category = EntityCategory.CONFIG
     entity_description: HWAMStoveTimeEntityDescription
     _attr_native_value: time | None = None
 

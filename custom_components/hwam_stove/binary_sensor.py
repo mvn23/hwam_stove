@@ -14,7 +14,7 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID
+from homeassistant.const import CONF_ID, EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -233,6 +233,7 @@ async def async_setup_entry(
 class HwamStoveBinarySensor(HWAMStoveCoordinatorEntity, BinarySensorEntity):
     """Representation of a HWAM Stove binary sensor."""
 
+    entity_category = EntityCategory.DIAGNOSTIC
     entity_description: HWAMStoveBinarySensorEntityDescription
 
     @callback
@@ -245,6 +246,7 @@ class HwamStoveBinarySensor(HWAMStoveCoordinatorEntity, BinarySensorEntity):
 class HwamStoveAlarmSensor(HWAMStoveCoordinatorEntity, BinarySensorEntity):
     """Representation of a HWAM Stove Alarm binary sensor."""
 
+    entity_category = EntityCategory.DIAGNOSTIC
     entity_description: HWAMStoveBinarySensorListEntityDescription
 
     @callback

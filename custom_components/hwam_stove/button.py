@@ -12,7 +12,7 @@ from typing import Any, Callable
 
 from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID
+from homeassistant.const import CONF_ID, EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -43,6 +43,7 @@ BUTTON_DESCRIPTIONS = [
         key="sync_clock",
         translation_key="sync_clock",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        entity_category=EntityCategory.CONFIG,
         press_func=lambda stove: stove.set_time(),
     ),
 ]

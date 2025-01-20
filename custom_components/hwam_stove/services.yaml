@@ -11,15 +11,3 @@ set_clock:
     time:
       description: Optional time in 24h format to set on the stove. Defaults to the current time.
       example: '19:34'
-
-set_night_lowering_hours:
-  description: Set the night lowering hours on the HWAM stove. At least one of 'start_time' or 'end_time' must be provided.
-  fields:
-    stove_name:
-      description: The stove name as specified in configuration.yaml.
-    start_time:
-      description: The time in 24h format at which night lowering should start.
-      example: '23:30'
-    end_time:
-      description: The time in 24h format at which night lowering should end.
-      example: '07:00'

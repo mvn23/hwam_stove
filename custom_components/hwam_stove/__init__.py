@@ -26,16 +26,9 @@ import voluptuous as vol
 from .const import DATA_STOVES, DOMAIN
 from .coordinator import StoveCoordinator
 
-ATTR_START_TIME = "start_time"
-ATTR_END_TIME = "end_time"
 ATTR_STOVE_ID = "stove_id"
 
-SERVICE_DISABLE_NIGHT_LOWERING = "disable_night_lowering"
-SERVICE_ENABLE_NIGHT_LOWERING = "enable_night_lowering"
-SERVICE_DISABLE_REMOTE_REFILL_ALARM = "disable_remote_refill_alarm"
-SERVICE_ENABLE_REMOTE_REFILL_ALARM = "enable_remote_refill_alarm"
 SERVICE_SET_CLOCK = "set_clock"
-SERVICE_SET_NIGHT_LOWERING_HOURS = "set_night_lowering_hours"
 
 CONFIG_SCHEMA = vol.Schema(
     {
@@ -111,18 +104,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 def register_services(hass: HomeAssistant) -> None:
     """Register HWAM Stove services."""
 
-    service_set_night_lowering_hours_schema = vol.All(
-        vol.Schema(
-            {
-                vol.Required(ATTR_STOVE_ID): vol.All(
-                    cv.string, vol.In(hass.data[DOMAIN][DATA_STOVES])
-                ),
-                vol.Optional(ATTR_START_TIME): cv.time,
-                vol.Optional(ATTR_END_TIME): cv.time,
-            },
-        ),
-        cv.has_at_least_one_key(ATTR_START_TIME, ATTR_END_TIME),
-    )
     service_set_clock_schema = vol.Schema(
         {
             vol.Required(ATTR_STOVE_ID): vol.All(
@@ -131,22 +112,6 @@ def register_services(hass: HomeAssistant) -> None:
             vol.Optional(ATTR_DATE, default=date.today()): cv.date,
             vol.Optional(ATTR_TIME, default=datetime.now().time()): cv.time,
         }
-    )
-
-    async def set_night_lowering_hours(call: ServiceCall) -> None:
-        """Set night lowering hours on the stove."""
-        stove_device = hass.data[DOMAIN][DATA_STOVES][call.data[ATTR_STOVE_ID]]
-        if stove_device is None:
-            return
-        attr_start = call.data.get(ATTR_START_TIME)
-        attr_end = call.data.get(ATTR_END_TIME)
-        await stove_device.stove.set_night_lowering_hours(attr_start, attr_end)
-
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_NIGHT_LOWERING_HOURS,
-        set_night_lowering_hours,
-        service_set_night_lowering_hours_schema,
     )
 
     async def set_device_clock(call: ServiceCall) -> None:

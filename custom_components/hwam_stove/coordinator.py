@@ -21,7 +21,6 @@ class StoveCoordinator(DataUpdateCoordinator):
     """Abstract description of a stove coordinator."""
 
     config_entry: ConfigEntry
-    hub_id: str
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize the coordinator."""
@@ -35,18 +34,18 @@ class StoveCoordinator(DataUpdateCoordinator):
         self.config_entry = config_entry
         self.hass = hass
         self.name = config_entry.data[CONF_NAME]
-        self.hub_id = config_entry.data[CONF_ID]
 
         dev_reg = dr.async_get(hass)
+        hub_id = config_entry.data[CONF_ID]
         self.stove_device_entry = dev_reg.async_get_or_create(
             config_entry_id=config_entry.entry_id,
-            identifiers={(DOMAIN, f"{self.hub_id}-{StoveDeviceIdentifier.STOVE}")},
+            identifiers={(DOMAIN, f"{hub_id}-{StoveDeviceIdentifier.STOVE}")},
             manufacturer="HWAM",
             translation_key="hwam_stove_device",
         )
         self.remote_device_entry = dev_reg.async_get_or_create(
             config_entry_id=config_entry.entry_id,
-            identifiers={(DOMAIN, f"{self.hub_id}-{StoveDeviceIdentifier.REMOTE}")},
+            identifiers={(DOMAIN, f"{hub_id}-{StoveDeviceIdentifier.REMOTE}")},
             manufacturer="HWAM",
             translation_key="hwam_remote_device",
         )

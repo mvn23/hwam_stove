@@ -1,5 +1,6 @@
 """Common HWAM Stove entity properties."""
 
+from homeassistant.const import CONF_ID
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -15,7 +16,7 @@ class HWAMStoveEntityDescription(EntityDescription):
 
 
 class HWAMStoveCoordinatorEntity(CoordinatorEntity[StoveCoordinator]):
-    """Represent a hwam_stove entity."""
+    """Represent a hwam_stove coordinator entity."""
 
     _attr_has_entity_name = True
     entity_description: HWAMStoveEntityDescription
@@ -25,13 +26,15 @@ class HWAMStoveCoordinatorEntity(CoordinatorEntity[StoveCoordinator]):
         stove_coordinator: StoveCoordinator,
         entity_description: HWAMStoveEntityDescription,
     ) -> None:
+        """Initialize the entity."""
         super().__init__(stove_coordinator)
-        self._attr_unique_id = f"{stove_coordinator.hub_id}-{entity_description.key}"
+        hub_id = stove_coordinator.config_entry.data[CONF_ID]
+        self._attr_unique_id = f"{hub_id}-{entity_description.key}"
         self._attr_device_info = DeviceInfo(
             identifiers={
                 (
                     DOMAIN,
-                    f"{stove_coordinator.hub_id}-{entity_description.device_identifier}",
+                    f"{hub_id}-{entity_description.device_identifier}",
                 )
             }
         )

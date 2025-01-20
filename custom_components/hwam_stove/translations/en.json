@@ -130,9 +130,6 @@
       "time_since_remote_message": {
         "name": "Time Since Remote Message"
       },
-      "date_and_time": {
-        "name": "Date and time"
-      },
       "time_to_new_firewood": {
         "name": "Time To New Firewood"
       },

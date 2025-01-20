@@ -36,7 +36,6 @@ class StoveCoordinator(DataUpdateCoordinator):
             update_interval=timedelta(seconds=10),
             always_update=False,
         )
-        self.config_entry = config_entry
         self.hass = hass
         self.name = config_entry.data[CONF_NAME]
         self.stove = stove

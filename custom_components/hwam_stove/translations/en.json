@@ -80,6 +80,14 @@
         "name": "Sensor Fault"
       }
     },
+    "button": {
+      "start": {
+        "name": "Start"
+      },
+      "sync_clock": {
+        "name": "Sync clock"
+      }
+    },
     "datetime": {
       "date_and_time": {
         "name": "Date and time"

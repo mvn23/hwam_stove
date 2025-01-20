@@ -51,6 +51,7 @@ CONFIG_SCHEMA = vol.Schema(
 
 PLATFORMS = [
     Platform.BINARY_SENSOR,
+    Platform.BUTTON,
     Platform.DATETIME,
     Platform.FAN,
     Platform.SENSOR,

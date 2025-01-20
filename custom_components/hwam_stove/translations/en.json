@@ -112,16 +112,42 @@
         "name": "New firewood estimate"
       },
       "night_lowering": {
-        "name": "Night lowering"
+        "name": "Night lowering",
+        "state": {
+          "disabled": "Disabled",
+          "init": "Initializing",
+          "on_day": "Day",
+          "on_night": "Night",
+          "on_manual_night": "Manual Night"
+        }
       },
       "operation_mode": {
-        "name": "Operation mode"
+        "name": "Operation mode",
+        "state": {
+          "init": "Initializing",
+          "self_test": "Self test",
+          "normal": "Normal",
+          "temperature_fault": "Temperature fault",
+          "o2_fault": "Oxygen fault",
+          "calibration": "Calibration",
+          "safety": "Safety",
+          "manual": "Manual",
+          "motor_test": "Motor test",
+          "slow_combustion": "Slow combustion",
+          "low_voltage": "Low voltage"
+        }
       },
       "oxygen_level": {
         "name": "Oxygen level"
       },
       "phase": {
-        "name": "Phase"
+        "name": "Phase",
+        "state": {
+          "ignition": "Ignition",
+          "burn": "Burn",
+          "glow": "Glow",
+          "standby": "Standby"
+        }
       },
       "room_temperature": {
         "name": "Temperature"

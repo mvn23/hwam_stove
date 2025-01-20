@@ -6,8 +6,10 @@ https://github.com/mvn23/hwam_stove
 """
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import date, datetime
+from decimal import Decimal
 import logging
+from typing import Callable
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -15,9 +17,16 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID, PERCENTAGE, EntityCategory, UnitOfTemperature
+from homeassistant.const import (
+    CONF_ID,
+    PERCENTAGE,
+    EntityCategory,
+    UnitOfTemperature,
+    UnitOfTime,
+)
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import dt
 
 from pystove import pystove
 
@@ -32,6 +41,57 @@ class HWAMStoveSensorEntityDescription(
 ):
     """Describes a hwam_stove sensor entity."""
 
+    state_func: Callable[
+        [dict, str], str | int | float | date | datetime | Decimal | None
+    ] = lambda data, key: data[key]
+
+
+NIGHT_LOWERING_STATES_LOOKUP = dict(
+    zip(
+        pystove.NIGHT_LOWERING_STATES,
+        [
+            "disabled",
+            "init",
+            "on_day",
+            "on_night",
+            "on_manual_night",
+        ],
+    )
+)
+
+OPERATION_MODES_LOOKUP = dict(
+    zip(
+        pystove.OPERATION_MODES,
+        [
+            "init",
+            "self_test",
+            "normal",
+            "temperature_fault",
+            "o2_fault",
+            "calibration",
+            "safety",
+            "manual",
+            "motor_test",
+            "slow_combustion",
+            "low_voltage",
+        ],
+    )
+)
+
+PHASE_LOOKUP = dict(
+    zip(
+        pystove.PHASE,
+        [
+            "ignition",
+            "burn",
+            "burn",
+            "burn",
+            "glow",
+            "standby",
+        ],
+    )
+)
+
 
 SENSOR_DESCRIPTIONS = [
     HWAMStoveSensorEntityDescription(
@@ -39,36 +99,48 @@ SENSOR_DESCRIPTIONS = [
         translation_key="algorithm",
         device_identifier=StoveDeviceIdentifier.STOVE,
         entity_category=EntityCategory.DIAGNOSTIC,
-    ),
-    HWAMStoveSensorEntityDescription(
-        key=pystove.DATA_MAINTENANCE_ALARMS,
-        translation_key="maintenance_alarms",
-        device_identifier=StoveDeviceIdentifier.STOVE,
-        entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:function-variant",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_MESSAGE_ID,
         translation_key="message_id",
         device_identifier=StoveDeviceIdentifier.STOVE,
         entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:message-processing",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NEW_FIREWOOD_ESTIMATE,
         translation_key="new_firewood_estimate",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        device_class=SensorDeviceClass.TIMESTAMP,
+        state_func=lambda data, key: (
+            datetime.combine(
+                data[key].date(), data[key].time(), dt.get_default_time_zone()
+            )
+            if data[pystove.DATA_PHASE] == pystove.PHASE[4]
+            else None
+        ),
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NIGHT_LOWERING,
         translation_key="night_lowering",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        device_class=SensorDeviceClass.ENUM,
+        options=[value for value in NIGHT_LOWERING_STATES_LOOKUP.values()],
+        state_func=lambda data, key: NIGHT_LOWERING_STATES_LOOKUP.get(data[key]),
         entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:theme-light-dark",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_OPERATION_MODE,
         translation_key="operation_mode",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        device_class=SensorDeviceClass.ENUM,
+        options=[value for value in OPERATION_MODES_LOOKUP.values()],
+        state_func=lambda data, key: OPERATION_MODES_LOOKUP.get(data[key]),
         entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:cogs",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_OXYGEN_LEVEL,
@@ -76,12 +148,17 @@ SENSOR_DESCRIPTIONS = [
         device_identifier=StoveDeviceIdentifier.STOVE,
         entity_category=EntityCategory.DIAGNOSTIC,
         native_unit_of_measurement=PERCENTAGE,
+        icon="mdi:percent",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_PHASE,
         translation_key="phase",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        device_class=SensorDeviceClass.ENUM,
+        options=[value for value in PHASE_LOOKUP.values()],
+        state_func=lambda data, key: PHASE_LOOKUP.get(data[key]),
         entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:progress-star-four-points",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_ROOM_TEMPERATURE,
@@ -89,12 +166,6 @@ SENSOR_DESCRIPTIONS = [
         device_identifier=StoveDeviceIdentifier.REMOTE,
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-    ),
-    HWAMStoveSensorEntityDescription(
-        key=pystove.DATA_SAFETY_ALARMS,
-        translation_key="safety_alarms",
-        device_identifier=StoveDeviceIdentifier.STOVE,
-        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_STOVE_TEMPERATURE,
@@ -108,12 +179,17 @@ SENSOR_DESCRIPTIONS = [
         key=pystove.DATA_TIME_SINCE_REMOTE_MSG,
         translation_key="time_since_remote_message",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.SECONDS,
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_TIME_TO_NEW_FIREWOOD,
         translation_key="time_to_new_firewood",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.SECONDS,
+        state_func=lambda data, key: data[key].seconds,
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HWAMStoveSensorEntityDescription(
@@ -121,18 +197,21 @@ SENSOR_DESCRIPTIONS = [
         translation_key="valve_1_position",
         device_identifier=StoveDeviceIdentifier.STOVE,
         entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:valve",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_VALVE2_POSITION,
         translation_key="valve_2_position",
         device_identifier=StoveDeviceIdentifier.STOVE,
         entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:valve",
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_VALVE3_POSITION,
         translation_key="valve_3_position",
         device_identifier=StoveDeviceIdentifier.STOVE,
         entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:valve",
     ),
 ]
 
@@ -163,20 +242,7 @@ class HwamStoveSensor(HWAMStoveCoordinatorEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle status updates from the component."""
-        value = self.coordinator.data[self.entity_description.key]
-        if (
-            self.entity_description.key
-            in [
-                pystove.DATA_NEW_FIREWOOD_ESTIMATE,
-                pystove.DATA_TIME_TO_NEW_FIREWOOD,
-            ]
-            and self.coordinator.data[pystove.DATA_PHASE] != pystove.PHASE[4]
-        ):
-            self._attr_native_value = "Wait for Glow phase..."
-        elif isinstance(value, datetime):
-            self._attr_native_value = value.strftime("%-d %b, %-H:%M")
-        elif isinstance(value, timedelta):
-            self._attr_native_value = f"{value}"
-        else:
-            self._attr_native_value = value
+        self._attr_native_value = self.entity_description.state_func(
+            self.coordinator.data, self.entity_description.key
+        )
         self.async_write_ha_state()

@@ -15,7 +15,7 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_NAME, PERCENTAGE, UnitOfTemperature
+from homeassistant.const import CONF_ID, PERCENTAGE, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -150,9 +150,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the HWAM Stove sensors."""
-
-    stove_name = config_entry.data[CONF_NAME]
-    stove_device = hass.data[DOMAIN][DATA_STOVES][stove_name]
+    stove_device = hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]]
     async_add_entities(
         HwamStoveSensor(
             stove_device,

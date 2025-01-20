@@ -13,6 +13,7 @@ from homeassistant.const import (
     ATTR_DATE,
     ATTR_TIME,
     CONF_HOST,
+    CONF_ID,
     CONF_MONITORED_VARIABLES,
     CONF_NAME,
     Platform,
@@ -27,7 +28,7 @@ from .coordinator import StoveCoordinator
 
 ATTR_START_TIME = "start_time"
 ATTR_END_TIME = "end_time"
-ATTR_STOVE_NAME = "stove_name"
+ATTR_STOVE_ID = "stove_id"
 
 SERVICE_DISABLE_NIGHT_LOWERING = "disable_night_lowering"
 SERVICE_ENABLE_NIGHT_LOWERING = "enable_night_lowering"
@@ -71,7 +72,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         hass.data[DOMAIN] = {DATA_STOVES: {}}
 
     stove_hub = StoveCoordinator(hass, config_entry)
-    hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_NAME]] = stove_hub
+    hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]] = stove_hub
 
     await stove_hub.async_config_entry_first_refresh()
 
@@ -112,7 +113,7 @@ def register_services(hass: HomeAssistant) -> None:
     service_set_night_lowering_hours_schema = vol.All(
         vol.Schema(
             {
-                vol.Required(ATTR_STOVE_NAME): vol.All(
+                vol.Required(ATTR_STOVE_ID): vol.All(
                     cv.string, vol.In(hass.data[DOMAIN][DATA_STOVES])
                 ),
                 vol.Optional(ATTR_START_TIME): cv.time,
@@ -123,7 +124,7 @@ def register_services(hass: HomeAssistant) -> None:
     )
     service_set_clock_schema = vol.Schema(
         {
-            vol.Required(ATTR_STOVE_NAME): vol.All(
+            vol.Required(ATTR_STOVE_ID): vol.All(
                 cv.string, vol.In(hass.data[DOMAIN][DATA_STOVES])
             ),
             vol.Optional(ATTR_DATE, default=date.today()): cv.date,
@@ -133,8 +134,7 @@ def register_services(hass: HomeAssistant) -> None:
 
     async def set_night_lowering_hours(call: ServiceCall) -> None:
         """Set night lowering hours on the stove."""
-        stove_name = call.data[ATTR_STOVE_NAME]
-        stove_device = hass.data[DOMAIN][DATA_STOVES].get(stove_name)
+        stove_device = hass.data[DOMAIN][DATA_STOVES][call.data[ATTR_STOVE_ID]]
         if stove_device is None:
             return
         attr_start = call.data.get(ATTR_START_TIME)
@@ -150,8 +150,7 @@ def register_services(hass: HomeAssistant) -> None:
 
     async def set_device_clock(call: ServiceCall) -> None:
         """Set the clock on the stove."""
-        stove_name = call.data[ATTR_STOVE_NAME]
-        stove_device = hass.data[DOMAIN][DATA_STOVES].get(stove_name)
+        stove_device = hass.data[DOMAIN][DATA_STOVES][call.data[ATTR_STOVE_ID]]
         if stove_device is None:
             return
         attr_date = call.data[ATTR_DATE]

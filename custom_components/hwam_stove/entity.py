@@ -57,7 +57,10 @@ class HWAMStoveCoordinatorEntity(
         entity_description: HWAMStoveEntityDescription,
     ) -> None:
         """Initialize the entity."""
-        super(HWAMStoveBaseEntity, self).__init__(stove_coordinator)
-        super().__init__(
-            stove_coordinator.stove, stove_coordinator.config_entry, entity_description
+        CoordinatorEntity.__init__(self, stove_coordinator)
+        HWAMStoveBaseEntity.__init__(
+            self,
+            stove_coordinator.stove,
+            stove_coordinator.config_entry,
+            entity_description,
         )

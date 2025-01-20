@@ -105,11 +105,6 @@ SENSOR_DESCRIPTIONS = [
         device_identifier=StoveDeviceIdentifier.STOVE,
     ),
     HWAMStoveSensorEntityDescription(
-        key=pystove.DATA_DATE_TIME,
-        translation_key="date_and_time",
-        device_identifier=StoveDeviceIdentifier.STOVE,
-    ),
-    HWAMStoveSensorEntityDescription(
         key=pystove.DATA_TIME_TO_NEW_FIREWOOD,
         translation_key="time_to_new_firewood",
         device_identifier=StoveDeviceIdentifier.STOVE,

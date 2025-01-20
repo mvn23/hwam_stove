@@ -5,20 +5,17 @@ For more details about this component, please refer to the documentation at
 https://github.com/mvn23/hwam_stove
 """
 
-from datetime import date, datetime
 import logging
 
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.const import (
-    ATTR_DATE,
-    ATTR_TIME,
     CONF_HOST,
     CONF_ID,
     CONF_MONITORED_VARIABLES,
     CONF_NAME,
     Platform,
 )
-from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv, issue_registry as ir
 from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
@@ -51,6 +48,7 @@ CONFIG_SCHEMA = vol.Schema(
 
 PLATFORMS = [
     Platform.BINARY_SENSOR,
+    Platform.DATETIME,
     Platform.FAN,
     Platform.SENSOR,
     Platform.SWITCH,
@@ -72,7 +70,6 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
 
-    register_services(hass)
     return True
 
 
@@ -99,30 +96,3 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 )
             )
     return True
-
-
-def register_services(hass: HomeAssistant) -> None:
-    """Register HWAM Stove services."""
-
-    service_set_clock_schema = vol.Schema(
-        {
-            vol.Required(ATTR_STOVE_ID): vol.All(
-                cv.string, vol.In(hass.data[DOMAIN][DATA_STOVES])
-            ),
-            vol.Optional(ATTR_DATE, default=date.today()): cv.date,
-            vol.Optional(ATTR_TIME, default=datetime.now().time()): cv.time,
-        }
-    )
-
-    async def set_device_clock(call: ServiceCall) -> None:
-        """Set the clock on the stove."""
-        stove_device = hass.data[DOMAIN][DATA_STOVES][call.data[ATTR_STOVE_ID]]
-        if stove_device is None:
-            return
-        attr_date = call.data[ATTR_DATE]
-        attr_time = call.data[ATTR_TIME]
-        await stove_device.stove.set_time(datetime.combine(attr_date, attr_time))
-
-    hass.services.async_register(
-        DOMAIN, SERVICE_SET_CLOCK, set_device_clock, service_set_clock_schema
-    )

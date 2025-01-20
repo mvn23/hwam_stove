@@ -2,6 +2,8 @@
 
 from enum import StrEnum
 
+DATA_STOVES = "stoves"
+
 DOMAIN = "hwam_stove"
 
 

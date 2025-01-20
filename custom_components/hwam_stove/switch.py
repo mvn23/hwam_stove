@@ -18,8 +18,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from pystove import pystove
 
-from . import DATA_HWAM_STOVE, DATA_STOVES
-from .const import StoveDeviceIdentifier
+from .const import DATA_STOVES, DOMAIN, StoveDeviceIdentifier
 from .coordinator import StoveCoordinator
 from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
 
@@ -64,7 +63,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up the HWAM Stove binary sensors."""
     stove_name = config_entry.data[CONF_NAME]
-    stove_hub = hass.data[DATA_HWAM_STOVE][DATA_STOVES][stove_name]
+    stove_hub = hass.data[DOMAIN][DATA_STOVES][stove_name]
     async_add_entities(
         HwamStoveBinarySensor(
             stove_hub,

@@ -162,4 +162,4 @@
       "description": "Configuration of the HWAM Smart Stove integration through configuration.yaml is deprecated. Your configuration has been migrated to config entries. Please remove any HWAM Smart Stove configuration from your configuration.yaml."
     }
   }
-}  
+}

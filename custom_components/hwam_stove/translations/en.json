@@ -26,58 +26,58 @@
   "entity": {
     "binary_sensor": {
       "refill_alarm": {
-        "name": "Refill Alarm"
+        "name": "Refill alarm"
       },
       "maintenance_alarms": {
-        "name": "Maintenance Alarm"
+        "name": "Maintenance alarm"
       },
       "maintenance_alarms_backup_battery_low": {
-        "name": "Backup Battery Low"
+        "name": "Backup battery low"
       },
       "maintenance_alarms_o2_sensor_fault": {
-        "name": "O2 Sensor Fault"
+        "name": "O2 sensor fault"
       },
       "maintenance_alarms_o2_sensor_offset": {
-        "name": "O2 Sensor Offset"
+        "name": "O2 sensor offset"
       },
       "maintenance_alarms_stove_temp_sensor_fault": {
-        "name": "Temperature Sensor Fault"
+        "name": "Temperature sensor fault"
       },
       "maintenance_alarms_room_temp_sensor_fault": {
-        "name": "Temperature Sensor Fault"
+        "name": "Temperature sensor fault"
       },
       "maintenance_alarms_communication_fault": {
-        "name": "Communication Fault"
+        "name": "Communication fault"
       },
       "maintenance_alarms_room_temp_sensor_battery_low": {
-        "name": "Battery Low"
+        "name": "Battery low"
       },
       "safety_alarms": {
-        "name": "Safety Alarm"
+        "name": "Safety alarm"
       },
       "safety_alarms_valve_fault": {
-        "name": "Valve Fault"
+        "name": "Valve fault"
       },
       "safety_alarms_bad_configuration": {
-        "name": "Bad Configuration"
+        "name": "Bad configuration"
       },
       "safety_alarms_valve_disconnect": {
-        "name": "Valve Disconnect"
+        "name": "Valve disconnect"
       },
       "safety_alarms_valve_calibration_error": {
-        "name": "Valve Calibration Error"
+        "name": "Valve calibration error"
       },
       "safety_alarms_stove_overheat": {
-        "name": "Overheat Alarm"
+        "name": "Overheat alarm"
       },
       "safety_alarms_door_open_too_long": {
-        "name": "Door Open Too Long"
+        "name": "Door open too long"
       },
       "safety_alarms_manual_safety_alarm": {
-        "name": "Manual Safety Alarm"
+        "name": "Manual safety alarm"
       },
       "safety_alarms_stove_sensor_fault": {
-        "name": "Sensor Fault"
+        "name": "Sensor fault"
       }
     },
     "button": {
@@ -103,22 +103,22 @@
         "name": "Algorithm"
       },
       "maintenance_alarms": {
-        "name": "Maintenance Alarms"
+        "name": "Maintenance alarms"
       },
       "message_id": {
         "name": "Message ID"
       },
       "new_firewood_estimate": {
-        "name": "New Firewood Estimate"
+        "name": "New firewood estimate"
       },
       "night_lowering": {
-        "name": "Night Lowering"
+        "name": "Night lowering"
       },
       "operation_mode": {
-        "name": "Operation Mode"
+        "name": "Operation mode"
       },
       "oxygen_level": {
-        "name": "Oxygen Level"
+        "name": "Oxygen level"
       },
       "phase": {
         "name": "Phase"
@@ -127,41 +127,41 @@
         "name": "Temperature"
       },
       "safety_alarms": {
-        "name": "Safety Alarms"
+        "name": "Safety alarms"
       },
       "stove_temperature": {
         "name": "Temperature"
       },
       "time_since_remote_message": {
-        "name": "Time Since Remote Message"
+        "name": "Time since remote message"
       },
       "time_to_new_firewood": {
-        "name": "Time To New Firewood"
+        "name": "Time to new firewood"
       },
       "valve_1_position": {
-        "name": "Valve 1 Position"
+        "name": "Valve 1 position"
       },
       "valve_2_position": {
-        "name": "Valve 2 Position"
+        "name": "Valve 2 position"
       },
       "valve_3_position": {
-        "name": "Valve 3 Position"
+        "name": "Valve 3 position"
       }
     },
     "switch": {
       "night_lowering": {
-        "name": "Night Lowering"
+        "name": "Night lowering"
       },
       "remote_refill_alarm": {
-        "name": "Refill Alarm"
+        "name": "Refill alarm"
       }
     },
     "time": {
       "night_begin_time": {
-        "name": "Night Begin Time"
+        "name": "Night begin time"
       },
       "night_end_time": {
-        "name": "Night End Time"
+        "name": "Night end time"
       }
     }
   },

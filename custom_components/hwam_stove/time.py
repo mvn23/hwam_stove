@@ -21,7 +21,7 @@ from pystove import pystove
 
 from .const import DATA_STOVES, DOMAIN, StoveDeviceIdentifier
 from .coordinator import StoveCoordinator
-from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
+from .entity import HWAMStoveCoordinatorEntity, HWAMStoveEntityDescription
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -74,7 +74,7 @@ async def async_setup_entry(
     )
 
 
-class HwamStoveTime(HWAMStoveEntity, TimeEntity):
+class HwamStoveTime(HWAMStoveCoordinatorEntity, TimeEntity):
     """Representation of a HWAM Stove time entity."""
 
     entity_description: HWAMStoveTimeEntityDescription

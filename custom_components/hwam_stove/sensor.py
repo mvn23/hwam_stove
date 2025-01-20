@@ -22,7 +22,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from pystove import pystove
 
 from .const import DATA_STOVES, DOMAIN, StoveDeviceIdentifier
-from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
+from .entity import HWAMStoveCoordinatorEntity, HWAMStoveEntityDescription
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -145,7 +145,7 @@ async def async_setup_entry(
     )
 
 
-class HwamStoveSensor(HWAMStoveEntity, SensorEntity):
+class HwamStoveSensor(HWAMStoveCoordinatorEntity, SensorEntity):
     """Representation of a HWAM Stove sensor."""
 
     entity_description: HWAMStoveSensorEntityDescription

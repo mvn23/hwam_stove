@@ -22,7 +22,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from pystove import pystove
 
 from .const import DATA_STOVES, DOMAIN, StoveDeviceIdentifier
-from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
+from .entity import HWAMStoveCoordinatorEntity, HWAMStoveEntityDescription
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ async def async_setup_entry(
     async_add_entities([stove])
 
 
-class StoveBurnLevel(HWAMStoveEntity, FanEntity):
+class StoveBurnLevel(HWAMStoveCoordinatorEntity, FanEntity):
     """Representation of a fan."""
 
     entity_description: HWAMStoveFanEntityDescription

@@ -21,7 +21,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from pystove import pystove
 
 from .const import DATA_STOVES, DOMAIN, StoveDeviceIdentifier
-from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
+from .entity import HWAMStoveCoordinatorEntity, HWAMStoveEntityDescription
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -230,7 +230,7 @@ async def async_setup_entry(
     )
 
 
-class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):
+class HwamStoveBinarySensor(HWAMStoveCoordinatorEntity, BinarySensorEntity):
     """Representation of a HWAM Stove binary sensor."""
 
     entity_description: HWAMStoveBinarySensorEntityDescription
@@ -242,7 +242,7 @@ class HwamStoveBinarySensor(HWAMStoveEntity, BinarySensorEntity):
         self.async_write_ha_state()
 
 
-class HwamStoveAlarmSensor(HWAMStoveEntity, BinarySensorEntity):
+class HwamStoveAlarmSensor(HWAMStoveCoordinatorEntity, BinarySensorEntity):
     """Representation of a HWAM Stove Alarm binary sensor."""
 
     entity_description: HWAMStoveBinarySensorListEntityDescription

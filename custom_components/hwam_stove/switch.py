@@ -20,7 +20,7 @@ from pystove import pystove
 
 from .const import DATA_STOVES, DOMAIN, StoveDeviceIdentifier
 from .coordinator import StoveCoordinator
-from .entity import HWAMStoveEntity, HWAMStoveEntityDescription
+from .entity import HWAMStoveCoordinatorEntity, HWAMStoveEntityDescription
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -72,7 +72,7 @@ async def async_setup_entry(
     )
 
 
-class HwamStoveBinarySensor(HWAMStoveEntity, SwitchEntity):
+class HwamStoveBinarySensor(HWAMStoveCoordinatorEntity, SwitchEntity):
     """Representation of a HWAM Stove switch."""
 
     entity_description: HWAMStoveSwitchEntityDescription

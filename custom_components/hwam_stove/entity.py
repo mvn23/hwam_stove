@@ -14,7 +14,7 @@ class HWAMStoveEntityDescription(EntityDescription):
     device_identifier: StoveDeviceIdentifier
 
 
-class HWAMStoveEntity(CoordinatorEntity[StoveCoordinator]):
+class HWAMStoveCoordinatorEntity(CoordinatorEntity[StoveCoordinator]):
     """Represent a hwam_stove entity."""
 
     _attr_has_entity_name = True

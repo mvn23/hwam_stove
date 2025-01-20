@@ -5,6 +5,8 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from pystove import Stove
+
 from .const import DOMAIN, StoveDeviceIdentifier
 from .coordinator import StoveCoordinator
 
@@ -20,6 +22,7 @@ class HWAMStoveCoordinatorEntity(CoordinatorEntity[StoveCoordinator]):
 
     _attr_has_entity_name = True
     entity_description: HWAMStoveEntityDescription
+    stove: Stove
 
     def __init__(
         self,
@@ -40,3 +43,4 @@ class HWAMStoveCoordinatorEntity(CoordinatorEntity[StoveCoordinator]):
         )
         self.coordinator = stove_coordinator
         self.entity_description = entity_description
+        self.stove = stove_coordinator.stove

@@ -5,8 +5,8 @@ import logging
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_ID, CONF_NAME, EVENT_HOMEASSISTANT_STOP
-from homeassistant.core import Event, HomeAssistant
+from homeassistant.const import CONF_ID, CONF_NAME
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -22,7 +22,12 @@ class StoveCoordinator(DataUpdateCoordinator):
 
     config_entry: ConfigEntry
 
-    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        stove: pystove.Stove,
+        config_entry: ConfigEntry,
+    ) -> None:
         """Initialize the coordinator."""
         super().__init__(
             hass,
@@ -34,6 +39,7 @@ class StoveCoordinator(DataUpdateCoordinator):
         self.config_entry = config_entry
         self.hass = hass
         self.name = config_entry.data[CONF_NAME]
+        self.stove = stove
 
         dev_reg = dr.async_get(hass)
         hub_id = config_entry.data[CONF_ID]
@@ -49,16 +55,6 @@ class StoveCoordinator(DataUpdateCoordinator):
             manufacturer="HWAM",
             translation_key="hwam_remote_device",
         )
-
-    async def _async_setup(self) -> None:
-        """Run ident routine and schedule updates."""
-        self.stove = await pystove.Stove.create(self.config_entry.data[CONF_HOST])
-
-        async def cleanup(event: Event) -> None:
-            """Clean up stove object."""
-            await self.stove.destroy()
-
-        self.hass.bus.async_listen(EVENT_HOMEASSISTANT_STOP, cleanup)
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Update stove info."""

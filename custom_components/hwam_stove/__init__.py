@@ -13,12 +13,15 @@ from homeassistant.const import (
     CONF_ID,
     CONF_MONITORED_VARIABLES,
     CONF_NAME,
+    EVENT_HOMEASSISTANT_STOP,
     Platform,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import Event, HomeAssistant
 from homeassistant.helpers import config_validation as cv, issue_registry as ir
 from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
+
+from pystove import Stove
 
 from .const import DATA_STOVES, DOMAIN
 from .coordinator import StoveCoordinator
@@ -63,7 +66,15 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     if DOMAIN not in hass.data:
         hass.data[DOMAIN] = {DATA_STOVES: {}}
 
-    stove_hub = StoveCoordinator(hass, config_entry)
+    stove = await Stove.create(config_entry.data[CONF_HOST])
+
+    async def cleanup(event: Event) -> None:
+        """Clean up stove object."""
+        await stove.destroy()
+
+    hass.bus.async_listen(EVENT_HOMEASSISTANT_STOP, cleanup)
+
+    stove_hub = StoveCoordinator(hass, stove, config_entry)
     hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]] = stove_hub
 
     await stove_hub.async_config_entry_first_refresh()

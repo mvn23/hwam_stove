@@ -26,58 +26,58 @@
   "entity": {
     "binary_sensor": {
       "refill_alarm": {
-        "name": "Refill alarm"
+        "name": "Refill needed"
       },
       "maintenance_alarms": {
-        "name": "Maintenance alarm"
+        "name": "Maintenance"
       },
       "maintenance_alarms_backup_battery_low": {
-        "name": "Backup battery low"
+        "name": "Backup battery"
       },
       "maintenance_alarms_o2_sensor_fault": {
-        "name": "O2 sensor fault"
+        "name": "O2 sensor"
       },
       "maintenance_alarms_o2_sensor_offset": {
         "name": "O2 sensor offset"
       },
       "maintenance_alarms_stove_temp_sensor_fault": {
-        "name": "Temperature sensor fault"
+        "name": "Temperature sensor"
       },
       "maintenance_alarms_room_temp_sensor_fault": {
-        "name": "Temperature sensor fault"
+        "name": "Temperature sensor"
       },
       "maintenance_alarms_communication_fault": {
-        "name": "Communication fault"
+        "name": "Communication"
       },
       "maintenance_alarms_room_temp_sensor_battery_low": {
-        "name": "Battery low"
+        "name": "Battery"
       },
       "safety_alarms": {
-        "name": "Safety alarm"
+        "name": "Safety"
       },
       "safety_alarms_valve_fault": {
-        "name": "Valve fault"
+        "name": "Valves"
       },
       "safety_alarms_bad_configuration": {
-        "name": "Bad configuration"
+        "name": "Configuration"
       },
       "safety_alarms_valve_disconnect": {
         "name": "Valve disconnect"
       },
       "safety_alarms_valve_calibration_error": {
-        "name": "Valve calibration error"
+        "name": "Valve calibration"
       },
       "safety_alarms_stove_overheat": {
-        "name": "Overheat alarm"
+        "name": "Overheat"
       },
       "safety_alarms_door_open_too_long": {
         "name": "Door open too long"
       },
       "safety_alarms_manual_safety_alarm": {
-        "name": "Manual safety alarm"
+        "name": "Manual safety"
       },
       "safety_alarms_stove_sensor_fault": {
-        "name": "Sensor fault"
+        "name": "Sensors"
       }
     },
     "button": {
@@ -101,9 +101,6 @@
     "sensor": {
       "algorithm": {
         "name": "Algorithm"
-      },
-      "maintenance_alarms": {
-        "name": "Maintenance alarms"
       },
       "message_id": {
         "name": "Message ID"
@@ -152,9 +149,6 @@
       "room_temperature": {
         "name": "Temperature"
       },
-      "safety_alarms": {
-        "name": "Safety alarms"
-      },
       "stove_temperature": {
         "name": "Temperature"
       },
@@ -184,10 +178,10 @@
     },
     "time": {
       "night_begin_time": {
-        "name": "Night begin time"
+        "name": "Night begin"
       },
       "night_end_time": {
-        "name": "Night end time"
+        "name": "Night end"
       }
     }
   },

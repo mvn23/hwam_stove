@@ -61,6 +61,10 @@ class StoveCoordinator(DataUpdateCoordinator):
         if data is None:
             raise UpdateFailed("Got empty response")
 
+        self.update_interval = timedelta(
+            seconds=10 if data[pystove.DATA_PHASE] != pystove.PHASE[5] else 60
+        )
+
         dev_reg = dr.async_get(self.hass)
         dev_reg.async_update_device(
             self.stove_device_entry.id,

@@ -48,6 +48,7 @@ BINARY_SENSOR_DESCRIPTIONS = [
         key=pystove.DATA_REFILL_ALARM,
         translation_key="refill_alarm",
         device_identifier=StoveDeviceIdentifier.STOVE,
+        icon="mdi:bell-ring",
     ),
 ]
 
@@ -121,7 +122,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="maintenance_alarms_room_temp_sensor_battery_low",
         device_identifier=StoveDeviceIdentifier.REMOTE,
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
-        device_class=BinarySensorDeviceClass.PROBLEM,
+        device_class=BinarySensorDeviceClass.BATTERY,
         alarm_str=pystove.MAINTENANCE_ALARMS[6],
     ),
     # General (any) safety alarm
@@ -130,7 +131,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="safety_alarms",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
-        device_class=BinarySensorDeviceClass.SAFETY,
+        device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=None,
     ),
     # Valve Fault, same as [1] and [2].
@@ -139,7 +140,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="safety_alarms_valve_fault",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
-        device_class=BinarySensorDeviceClass.SAFETY,
+        device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[0],
     ),
     # Bad Configuration
@@ -148,7 +149,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="safety_alarms_bad_configuration",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
-        device_class=BinarySensorDeviceClass.SAFETY,
+        device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[3],
     ),
     # Valve Disconnect, same as [5] and [6]
@@ -157,7 +158,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="safety_alarms_valve_disconnect",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
-        device_class=BinarySensorDeviceClass.SAFETY,
+        device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[4],
     ),
     # Valve Calibration Error, same as [8] and [9]
@@ -166,7 +167,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="safety_alarms_valve_calibration_error",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
-        device_class=BinarySensorDeviceClass.SAFETY,
+        device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[7],
     ),
     # Overheating
@@ -175,7 +176,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="safety_alarms_stove_overheat",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
-        device_class=BinarySensorDeviceClass.SAFETY,
+        device_class=BinarySensorDeviceClass.HEAT,
         alarm_str=pystove.SAFETY_ALARMS[10],
     ),
     # Door Open Too Long
@@ -184,7 +185,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="safety_alarms_door_open_too_long",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
-        device_class=BinarySensorDeviceClass.SAFETY,
+        device_class=BinarySensorDeviceClass.DOOR,
         alarm_str=pystove.SAFETY_ALARMS[11],
     ),
     # Manual Safety Alarm
@@ -193,7 +194,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="safety_alarms_manual_safety_alarm",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
-        device_class=BinarySensorDeviceClass.SAFETY,
+        device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[12],
     ),
     # Stove Sensor Fault
@@ -202,7 +203,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         translation_key="safety_alarms_stove_sensor_fault",
         device_identifier=StoveDeviceIdentifier.STOVE,
         value_source_key=pystove.DATA_SAFETY_ALARMS,
-        device_class=BinarySensorDeviceClass.SAFETY,
+        device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[13],
     ),
 ]

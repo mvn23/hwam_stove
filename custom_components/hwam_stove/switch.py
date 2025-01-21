@@ -43,6 +43,7 @@ SWITCH_DESCRIPTIONS = [
         state_func=lambda x: bool(x != pystove.NIGHT_LOWERING_STATES[0]),
         turn_off_func=lambda hub: hub.stove.set_night_lowering(False),
         turn_on_func=lambda hub: hub.stove.set_night_lowering(True),
+        icon="mdi:theme-light-dark",
     ),
     HWAMStoveSwitchEntityDescription(
         key=pystove.DATA_REMOTE_REFILL_ALARM,
@@ -50,6 +51,7 @@ SWITCH_DESCRIPTIONS = [
         device_identifier=StoveDeviceIdentifier.REMOTE,
         turn_off_func=lambda hub: hub.stove.set_remote_refill_alarm(False),
         turn_on_func=lambda hub: hub.stove.set_remote_refill_alarm(True),
+        icon="mdi:bell-cog",
     ),
 ]
 

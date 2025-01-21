@@ -26,58 +26,66 @@
   "entity": {
     "binary_sensor": {
       "refill_alarm": {
-        "name": "Refill alarm"
+        "name": "Refill needed",
+        "state": {
+          "off": "No",
+          "on": "Yes"
+        }
       },
       "maintenance_alarms": {
-        "name": "Maintenance alarm"
+        "name": "Maintenance"
       },
       "maintenance_alarms_backup_battery_low": {
-        "name": "Backup battery low"
+        "name": "Backup battery"
       },
       "maintenance_alarms_o2_sensor_fault": {
-        "name": "O2 sensor fault"
+        "name": "O2 sensor"
       },
       "maintenance_alarms_o2_sensor_offset": {
         "name": "O2 sensor offset"
       },
       "maintenance_alarms_stove_temp_sensor_fault": {
-        "name": "Temperature sensor fault"
+        "name": "Temperature sensor"
       },
       "maintenance_alarms_room_temp_sensor_fault": {
-        "name": "Temperature sensor fault"
+        "name": "Temperature sensor"
       },
       "maintenance_alarms_communication_fault": {
-        "name": "Communication fault"
+        "name": "Communication"
       },
       "maintenance_alarms_room_temp_sensor_battery_low": {
-        "name": "Battery low"
+        "name": "Battery"
       },
       "safety_alarms": {
-        "name": "Safety alarm"
+        "name": "Safety"
       },
       "safety_alarms_valve_fault": {
-        "name": "Valve fault"
+        "name": "Valves"
       },
       "safety_alarms_bad_configuration": {
-        "name": "Bad configuration"
+        "name": "Configuration"
       },
       "safety_alarms_valve_disconnect": {
         "name": "Valve disconnect"
       },
       "safety_alarms_valve_calibration_error": {
-        "name": "Valve calibration error"
+        "name": "Valve calibration"
       },
       "safety_alarms_stove_overheat": {
-        "name": "Overheat alarm"
+        "name": "Overheat"
       },
       "safety_alarms_door_open_too_long": {
-        "name": "Door open too long"
+        "name": "Door open too long",
+        "state": {
+          "off": "No",
+          "on": "Yes"
+        }
       },
       "safety_alarms_manual_safety_alarm": {
-        "name": "Manual safety alarm"
+        "name": "Manual safety"
       },
       "safety_alarms_stove_sensor_fault": {
-        "name": "Sensor fault"
+        "name": "Sensors"
       }
     },
     "button": {
@@ -102,9 +110,6 @@
       "algorithm": {
         "name": "Algorithm"
       },
-      "maintenance_alarms": {
-        "name": "Maintenance alarms"
-      },
       "message_id": {
         "name": "Message ID"
       },
@@ -112,22 +117,45 @@
         "name": "New firewood estimate"
       },
       "night_lowering": {
-        "name": "Night lowering"
+        "name": "Night lowering",
+        "state": {
+          "disabled": "Disabled",
+          "init": "Initializing",
+          "on_day": "Day",
+          "on_night": "Night",
+          "on_manual_night": "Manual Night"
+        }
       },
       "operation_mode": {
-        "name": "Operation mode"
+        "name": "Operation mode",
+        "state": {
+          "init": "Initializing",
+          "self_test": "Self test",
+          "normal": "Normal",
+          "temperature_fault": "Temperature fault",
+          "o2_fault": "Oxygen fault",
+          "calibration": "Calibration",
+          "safety": "Safety",
+          "manual": "Manual",
+          "motor_test": "Motor test",
+          "slow_combustion": "Slow combustion",
+          "low_voltage": "Low voltage"
+        }
       },
       "oxygen_level": {
         "name": "Oxygen level"
       },
       "phase": {
-        "name": "Phase"
+        "name": "Phase",
+        "state": {
+          "ignition": "Ignition",
+          "burn": "Burn",
+          "glow": "Glow",
+          "standby": "Standby"
+        }
       },
       "room_temperature": {
         "name": "Temperature"
-      },
-      "safety_alarms": {
-        "name": "Safety alarms"
       },
       "stove_temperature": {
         "name": "Temperature"
@@ -158,10 +186,10 @@
     },
     "time": {
       "night_begin_time": {
-        "name": "Night begin time"
+        "name": "Night begin"
       },
       "night_end_time": {
-        "name": "Night end time"
+        "name": "Night end"
       }
     }
   },

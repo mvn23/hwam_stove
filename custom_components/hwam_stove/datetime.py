@@ -41,6 +41,7 @@ TIME_DESCRIPTIONS = [
         translation_key="date_and_time",
         device_identifier=StoveDeviceIdentifier.STOVE,
         set_func=lambda hub, date_time: hub.stove.set_time(date_time),
+        entity_registry_enabled_default=False,
     ),
 ]
 

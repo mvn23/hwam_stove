@@ -107,6 +107,7 @@ SENSOR_DESCRIPTIONS = [
         device_identifier=StoveDeviceIdentifier.STOVE,
         entity_category=EntityCategory.DIAGNOSTIC,
         icon="mdi:message-processing",
+        entity_registry_enabled_default=False,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_NEW_FIREWOOD_ESTIMATE,
@@ -182,6 +183,8 @@ SENSOR_DESCRIPTIONS = [
         device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.SECONDS,
         entity_category=EntityCategory.DIAGNOSTIC,
+        suggested_unit_of_measurement=UnitOfTime.HOURS,
+        suggested_display_precision=2,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_TIME_TO_NEW_FIREWOOD,
@@ -191,6 +194,8 @@ SENSOR_DESCRIPTIONS = [
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_func=lambda data, key: data[key].seconds,
         entity_category=EntityCategory.DIAGNOSTIC,
+        suggested_unit_of_measurement=UnitOfTime.HOURS,
+        suggested_display_precision=2,
     ),
     HWAMStoveSensorEntityDescription(
         key=pystove.DATA_VALVE1_POSITION,

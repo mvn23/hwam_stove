@@ -26,7 +26,11 @@
   "entity": {
     "binary_sensor": {
       "refill_alarm": {
-        "name": "Refill needed"
+        "name": "Refill needed",
+        "state": {
+          "off": "No",
+          "on": "Yes"
+        }
       },
       "maintenance_alarms": {
         "name": "Maintenance"
@@ -71,7 +75,11 @@
         "name": "Overheat"
       },
       "safety_alarms_door_open_too_long": {
-        "name": "Door open too long"
+        "name": "Door open too long",
+        "state": {
+          "off": "No",
+          "on": "Yes"
+        }
       },
       "safety_alarms_manual_safety_alarm": {
         "name": "Manual safety"

@@ -6,6 +6,6 @@
   "dependencies": [],
   "codeowners": [],
   "requirements": [ "pystove" ],
-  "version": "0.0.1",
+  "version": "1.0.0b0",
   "iot_class": "local_polling"
 }

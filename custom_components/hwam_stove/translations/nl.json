@@ -36,7 +36,7 @@
         "name": "Onderhoud"
       },
       "maintenance_alarms_backup_battery_low": {
-        "name": "Backup accu"
+        "name": "Backupaccu"
       },
       "maintenance_alarms_o2_sensor_fault": {
         "name": "Zuurstofsensor"

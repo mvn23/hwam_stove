@@ -61,6 +61,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=None,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Stove Backup Battery Low
     HWAMStoveBinarySensorListEntityDescription(
@@ -70,6 +71,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.BATTERY,
         alarm_str=pystove.MAINTENANCE_ALARMS[0],
+        entity_category=EntityCategory.DIAGNOSTIC,        
     ),
     # O2 Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
@@ -79,6 +81,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.MAINTENANCE_ALARMS[1],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # O2 Sensor Offset
     HWAMStoveBinarySensorListEntityDescription(
@@ -88,6 +91,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.MAINTENANCE_ALARMS[2],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Stove Temperature Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
@@ -97,6 +101,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.MAINTENANCE_ALARMS[3],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Room Temperature Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
@@ -106,6 +111,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.MAINTENANCE_ALARMS[4],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Communication Fault
     HWAMStoveBinarySensorListEntityDescription(
@@ -115,6 +121,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.MAINTENANCE_ALARMS[5],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Room Temperature Sensor Battery Low
     HWAMStoveBinarySensorListEntityDescription(
@@ -124,6 +131,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_MAINTENANCE_ALARMS,
         device_class=BinarySensorDeviceClass.BATTERY,
         alarm_str=pystove.MAINTENANCE_ALARMS[6],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # General (any) safety alarm
     HWAMStoveBinarySensorListEntityDescription(
@@ -133,6 +141,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=None,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Valve Fault, same as [1] and [2].
     HWAMStoveBinarySensorListEntityDescription(
@@ -142,6 +151,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[0],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Bad Configuration
     HWAMStoveBinarySensorListEntityDescription(
@@ -151,6 +161,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[3],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Valve Disconnect, same as [5] and [6]
     HWAMStoveBinarySensorListEntityDescription(
@@ -160,6 +171,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[4],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Valve Calibration Error, same as [8] and [9]
     HWAMStoveBinarySensorListEntityDescription(
@@ -169,6 +181,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[7],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Overheating
     HWAMStoveBinarySensorListEntityDescription(
@@ -178,6 +191,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.HEAT,
         alarm_str=pystove.SAFETY_ALARMS[10],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Door Open Too Long
     HWAMStoveBinarySensorListEntityDescription(
@@ -187,6 +201,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.DOOR,
         alarm_str=pystove.SAFETY_ALARMS[11],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Manual Safety Alarm
     HWAMStoveBinarySensorListEntityDescription(
@@ -196,6 +211,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[12],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Stove Sensor Fault
     HWAMStoveBinarySensorListEntityDescription(
@@ -205,6 +221,7 @@ BINARY_SENSOR_LIST_DESCRIPTIONS = [
         value_source_key=pystove.DATA_SAFETY_ALARMS,
         device_class=BinarySensorDeviceClass.PROBLEM,
         alarm_str=pystove.SAFETY_ALARMS[13],
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
 ]
 
@@ -234,7 +251,6 @@ async def async_setup_entry(
 class HwamStoveBinarySensor(HWAMStoveCoordinatorEntity, BinarySensorEntity):
     """Representation of a HWAM Stove binary sensor."""
 
-    entity_category = EntityCategory.DIAGNOSTIC
     entity_description: HWAMStoveBinarySensorEntityDescription
 
     @callback
@@ -247,7 +263,6 @@ class HwamStoveBinarySensor(HWAMStoveCoordinatorEntity, BinarySensorEntity):
 class HwamStoveAlarmSensor(HWAMStoveCoordinatorEntity, BinarySensorEntity):
     """Representation of a HWAM Stove Alarm binary sensor."""
 
-    entity_category = EntityCategory.DIAGNOSTIC
     entity_description: HWAMStoveBinarySensorListEntityDescription
 
     @callback

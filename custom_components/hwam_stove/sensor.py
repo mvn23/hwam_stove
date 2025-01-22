@@ -158,7 +158,6 @@ SENSOR_DESCRIPTIONS = [
         device_class=SensorDeviceClass.ENUM,
         options=[value for value in PHASE_LOOKUP.values()],
         state_func=lambda data, key: PHASE_LOOKUP.get(data[key]),
-        entity_category=EntityCategory.DIAGNOSTIC,
         icon="mdi:progress-star-four-points",
     ),
     HWAMStoveSensorEntityDescription(
@@ -193,7 +192,6 @@ SENSOR_DESCRIPTIONS = [
         device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_func=lambda data, key: data[key].seconds,
-        entity_category=EntityCategory.DIAGNOSTIC,
         suggested_unit_of_measurement=UnitOfTime.HOURS,
         suggested_display_precision=2,
     ),

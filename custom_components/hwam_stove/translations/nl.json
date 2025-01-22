@@ -178,7 +178,7 @@
     },
     "switch": {
       "night_lowering": {
-        "name": "Nacht verlaging"
+        "name": "Nachtverlaging"
       },
       "remote_refill_alarm": {
         "name": "Bijvul alarm"

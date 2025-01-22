@@ -186,7 +186,7 @@
     },
     "time": {
       "night_begin_time": {
-        "name": "Begintijd nacht verlaging"
+        "name": "Begintijd nachtverlaging"
       },
       "night_end_time": {
         "name": "Eindtijd nachtverlaging"

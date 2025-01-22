@@ -132,7 +132,7 @@
           "init": "Initialiseren",
           "self_test": "Zelftest",
           "normal": "Normaal",
-          "temperature_fault": "Temperatuurefout",
+          "temperature_fault": "Temperatuurfout",
           "o2_fault": "Zuurstoffout",
           "calibration": "Kalibratie",
           "safety": "Veiligheid",

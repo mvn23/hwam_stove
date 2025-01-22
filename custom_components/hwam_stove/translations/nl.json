@@ -39,7 +39,7 @@
         "name": "Backup accu"
       },
       "maintenance_alarms_o2_sensor_fault": {
-        "name": "O2 sensor"
+        "name": "Zuurstofsensor"
       },
       "maintenance_alarms_o2_sensor_offset": {
         "name": "Correctiewaarde O2 sensor"

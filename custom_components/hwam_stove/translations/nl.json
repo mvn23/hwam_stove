@@ -1,0 +1,202 @@
+{
+  "config": {
+    "step": {
+      "init": {
+        "data": {
+          "name": "Naam",
+          "host": "Hostnaam of ip",
+          "id": "ID"
+        }
+      }
+    },
+    "error": {
+      "already_configured": "Kachel is al geconfigureerd",
+      "id_exists": "ID bestaat al",
+      "cannot_connect": "Kan geen verbinding maken met de kachel"
+    }
+  },
+  "device": {
+    "hwam_remote_device": {
+      "name": "HWAM Kamertemperatuur Sensor"
+    },
+    "hwam_stove_device": {
+      "name": "HWAM Smart Stove"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "refill_alarm": {
+        "name": "Bijvullen nodig",
+        "state": {
+          "off": "Nee",
+          "on": "Ja"
+        }
+      },
+      "maintenance_alarms": {
+        "name": "Onderhoud"
+      },
+      "maintenance_alarms_backup_battery_low": {
+        "name": "Backup batterij
+      },
+      "maintenance_alarms_o2_sensor_fault": {
+        "name": "O2 sensor"
+      },
+      "maintenance_alarms_o2_sensor_offset": {
+        "name": "O2 sensor offset"
+      },
+      "maintenance_alarms_stove_temp_sensor_fault": {
+        "name": "Temperatuur sensor"
+      },
+      "maintenance_alarms_room_temp_sensor_fault": {
+        "name": "Temperatuur sensor"
+      },
+      "maintenance_alarms_communication_fault": {
+        "name": "Communicatie"
+      },
+      "maintenance_alarms_room_temp_sensor_battery_low": {
+        "name": "Batterij"
+      },
+      "safety_alarms": {
+        "name": "Veiligheid"
+      },
+      "safety_alarms_valve_fault": {
+        "name": "Kleppen"
+      },
+      "safety_alarms_bad_configuration": {
+        "name": "Configuratie"
+      },
+      "safety_alarms_valve_disconnect": {
+        "name": "Klep niet verbonden"
+      },
+      "safety_alarms_valve_calibration_error": {
+        "name": "Klep kalibratie"
+      },
+      "safety_alarms_stove_overheat": {
+        "name": "Oververhitting"
+      },
+      "safety_alarms_door_open_too_long": {
+        "name": "Deur te lang open",
+        "state": {
+          "off": "Nee",
+          "on": "Ja"
+        }
+      },
+      "safety_alarms_manual_safety_alarm": {
+        "name": "Handmatige veiligheid"
+      },
+      "safety_alarms_stove_sensor_fault": {
+        "name": "Sensoren"
+      }
+    },
+    "button": {
+      "start": {
+        "name": "Start"
+      },
+      "sync_clock": {
+        "name": "Synchroniseer klok"
+      }
+    },
+    "datetime": {
+      "date_and_time": {
+        "name": "Datum en tijd"
+      }
+    },
+    "number": {
+      "burn_level": {
+        "name": "Brandniveau"
+      }
+    },
+    "sensor": {
+      "algorithm": {
+        "name": "Algoritme"
+      },
+      "message_id": {
+        "name": "Bericht ID"
+      },
+      "new_firewood_estimate": {
+        "name": "Schatting nieuw brandhout"
+      },
+      "night_lowering": {
+        "name": "Nacht verlaging",
+        "state": {
+          "disabled": "Uitgeschakeld",
+          "init": "Initialiseren",
+          "on_day": "Dag",
+          "on_night": "Nacht",
+          "on_manual_night": "Handmatig nacht"
+        }
+      },
+      "operation_mode": {
+        "name": "Operationele status",
+        "state": {
+          "init": "Initialiseren",
+          "self_test": "Zelftest",
+          "normal": "Normaal",
+          "temperature_fault": "Temperatuurefout",
+          "o2_fault": "Zuurstoffout",
+          "calibration": "Kalibratie",
+          "safety": "Veiligheid",
+          "manual": "Handmatig",
+          "motor_test": "Motor est",
+          "slow_combustion": "Langzame verbranding",
+          "low_voltage": "Lage spanning"
+        }
+      },
+      "oxygen_level": {
+        "name": "Zuurstof niveau"
+      },
+      "phase": {
+        "name": "Fase",
+        "state": {
+          "ignition": "Ontsteking",
+          "burn": "Verbranding",
+          "glow": "Gloeien",
+          "standby": "Stand-by"
+        }
+      },
+      "room_temperature": {
+        "name": "Kamer temperatuur"
+      },
+      "stove_temperature": {
+        "name": "Kachel temperatuur"
+      },
+      "time_since_remote_message": {
+        "name": "Tijd sinds laatste bericht"
+      },
+      "time_to_new_firewood": {
+        "name": "Tijd tot nieuw brandhout"
+      },
+      "valve_1_position": {
+        "name": "Klep 1 positie"
+      },
+      "valve_2_position": {
+        "name": "Klep 2 positie"
+      },
+      "valve_3_position": {
+        "name": "Klep 3 positie"
+      }
+    },
+    "switch": {
+      "night_lowering": {
+        "name": "Nacht verlaging"
+      },
+      "remote_refill_alarm": {
+        "name": "Bijvul alarm"
+      }
+    },
+    "time": {
+      "night_begin_time": {
+        "name": "Begintijd nacht verlaging"
+      },
+      "night_end_time": {
+        "name": "Eindtijd nacht verlaging"
+      }
+    }
+  },
+  "issues": {
+    "deprecated_import_from_configuration_yaml": {
+      "title": "Verouderde configuratie",
+      "description": "Configuratie van de HWAM Smart Stove integratie middels configuration.yaml is vervallen. Je configuratie is gemigreerd naar config entries. Verwijder alle HWAM Smart Stove configuratie instellingen uit je configuration.yaml."
+    }
+  }
+}

@@ -39,10 +39,10 @@
         "name": "Backup battery"
       },
       "maintenance_alarms_o2_sensor_fault": {
-        "name": "O2 sensor"
+        "name": "Oxygen sensor"
       },
       "maintenance_alarms_o2_sensor_offset": {
-        "name": "O2 sensor offset"
+        "name": "Oxygen sensor offset"
       },
       "maintenance_alarms_stove_temp_sensor_fault": {
         "name": "Temperature sensor"
@@ -66,7 +66,7 @@
         "name": "Configuration"
       },
       "safety_alarms_valve_disconnect": {
-        "name": "Valve disconnect"
+        "name": "Valve disconnected"
       },
       "safety_alarms_valve_calibration_error": {
         "name": "Valve calibration"
@@ -93,7 +93,7 @@
         "name": "Start"
       },
       "sync_clock": {
-        "name": "Sync clock"
+        "name": "Synchronize clock"
       }
     },
     "datetime": {

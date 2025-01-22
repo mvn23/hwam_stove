@@ -108,3 +108,21 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 )
             )
     return True
+
+
+async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+    """Unload the HWAM Stove component from a config entry."""
+
+    if unload_ok := await hass.config_entries.async_unload_platforms(
+        config_entry, PLATFORMS
+    ):
+        stove_hub = hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]]
+        await stove_hub.stove.destroy()
+
+        hass.data[DOMAIN][DATA_STOVES].pop(config_entry.data[CONF_ID])
+        if hass.data[DOMAIN][DATA_STOVES] == {}:
+            hass.data[DOMAIN].pop(DATA_STOVES)
+            # DATA_STOVES is the only key in hass.data[DOMAIN] at the moment...
+            hass.data.pop(DOMAIN)
+
+    return unload_ok

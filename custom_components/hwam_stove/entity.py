@@ -64,3 +64,8 @@ class HWAMStoveCoordinatorEntity(
             stove_coordinator.config_entry,
             entity_description,
         )
+
+    async def async_added_to_hass(self) -> None:
+        """Update value when added."""
+        await super().async_added_to_hass()
+        self._handle_coordinator_update()

@@ -117,7 +117,7 @@
         "name": "Schatting nieuw brandhout"
       },
       "night_lowering": {
-        "name": "Nacht verlaging",
+        "name": "Nachtverlaging",
         "state": {
           "disabled": "Uitgeschakeld",
           "init": "Initialiseren",

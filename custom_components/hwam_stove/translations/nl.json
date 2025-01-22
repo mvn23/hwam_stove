@@ -69,7 +69,7 @@
         "name": "Klep niet verbonden"
       },
       "safety_alarms_valve_calibration_error": {
-        "name": "Klep kalibratie"
+        "name": "Klepkalibratie"
       },
       "safety_alarms_stove_overheat": {
         "name": "Oververhitting"

@@ -155,7 +155,7 @@
         }
       },
       "room_temperature": {
-        "name": "Kamer temperatuur"
+        "name": "Kamertemperatuur"
       },
       "stove_temperature": {
         "name": "Kachel temperatuur"

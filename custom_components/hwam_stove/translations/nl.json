@@ -158,7 +158,7 @@
         "name": "Kamertemperatuur"
       },
       "stove_temperature": {
-        "name": "Kachel temperatuur"
+        "name": "Kacheltemperatuur"
       },
       "time_since_remote_message": {
         "name": "Tijd sinds laatste bericht"

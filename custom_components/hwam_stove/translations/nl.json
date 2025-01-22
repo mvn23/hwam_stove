@@ -4,7 +4,7 @@
       "init": {
         "data": {
           "name": "Naam",
-          "host": "Hostnaam of ip",
+          "host": "Hostnaam of IP",
           "id": "ID"
         }
       }

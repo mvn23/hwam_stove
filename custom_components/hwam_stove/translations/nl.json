@@ -181,7 +181,7 @@
         "name": "Nachtverlaging"
       },
       "remote_refill_alarm": {
-        "name": "Bijvul alarm"
+        "name": "Bijvulalarm"
       }
     },
     "time": {

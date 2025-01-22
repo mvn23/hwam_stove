@@ -42,7 +42,7 @@
         "name": "Zuurstofsensor"
       },
       "maintenance_alarms_o2_sensor_offset": {
-        "name": "Correctiewaarde O2 sensor"
+        "name": "Correctiewaarde zuurstofsensor"
       },
       "maintenance_alarms_stove_temp_sensor_fault": {
         "name": "Temperatuursensor"

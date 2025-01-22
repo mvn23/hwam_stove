@@ -42,13 +42,13 @@
         "name": "O2 sensor"
       },
       "maintenance_alarms_o2_sensor_offset": {
-        "name": "O2 sensor offset"
+        "name": "Correctiewaarde O2 sensor"
       },
       "maintenance_alarms_stove_temp_sensor_fault": {
-        "name": "Temperatuur sensor"
+        "name": "Temperatuursensor"
       },
       "maintenance_alarms_room_temp_sensor_fault": {
-        "name": "Temperatuur sensor"
+        "name": "Temperatuursensor"
       },
       "maintenance_alarms_communication_fault": {
         "name": "Communicatie"
@@ -196,7 +196,7 @@
   "issues": {
     "deprecated_import_from_configuration_yaml": {
       "title": "Verouderde configuratie",
-      "description": "Configuratie van de HWAM Smart Stove integratie middels configuration.yaml is vervallen. Je configuratie is gemigreerd naar config entries. Verwijder alle HWAM Smart Stove configuratie instellingen uit je configuration.yaml."
+      "description": "Configuratie van de HWAM Smart Stove integratie middels configuration.yaml wordt niet meer ondersteund. Je configuratie is gemigreerd naar config entries. Verwijder alle HWAM Smart Stove instellingen uit je configuration.yaml."
     }
   }
 }

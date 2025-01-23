@@ -26,10 +26,6 @@ from pystove import Stove
 from .const import DATA_STOVES, DOMAIN
 from .coordinator import StoveCoordinator
 
-ATTR_STOVE_ID = "stove_id"
-
-SERVICE_SET_CLOCK = "set_clock"
-
 CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema(

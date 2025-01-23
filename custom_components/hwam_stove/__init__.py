@@ -5,18 +5,18 @@ For more details about this component, please refer to the documentation at
 https://github.com/mvn23/hwam_stove
 """
 
+from asyncio import CancelledError
 import logging
 
-from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
+from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry, ConfigEntryNotReady
 from homeassistant.const import (
     CONF_HOST,
     CONF_ID,
     CONF_MONITORED_VARIABLES,
     CONF_NAME,
-    EVENT_HOMEASSISTANT_STOP,
     Platform,
 )
-from homeassistant.core import Event, HomeAssistant
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv, issue_registry as ir
 from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
@@ -67,13 +67,10 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     if DOMAIN not in hass.data:
         hass.data[DOMAIN] = {DATA_STOVES: {}}
 
-    stove = await Stove.create(config_entry.data[CONF_HOST])
-
-    async def cleanup(event: Event) -> None:
-        """Clean up stove object."""
-        await stove.destroy()
-
-    hass.bus.async_listen(EVENT_HOMEASSISTANT_STOP, cleanup)
+    try:
+        stove = await Stove.create(config_entry.data[CONF_HOST])
+    except (CancelledError, TimeoutError) as e:
+        raise ConfigEntryNotReady() from e
 
     stove_hub = StoveCoordinator(hass, stove, config_entry)
     hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]] = stove_hub

@@ -10,7 +10,8 @@
       }
     },
     "error": {
-      "already_configured": "Host bereits konfiguriet",
+      "already_configured": "Host bereits konfiguriert",
+
       "id_exists": "ID existiert bereits",
       "cannot_connect": "Kann nicht mit Host verbinden"
     }

@@ -11,7 +11,6 @@
     },
     "error": {
       "already_configured": "Host bereits konfiguriert",
-
       "id_exists": "ID existiert bereits",
       "cannot_connect": "Kann nicht mit Host verbinden"
     }
@@ -40,37 +39,37 @@
         "name": "Backup Batterie"
       },
       "maintenance_alarms_o2_sensor_fault": {
-        "name": "O2 sensor"
+        "name": "Sauerstoffsensor"
       },
       "maintenance_alarms_o2_sensor_offset": {
-        "name": "O2 sensor offset"
+        "name": "Korrekturwert Sauerstoffsensor"
       },
       "maintenance_alarms_stove_temp_sensor_fault": {
-        "name": "Temperatur Sensor Ofen"
+        "name": "Rauchgastemperatursensor"
       },
       "maintenance_alarms_room_temp_sensor_fault": {
-        "name": "Temperatur Sensor Raum"
+        "name": "Raumtemperatursensor"
       },
       "maintenance_alarms_communication_fault": {
         "name": "Kommunikation"
       },
       "maintenance_alarms_room_temp_sensor_battery_low": {
-        "name": "Batterie"
+        "name": "Batterie Raumtemperatursensor"
       },
       "safety_alarms": {
         "name": "Sicherheit"
       },
       "safety_alarms_valve_fault": {
-        "name": "Ventile"
+        "name": "Status Klappe(n)"
       },
       "safety_alarms_bad_configuration": {
         "name": "Konfiguration"
       },
       "safety_alarms_valve_disconnect": {
-        "name": "Ventil trennen"
+        "name": "Verbindung Klappe(n)"
       },
       "safety_alarms_valve_calibration_error": {
-        "name": "Ventile kalibriert"
+        "name": "Kalibrierstatus Klappe(n)"
       },
       "safety_alarms_stove_overheat": {
         "name": "Überhitzung"
@@ -104,7 +103,7 @@
     },
     "number": {
       "burn_level": {
-        "name": "Brenngrad soll"
+        "name": "Brenngrad"
       }
     },
     "sensor": {
@@ -115,7 +114,7 @@
         "name": "Message ID"
       },
       "new_firewood_estimate": {
-        "name": "Feuerholz nachlegen ~"
+        "name": "Feuerholz nachlegen geschätzt"
       },
       "night_lowering": {
         "name": "Nachtabsenkung",
@@ -133,18 +132,18 @@
           "init": "Initialisierung",
           "self_test": "Selbsttest",
           "normal": "Normal",
-          "temperature_fault": "Temperatur Fehler",
-          "o2_fault": "Sauerstoff Fehler",
-          "calibration": "Kalibartion",
+          "temperature_fault": "Temperaturfehler",
+          "o2_fault": "Sauerstofffehler",
+          "calibration": "Kalibration",
           "safety": "Sicherheit",
           "manual": "Manuell",
-          "motor_test": "Motor Test",
+          "motor_test": "Motortest",
           "slow_combustion": "Langsame Verbrennung",
           "low_voltage": "Niedrige Spannung (Volt)"
         }
       },
       "oxygen_level": {
-        "name": "Sauerstoff Level"
+        "name": "Sauerstofflevel"
       },
       "phase": {
         "name": "Brennphase",
@@ -168,13 +167,13 @@
         "name": "Zeit für neues Feuerholz"
       },
       "valve_1_position": {
-        "name": "Klappe Primär"
+        "name": "Klappe 1"
       },
       "valve_2_position": {
-        "name": "Klappe Sekundär"
+        "name": "Klappe 2"
       },
       "valve_3_position": {
-        "name": "Klappe Tertiär"
+        "name": "Klappe 3"
       }
     },
     "switch": {

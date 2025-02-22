@@ -1,0 +1,202 @@
+{
+  "config": {
+    "step": {
+      "init": {
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "id": "ID"
+        }
+      }
+    },
+    "error": {
+      "already_configured": "Host bereits konfiguriert",
+      "id_exists": "ID existiert bereits",
+      "cannot_connect": "Kann nicht mit Host verbinden"
+    }
+  },
+  "device": {
+    "hwam_remote_device": {
+      "name": "HWAM Raum Temperatur Sensor"
+    },
+    "hwam_stove_device": {
+      "name": "HWAM Smart Ofen"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "refill_alarm": {
+        "name": "Nachlegen nötig",
+        "state": {
+          "off": "Nein",
+          "on": "Ja"
+        }
+      },
+      "maintenance_alarms": {
+        "name": "Wartung"
+      },
+      "maintenance_alarms_backup_battery_low": {
+        "name": "Backup Batterie"
+      },
+      "maintenance_alarms_o2_sensor_fault": {
+        "name": "Sauerstoffsensor"
+      },
+      "maintenance_alarms_o2_sensor_offset": {
+        "name": "Korrekturwert Sauerstoffsensor"
+      },
+      "maintenance_alarms_stove_temp_sensor_fault": {
+        "name": "Rauchgastemperatursensor"
+      },
+      "maintenance_alarms_room_temp_sensor_fault": {
+        "name": "Raumtemperatursensor"
+      },
+      "maintenance_alarms_communication_fault": {
+        "name": "Kommunikation"
+      },
+      "maintenance_alarms_room_temp_sensor_battery_low": {
+        "name": "Batterie Raumtemperatursensor"
+      },
+      "safety_alarms": {
+        "name": "Sicherheit"
+      },
+      "safety_alarms_valve_fault": {
+        "name": "Status Klappe(n)"
+      },
+      "safety_alarms_bad_configuration": {
+        "name": "Konfiguration"
+      },
+      "safety_alarms_valve_disconnect": {
+        "name": "Verbindung Klappe(n)"
+      },
+      "safety_alarms_valve_calibration_error": {
+        "name": "Kalibrierstatus Klappe(n)"
+      },
+      "safety_alarms_stove_overheat": {
+        "name": "Überhitzung"
+      },
+      "safety_alarms_door_open_too_long": {
+        "name": "Tür zu lange auf",
+        "state": {
+          "off": "Nein",
+          "on": "Ja"
+        }
+      },
+      "safety_alarms_manual_safety_alarm": {
+        "name": "Manualle Sicherheit"
+      },
+      "safety_alarms_stove_sensor_fault": {
+        "name": "Sensoren"
+      }
+    },
+    "button": {
+      "start": {
+        "name": "Start"
+      },
+      "sync_clock": {
+        "name": "Synkronisiere Uhr"
+      }
+    },
+    "datetime": {
+      "date_and_time": {
+        "name": "Datum und Zeit"
+      }
+    },
+    "number": {
+      "burn_level": {
+        "name": "Brenngrad"
+      }
+    },
+    "sensor": {
+      "algorithm": {
+        "name": "Algorithmus"
+      },
+      "message_id": {
+        "name": "Message ID"
+      },
+      "new_firewood_estimate": {
+        "name": "Feuerholz nachlegen geschätzt"
+      },
+      "night_lowering": {
+        "name": "Nachtabsenkung",
+        "state": {
+          "disabled": "Deaktiviert",
+          "init": "Initialisierung",
+          "on_day": "Tag",
+          "on_night": "Nacht",
+          "on_manual_night": "Manuell Nacht"
+        }
+      },
+      "operation_mode": {
+        "name": "Arbeitsmodus",
+        "state": {
+          "init": "Initialisierung",
+          "self_test": "Selbsttest",
+          "normal": "Normal",
+          "temperature_fault": "Temperaturfehler",
+          "o2_fault": "Sauerstofffehler",
+          "calibration": "Kalibration",
+          "safety": "Sicherheit",
+          "manual": "Manuell",
+          "motor_test": "Motortest",
+          "slow_combustion": "Langsame Verbrennung",
+          "low_voltage": "Niedrige Spannung (Volt)"
+        }
+      },
+      "oxygen_level": {
+        "name": "Sauerstofflevel"
+      },
+      "phase": {
+        "name": "Brennphase",
+        "state": {
+          "ignition": "Anzünden",
+          "burn": "Brennen",
+          "glow": "Glut halten",
+          "standby": "Standby"
+        }
+      },
+      "room_temperature": {
+        "name": "Raumtemperatur"
+      },
+      "stove_temperature": {
+        "name": "Rauchgastemperatur"
+      },
+      "time_since_remote_message": {
+        "name": "Zeit seit remote Nachricht"
+      },
+      "time_to_new_firewood": {
+        "name": "Zeit für neues Feuerholz"
+      },
+      "valve_1_position": {
+        "name": "Klappe 1"
+      },
+      "valve_2_position": {
+        "name": "Klappe 2"
+      },
+      "valve_3_position": {
+        "name": "Klappe 3"
+      }
+    },
+    "switch": {
+      "night_lowering": {
+        "name": "Nachtabsenkung"
+      },
+      "remote_refill_alarm": {
+        "name": "Nachfüll Alarm"
+      }
+    },
+    "time": {
+      "night_begin_time": {
+        "name": "Nacht Anfang"
+      },
+      "night_end_time": {
+        "name": "Nacht Ende"
+      }
+    }
+  },
+  "issues": {
+    "deprecated_import_from_configuration_yaml": {
+      "title": "Veraltete Konfiguration",
+      "description": "Die Konfiguration der HWAM Smart Stove-Integration über „configuration.yaml“ ist veraltet. Ihre Konfiguration wurde in Konfigurationseinträge migriert. Bitte entfernen Sie alle HWAM Smart Stove-Konfigurationen aus Ihrer configuration.yaml."
+    }
+  }
+}

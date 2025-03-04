@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0b2
+
+- Add german translation (thanks @UDicke) (#46)
+- Pin pystove version (#45)
+
 ## 1.0.0b1
 
 - Remove services.yaml (#43)

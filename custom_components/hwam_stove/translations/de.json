@@ -4,14 +4,12 @@
       "init": {
         "data": {
           "name": "Name",
-          "host": "Host",
-          "id": "ID"
+          "host": "Host"
         }
       }
     },
     "error": {
       "already_configured": "Host bereits konfiguriert",
-      "id_exists": "ID existiert bereits",
       "cannot_connect": "Kann nicht mit Host verbinden"
     }
   },

@@ -4,14 +4,12 @@
       "init": {
         "data": {
           "name": "Naam",
-          "host": "Hostnaam of IP",
-          "id": "ID"
+          "host": "Hostnaam of IP"
         }
       }
     },
     "error": {
       "already_configured": "Kachel is al geconfigureerd",
-      "id_exists": "ID bestaat al",
       "cannot_connect": "Kan geen verbinding maken met de kachel"
     }
   },

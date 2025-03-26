@@ -5,8 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_HOST, CONF_ID, CONF_NAME
-import homeassistant.helpers.config_validation as cv
+from homeassistant.const import CONF_HOST, CONF_NAME
 import voluptuous as vol
 
 from pystove import pystove
@@ -26,12 +25,8 @@ class HWAMStoveConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
         if info:
             name = info[CONF_NAME]
             host = info[CONF_HOST]
-            stove_id = cv.slugify(info.get(CONF_NAME, name))
 
             entries = [e.data for e in self._async_current_entries()]
-
-            if stove_id in [e[CONF_ID] for e in entries]:
-                return self._show_form({"base": "id_exists"})
 
             if host in [e[CONF_HOST] for e in entries]:
                 return self._show_form({"base": "already_configured"})
@@ -51,7 +46,7 @@ class HWAMStoveConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
             except ConnectionError:
                 return self._show_form({"base": "cannot_connect"})
 
-            return self._create_entry(stove_id, name, host)
+            return self._create_entry(name, host)
 
         return self._show_form()
 
@@ -80,14 +75,13 @@ class HWAMStoveConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
                 {
                     vol.Required(CONF_NAME): str,
                     vol.Required(CONF_HOST): str,
-                    vol.Optional(CONF_ID): str,
                 }
             ),
             errors=errors or {},
         )
 
-    def _create_entry(self, stove_id: str, name: str, host: str) -> ConfigFlowResult:
+    def _create_entry(self, name: str, host: str) -> ConfigFlowResult:
         """Create entry for the HWAM Stove."""
         return self.async_create_entry(
-            title=name, data={CONF_ID: stove_id, CONF_HOST: host, CONF_NAME: name}
+            title=name, data={CONF_HOST: host, CONF_NAME: name}
         )

@@ -9,13 +9,7 @@ from asyncio import CancelledError
 import logging
 
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry, ConfigEntryNotReady
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_ID,
-    CONF_MONITORED_VARIABLES,
-    CONF_NAME,
-    Platform,
-)
+from homeassistant.const import CONF_HOST, CONF_MONITORED_VARIABLES, CONF_NAME, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv, issue_registry as ir
 from homeassistant.helpers.typing import ConfigType
@@ -69,7 +63,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         raise ConfigEntryNotReady() from e
 
     stove_hub = StoveCoordinator(hass, stove, config_entry)
-    hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]] = stove_hub
+    hass.data[DOMAIN][DATA_STOVES][config_entry.entry_id] = stove_hub
 
     await stove_hub.async_config_entry_first_refresh()
 
@@ -109,10 +103,10 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     if unload_ok := await hass.config_entries.async_unload_platforms(
         config_entry, PLATFORMS
     ):
-        stove_hub = hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]]
+        stove_hub = hass.data[DOMAIN][DATA_STOVES][config_entry.entry_id]
         await stove_hub.stove.destroy()
 
-        hass.data[DOMAIN][DATA_STOVES].pop(config_entry.data[CONF_ID])
+        hass.data[DOMAIN][DATA_STOVES].pop(config_entry.entry_id)
         if hass.data[DOMAIN][DATA_STOVES] == {}:
             hass.data[DOMAIN].pop(DATA_STOVES)
             # DATA_STOVES is the only key in hass.data[DOMAIN] at the moment...

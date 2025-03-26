@@ -13,7 +13,7 @@ from typing import Any, Callable
 
 from homeassistant.components.datetime import DateTimeEntity, DateTimeEntityDescription
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID, EntityCategory
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.dt import get_default_time_zone
@@ -54,7 +54,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the HWAM Stove datetime entities."""
-    stove_device = hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]]
+    stove_device = hass.data[DOMAIN][DATA_STOVES][config_entry.entry_id]
     async_add_entities(
         HwamStoveTime(
             stove_device,

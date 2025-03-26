@@ -5,7 +5,7 @@ import logging
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID, CONF_NAME
+from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -41,16 +41,19 @@ class StoveCoordinator(DataUpdateCoordinator):
         self.stove = stove
 
         dev_reg = dr.async_get(hass)
-        hub_id = config_entry.data[CONF_ID]
         self.stove_device_entry = dev_reg.async_get_or_create(
             config_entry_id=config_entry.entry_id,
-            identifiers={(DOMAIN, f"{hub_id}-{StoveDeviceIdentifier.STOVE}")},
+            identifiers={
+                (DOMAIN, f"{config_entry.entry_id}-{StoveDeviceIdentifier.STOVE}")
+            },
             manufacturer="HWAM",
             translation_key="hwam_stove_device",
         )
         self.remote_device_entry = dev_reg.async_get_or_create(
             config_entry_id=config_entry.entry_id,
-            identifiers={(DOMAIN, f"{hub_id}-{StoveDeviceIdentifier.REMOTE}")},
+            identifiers={
+                (DOMAIN, f"{config_entry.entry_id}-{StoveDeviceIdentifier.REMOTE}")
+            },
             manufacturer="HWAM",
             translation_key="hwam_remote_device",
         )

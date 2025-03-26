@@ -1,7 +1,6 @@
 """Common HWAM Stove entity properties."""
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity, EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -32,7 +31,7 @@ class HWAMStoveBaseEntity(Entity):
         entity_description: HWAMStoveEntityDescription,
     ) -> None:
         """Initialize the entity."""
-        hub_id = config_entry.data[CONF_ID]
+        hub_id = config_entry.entry_id
         self._attr_unique_id = f"{hub_id}-{entity_description.key}"
         self._attr_device_info = DeviceInfo(
             identifiers={

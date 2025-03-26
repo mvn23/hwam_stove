@@ -12,7 +12,6 @@ from typing import Any, Callable
 
 from homeassistant.components.number import NumberEntity, NumberEntityDescription
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -56,7 +55,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the HWAM Stove number entities."""
-    stove_hub = hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]]
+    stove_hub = hass.data[DOMAIN][DATA_STOVES][config_entry.entry_id]
     async_add_entities(
         HwamStoveNumber(
             stove_hub,

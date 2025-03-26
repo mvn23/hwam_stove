@@ -14,7 +14,7 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID, EntityCategory
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -217,7 +217,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the HWAM Stove binary sensors."""
-    stove_hub = hass.data[DOMAIN][DATA_STOVES][config_entry.data[CONF_ID]]
+    stove_hub = hass.data[DOMAIN][DATA_STOVES][config_entry.entry_id]
     async_add_entities(
         HwamStoveBinarySensor(
             stove_hub,
